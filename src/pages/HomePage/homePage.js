@@ -7,7 +7,7 @@ const HomePage =()=>{
     const classes = useStyles()
 
     return(
-        <div>
+        <div className={classes.pageContainer}>
             <Home/>
         </div>
     )
