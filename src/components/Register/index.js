@@ -40,9 +40,8 @@ const Register=()=>{
             let user={UserName,Email,Password};
             console.log('user:'+JSON.stringify(user));
 
-            UserServer.createUser(user).then(res=>{
-                this.props.history.push('/');
-            });
+            await UserServer.createUser(user);
+            history.push('/');
         }
     }
 
