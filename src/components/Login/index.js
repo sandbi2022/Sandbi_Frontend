@@ -58,6 +58,7 @@ const Login =()=>{
             }
             errRef.current.focus();
         }
+        history.push("/");
         
     }
     
@@ -79,6 +80,7 @@ const Login =()=>{
                             placeholder="Email"
                             onChange={updateEmail}
                         />
+                       
                         
 
                     </div>

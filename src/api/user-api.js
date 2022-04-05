@@ -10,7 +10,7 @@ class UserAPI{
     }
 
     createUser(User){
-        return axios.post(USER_API_BASE_URL+'/Register.jsp',
+        return axios.post(USER_API_BASE_URL+'/User/Register.jsp',
             JSON.stringify(User),
             {
                 headers:{
@@ -21,7 +21,17 @@ class UserAPI{
         );
     }
     getUser(User){
-        return axios.post(USER_API_BASE_URL+'/Login.jsp',
+        return axios.post(USER_API_BASE_URL+'/User/Login.jsp',
+            JSON.stringify(User),
+            {
+                headers:{'Content-Type':'application/json'},
+                withCredentials:true
+            }
+        );
+    }
+
+    sendMail(User){
+        return axios.post(USER_API_BASE_URL+'/User/Mail.jsp',
             JSON.stringify(User),
             {
                 headers:{'Content-Type':'application/json'},

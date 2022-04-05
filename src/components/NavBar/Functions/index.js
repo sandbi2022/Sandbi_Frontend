@@ -17,7 +17,7 @@ const Functions = () => {
                 C2C
             </div>
             <div className={classes.Button}>
-                MARGIN
+                MARGI
             </div>
             <div className={classes.Button}>
                 FUTURES

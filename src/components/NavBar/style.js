@@ -23,7 +23,6 @@ export const useStyles = createUseStyles({
 
     selection:{
         height:"20px",
-        flexCenter
     },
 
     buttons:{

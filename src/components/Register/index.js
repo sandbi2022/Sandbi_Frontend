@@ -10,6 +10,7 @@ const Register=()=>{
     const classes = useStyles();
     const history = useHistory();
     const [Email,setEmail]=useState("");
+    const [Code,setCode]=useState("");
     const [Password,setPassword]=useState("");
     const [confirmPassword,setConfirmPassword]=useState("");
     const [UserName,setName]=useState("");
@@ -29,6 +30,9 @@ const Register=()=>{
     const updateName = (event) => {
         setName(event.target.value);
     }
+    const updateCode = (event) => {
+        setCode(event.target.value);
+    }
 
     const confirmRegister= async(event)=>{
 
@@ -44,7 +48,12 @@ const Register=()=>{
             history.push('/');
         }
     }
-
+    const confirmEmail= async(event)=>{
+        event.preventDefault();
+        let user={Email};
+        console.log('user:'+JSON.stringify(user));
+        await UserServer.sendMail(user);
+    }
     return(
         <div className={classes.loginForm}>
             <div className={classes.titleWrapper}>
@@ -60,11 +69,27 @@ const Register=()=>{
                             name="email"
                             placeholder="Email"
                             onChange={updateEmail}
-                        />
+                    />
+                    <button className={classes.verifybutton} onClick={confirmEmail}>verify</button>
                         {formErrors?.EmailError && (
                             <p className={classes.errorMsg}>{formErrors.EmailError}</p>
                         )}
                     </div>
+                    <div className={classes.textToLeft}>Verification Code</div>
+                    <div className={classes.inputWrapper}>
+                    <input
+                            className={formErrors?.UsernameError ? classes.inputError :classes.input}
+                            type="name"
+                            name="name"
+                            placeholder="Verification Code"
+                            onChange={updateCode}
+                        />
+                        {formErrors?.UsernameError && (
+                            <p className={classes.errorMsg}>{formErrors.UsernameError}</p>
+                        )}
+                    </div>
+
+
                     <div className={classes.textToLeft}>Display Name</div>
                     <div className={classes.inputWrapper}>
                     <input
