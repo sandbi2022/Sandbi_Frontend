@@ -70,7 +70,11 @@ const Wallet =()=>{
         console.log(PBalance[0])
        // settotal(BTC*PBalance[0].balance+BCH*PBalance[1].balance+ETH*PBalance[2].balance+PBalance[3].balance)
       }, [BTC,ETH,BCH]);
+   useEffect(()=>{
+    console.log(PBalance[0])
+   },[PBalance]
 
+   )
 
     
 
