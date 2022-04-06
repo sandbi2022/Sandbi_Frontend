@@ -5,18 +5,20 @@ import UserLogin from './UserLogin';
 import Functions from './Functions';
 import UserControl from './UserControl';
 import AuthContext from '../../context/AuthProvider';
+import{useSelector} from 'react-redux';
 const NavBar=()=>{
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const {auth}=useContext(AuthContext)
 
     useEffect(()=>{
-        if(auth.loggedIn){
+        if(localStorage.getItem("isLoggedin")){
             setIsLoggedIn(true)
         }else{
             setIsLoggedIn(false)
         }
-    },[auth])
+    },[isLoggedIn])
     const classes = useStyles()
+    const user = useSelector((state)=>state.user.value)
     return (
         <div className={classes.barContainer}>
             <div className={classes.icon}>
@@ -27,7 +29,7 @@ const NavBar=()=>{
             </div>
             <div className={classes.buttons}>
                 {
-                    isLoggedIn?<UserControl setLogin={setIsLoggedIn}/>
+                    user.logged?<UserControl setLogin={setIsLoggedIn}/>
                     : <UserLogin setLogin={setIsLoggedIn}/>
                 }
             </div>

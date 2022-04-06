@@ -5,6 +5,8 @@ import { useHistory } from 'react-router-dom';
 import AuthContext from "../../context/AuthProvider"
 import UserServer from '../../api/user-api';
 import axios from 'axios';
+import {useDispatch} from 'react-redux';
+import { login } from '../../features/user';
 const Login =()=>{
     const {setAuth}=useContext(AuthContext);
 
@@ -13,6 +15,8 @@ const Login =()=>{
 
     const classes = useStyles()
     const [Email, setEmail] = useState("");
+    const [username, setusername] = useState("");
+    const [UID, setUID] = useState("");
     const [Password, setPassword] = useState("");
     const [errMsg,setErrMsg]=useState("");
     const [success,setSuccess]=useState("");
@@ -37,7 +41,10 @@ const Login =()=>{
         console.log(Email+","+Password);
         try{
             const response =await UserServer.getUser({Email,Password});
-            console.log(JSON.stringify(response?.data));
+            const data = response.data;
+            setusername(data["Username"])
+            setUID(data["UID"])
+            
             const accessToken=response?.data?.accessToken;
             const roles =response?.data?.roles;
             setAuth({Email,Password,roles,accessToken});
@@ -58,10 +65,23 @@ const Login =()=>{
             }
             errRef.current.focus();
         }
+        localStorage.setItem('isLoggedin',true);
+        localStorage.setItem('Email',Email);
+        
+        
         history.push("/");
         
     }
-    
+
+    useEffect(()=>{
+       dispatch(login({
+            email:Email,
+            logged:true,
+            username:username,
+            UID:UID,
+        }))
+    },[UID,username])
+    const dispatch = useDispatch();
     return(
         <div className={classes.loginForm}>
             <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>

@@ -10,7 +10,7 @@ export const useStyles = createUseStyles({
         borderWidth: "0px 0px 6px 0px",
         borderColor:"#242044",
         width: "100vw",
-        position: 'fixed',
+        position: 'sticky',
         top:"0",
         zIndex: "999"
     },
@@ -22,11 +22,11 @@ export const useStyles = createUseStyles({
     },
 
     selection:{
-        height:"20px",
+        height:"35px",
     },
 
     buttons:{
-        height:"20px",
+        height:"35px",
         ...flexCenter
     }
 

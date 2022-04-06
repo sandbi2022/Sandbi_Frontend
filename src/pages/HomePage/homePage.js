@@ -8,7 +8,9 @@ const HomePage =()=>{
 
     return(
         <div className={classes.pageContainer}>
-            <Home/>
+            <div className={classes.loginContainer}>
+                <Home/>
+            </div>
         </div>
     )
 }

@@ -4,7 +4,7 @@ import {useContext, useEffect, useState} from 'react'
 import Wallet from '../../components/Wallet/Wallet.js'
 
 const WalletPage =()=>{
-
+    const classes = useStyles()
     return(
         <div className={classes.pageContainer}>
             <Wallet/>

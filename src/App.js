@@ -11,14 +11,8 @@ import WalletPage from './pages/WalletPage/WalletPage';
 import NavBar from './components/NavBar';
 import { Switch, Route, Router } from 'react-router-dom';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
-function setToken(userToken){
-  sessionStor
-}
-function getToken(){
 
-}
 function App() {
-  const token=getToken();
   return (
     <div className="App">
       <div className="navbarHeader">

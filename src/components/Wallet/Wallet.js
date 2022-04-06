@@ -3,14 +3,36 @@ import { useRef, useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import AuthContext from "../../context/AuthProvider"
-import UserServer from '../../api/user-api';
-import axios from 'axios';
+import WalletAPI from '../../api/wallet_api';
+import{useDispatch, useSelector} from 'react-redux';
 const Wallet =()=>{
 
     //const classes = useStyles();
     const history = useHistory();
     const [formErrors, setFormErrors] = useState({})
-    const [PBalance,setPBalance] = useState()
+    const [PBalance,setPBalance] = useState([])
+    const user = useSelector((state)=>state.user.value)
+    const [email,setEmail]= useState("");
+    const [Assets, setAssets]= useState({});
+    const [UID,setUID]= useState();
+    
+    useEffect(() => {
+        setUID(user.UID)
+        console.log(user.UID)
+       
+      }, []);
+
+    useEffect(() => {
+        const ID= user.UID;
+        console.log(ID);
+        WalletAPI.getBalance({ID}).then((response) => {
+        console.log(response.data);
+        setPBalance(response.data);
+        });
+        console.log(PBalance)
+      }, []);
+
+
     const BalanceData=[
 		{
 			Asset: "USD",
@@ -64,7 +86,6 @@ return(
                 {item.Asset} 
                 <span>  {item.Balance}  </span>
                 <span>  {item.Available_Balance}</span>
-                <span>  {item.Inorder}</span>
                 <button>Trade</button>
             </li>
           );
