@@ -14,7 +14,10 @@ const Home=()=>{
             </div>
             </div>
             <div className={classes.coinContainers}>
-                
+                <CoinBar CoinName={'XXX'} CoinPrice={222} CoinChange={111}/>
+                <CoinBar CoinName={'YYY'} CoinPrice={111} CoinChange={111}/>
+                <CoinBar CoinName={'ZZZ'} CoinPrice={333} CoinChange={111}/>
+                <CoinBar CoinName={'AAA'} CoinPrice={444} CoinChange={111}/>
             </div>
         </div>
     )

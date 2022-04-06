@@ -9,69 +9,77 @@ const Wallet =()=>{
 
     //const classes = useStyles();
     const history = useHistory();
+    const[total,settotal]= useState();
     const [formErrors, setFormErrors] = useState({})
     const [PBalance,setPBalance] = useState([])
     const user = useSelector((state)=>state.user.value)
     const [email,setEmail]= useState("");
     const [Assets, setAssets]= useState({});
     const [UID,setUID]= useState();
-    
+    const [BTC,setBTC]= useState();
+    const [BCH,setBCH]= useState();
+    const [ETH,setETH]= useState();
+
     useEffect(() => {
-        setUID(user.UID)
-        console.log(user.UID)
-       
+       WalletAPI.getPrice({"TradePair":"BTCUSDT"}).then((response)=>{
+           console.log(response.data)
+           setBTC(response.data["Price"])
+       }
+       ) 
+       WalletAPI.getPrice({"TradePair":"BCHUSDT"}).then((response)=>{
+        console.log(response.data)
+        setBCH(response.data["Price"])
+    }
+    ) 
+    WalletAPI.getPrice({"TradePair":"ETHUSDT"}).then((response)=>{
+        console.log(response.data)
+        setETH(response.data["Price"])
+    }
+    ) 
       }, []);
 
     useEffect(() => {
-        const ID= user.UID;
-        console.log(ID);
-        WalletAPI.getBalance({ID}).then((response) => {
-        console.log(response.data);
-        setPBalance(response.data);
+        const UID= user.UID;
+        console.log(UID);
+        WalletAPI.getBalance({UID}).then((response) => {
+        const data = response.data;
+        setPBalance([
+            {
+             name:"BTC",
+             balance:data["BTC"],
+             available:data["BTC"]-data["FreezeBTC"]
+            },
+            {
+             name:"BCH",
+             balance:data["BCH"],
+             available:data["BCH"]-data["FreezeBCH"]
+            },
+            {
+                name:"ETH",
+                balance:data["ETH"],
+                available:data["ETH"]-data["FreezeETH"]  
+            },
+            {
+                name:"USDT",
+                balance:data["USDT"],
+                available:data["USDT"]-data["FreezeUSDT"]  
+            }
+
+        ]);
         });
-        console.log(PBalance)
-      }, []);
+        console.log(PBalance[0])
+       // settotal(BTC*PBalance[0].balance+BCH*PBalance[1].balance+ETH*PBalance[2].balance+PBalance[3].balance)
+      }, [BTC,ETH,BCH]);
 
 
-    const BalanceData=[
-		{
-			Asset: "USD",
-			Balance:100,
-            Available_Balance:0,
-			Inorder:0
-		} ,
-        { 
-			Asset: "USD",
-			Balance:100,
-            Available_Balance:0,
-			Inorder:0
-		} ,
-		{
-            Asset: "USD",
-			Balance:100,
-            Available_Balance:0,
-			Inorder:0
-		},
-        {
-            Asset: "USD",
-			Balance:100,
-            Available_Balance:0,
-			Inorder:0
-        },
-        {
-            Asset: "USD",
-			Balance:100,
-            Available_Balance:0,
-			Inorder:0
-        } 
-];
+    
 
     
     
 return(
     <div>
     <div>Portfolio Balance</div>
-    <h4 className="Balance" >{100}</h4>
+    <h4 className="Balance" >{total}</h4>
 
     <div>Balance</div>
     <div> 
@@ -80,12 +88,12 @@ return(
     </div> 
 
 
-    {BalanceData.map((item, index) => {
+    {PBalance.map((item, index) => {
           return (
-            <li key={index} className={item.cName}>
-                {item.Asset} 
-                <span>  {item.Balance}  </span>
-                <span>  {item.Available_Balance}</span>
+            <li key={index} className={item.name}>
+                {item.name} 
+                <span>  {item.balance}  </span>
+                <span>  {item.available}</span>
                 <button>Trade</button>
             </li>
           );

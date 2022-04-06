@@ -8,9 +8,10 @@ export const useStyles = createUseStyles({
         backgroundColor: '#04011A'
     },
     loginContainer: {
-        height: '100%',
-        marginLeft: '10%',
-        marginRight: '35%',
-        ...flexCenter
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
+        marginTop:'-400px',
+        marginLeft:'-450px',
     },
 })

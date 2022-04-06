@@ -125,18 +125,18 @@ const market= [
           <div className='history'>
              <button>Open Order</button>
              <button>Order history</button>
-             <button>Normal</button>
+             {/* <button>Normal</button>
              <button>Scmp-limit</button>
-             <button>Trigger Order</button>
+             <button>Trigger Order</button> */}
           </div>
 
          <div className='exhange'>
          <div className='left'>
              <label>Exchange</label>
-             <button>limit</button>
+             {/* <button>limit</button>
              <button>Market</button>
              <button>Stop-limit</button>
-             <button>Trigger order</button>
+             <button>Trigger order</button> */}
              <input type="text"></input>
              <input type="text"></input>
              <label>Total</label>
@@ -145,10 +145,10 @@ const market= [
         </div> 
         <div className='right'>
              <label>Exchange</label>
-             <button>limit</button>
+             {/* <button>limit</button>
              <button>Market</button>
              <button>Stop-limit</button>
-             <button>Trigger order</button>
+             <button>Trigger order</button> */}
              <input type="text"></input>
              <input type="text"></input>
              <label>Total</label>

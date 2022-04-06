@@ -2,11 +2,8 @@ import { createUseStyles } from 'react-jss'
 const flexCenter = { display: 'flex', justifyContent: 'center', alignItems: 'center' }
 export const useStyles = createUseStyles({
     TitleForm: {
-        width: '400%',
-        height: 'auto',
-        maxWidth: '900px',
-        minHeight: '400px',
-        padding: '40px',
+        width: '900px',
+        height: '400px',
         borderRadius: '14px',
         ...flexCenter,
         flexDirection: 'column',

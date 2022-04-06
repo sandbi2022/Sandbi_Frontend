@@ -16,7 +16,16 @@ class WalletAPI{
             }
         );
     }
-
+   
+    getPrice(Currency){
+        return axios.post(Wallet_API_BASE_URL+'/Price/Price.jsp',
+            JSON.stringify(Currency),
+            {
+                headers:{'Content-Type':'application/json'},
+                withCredentials:true
+            }
+        );
+    }
 
  
 }
