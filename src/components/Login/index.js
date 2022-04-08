@@ -44,7 +44,7 @@ const Login =()=>{
             const data = response.data;
             setusername(data["Username"])
             setUID(data["UID"])
-            
+            console.log(data["UID"])
             const accessToken=response?.data?.accessToken;
             const roles =response?.data?.roles;
             setAuth({Email,Password,roles,accessToken});
@@ -65,8 +65,6 @@ const Login =()=>{
             }
             errRef.current.focus();
         }
-        localStorage.setItem('isLoggedin',true);
-        localStorage.setItem('Email',Email);
         
         
         history.push("/");

@@ -10,13 +10,7 @@ const NavBar=()=>{
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const {auth}=useContext(AuthContext)
 
-    useEffect(()=>{
-        if(localStorage.getItem("isLoggedin")){
-            setIsLoggedIn(true)
-        }else{
-            setIsLoggedIn(false)
-        }
-    },[isLoggedIn])
+   
     const classes = useStyles()
     const user = useSelector((state)=>state.user.value)
     return (

@@ -8,6 +8,8 @@ import UserProfilePage from './pages/UserProfilePage/userProfilePage';
 import C2CPage from './pages/C2CPage/C2CPage';
 import ExchangePage from './pages/ExchangePage/ExchangePage';
 import WalletPage from './pages/WalletPage/WalletPage';
+import SettingPage from './pages/SettingPage/SettingPage';
+import IdentityVerificationPage from './pages/IdentityVerificationPage/IdentityVerificationPage';
 import NavBar from './components/NavBar';
 import { Switch, Route, Router } from 'react-router-dom';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
@@ -23,11 +25,12 @@ function App() {
           <Route exact path='/' component = {HomePage}/>
           <Route path='/login' component = {LoginPage}/>
           <Route path='/register' component = {RegisterPage}/>
-          <Route path='/setting' component={ResetPasswordPage}/>
           <Route path='/profile/:userId' component={UserProfilePage}/>
           <Route path='/C2C' component={C2CPage}/>
           <Route path='/Exchange' component={ExchangePage}/>
           <Route path='/Wallet' component={WalletPage}/>
+          <Route path='/Setting' component={SettingPage}/>
+          <Route path='/IdentityVerification' component={IdentityVerificationPage}/>
       </Switch>
       </div>
     </div>

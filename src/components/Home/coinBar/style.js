@@ -23,8 +23,8 @@ export const useStyles = createUseStyles({
     },
     change:{
         color:'green',
-        fontSize:'5px',
-        fontWeight: '200',
+        fontSize:'9px',
+        fontWeight: '600',
     },
     columContainers:{
         display:'grid',

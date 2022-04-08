@@ -51,16 +51,7 @@ const UserControl=()=>{
                     <li><div className={`${classes.dropItem} dropdown-item`} onClick={redirectLogin}>log out</div></li>
     </ul>
     </div>*/}
-            <Dropdown>
-            <Dropdown.Toggle as="success" id="dropdown-basic">
-            <img className={classes.image_setting} src={user} alt=""/>
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-                <Dropdown.Item  onClick={redirectProfile}>Wallet</Dropdown.Item>
-                <Dropdown.Item  onClick={redirectSetting}>Setting</Dropdown.Item>
-                <Dropdown.Item  onClick={redirectLogin}>log out</Dropdown.Item>
-            </Dropdown.Menu>
-            </Dropdown>
+            <img className={classes.image_setting} src={user} alt="" onClick={redirectProfile}/>
         </div>
     )
 }

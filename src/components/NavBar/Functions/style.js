@@ -3,13 +3,15 @@ export const useStyles = createUseStyles({
 
     userControlsContainers:{
         display:'grid',
-        paddingRight:'40%',
+        paddingRight:'10%',
+        marginUp:'10%',
         paddingLeft:"0%",
         gridTemplateColumns:'auto auto auto auto auto',
-        width: '100%',
+        width: '60%',
         
     },
     Button:{
-        color:"white"
+        color:"white",
+        fontWeight:'bold'
     }
 })
