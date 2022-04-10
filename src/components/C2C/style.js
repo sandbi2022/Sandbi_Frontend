@@ -12,11 +12,10 @@ export const useStyles = createUseStyles({
         width:'85%',
         height:'1200px',
         backgroundColor:'#141126',
-        position:'absolute',
-        top:'50%',
-        left:'50%',
-        marginLeft:'-40%',
-        marginTop:'-550px'
+        top:'90%',
+        left:'80%',
+        marginLeft:'7.5%',
+        marginTop:'0px'
     },
     SelectButtonSetting:{
         color:'white',

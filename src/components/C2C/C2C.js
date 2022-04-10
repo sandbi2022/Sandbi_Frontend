@@ -116,7 +116,7 @@ const C2C =()=>{
                                     </div>
                                     </div>
                                 <div  className={classes.infoTextSetting}>{item.Payment}</div>
-                                <div><button className={classes.SelectButtonSetting2}>bUY xxx</button></div>
+                                <div><button className={classes.SelectButtonSetting2}>Buy xxx</button></div>
                             </div>
                         
                         );

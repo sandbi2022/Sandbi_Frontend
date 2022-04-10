@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import Slider from '@mui/material/Slider'
 import { useHistory } from 'react-router-dom';
 import AuthContext from "../../context/AuthProvider"
 import WalletAPI from '../../api/wallet_api';
@@ -7,8 +8,9 @@ import MarketAPI from '../../api/market-api';
 import{useDispatch, useSelector} from 'react-redux';
 import { useStyles } from "./style";
 import Chart from "../Chart/Kline";
+import ReactSpeedometer from 'react-d3-speedometer';
 
-const Exchange =()=>{
+const Future =()=>{
     const classes=useStyles()
     const history = useHistory();
     const user = useSelector((state)=>state.user.value)
@@ -35,6 +37,8 @@ const Exchange =()=>{
     const coin1='XXX'
     const coin2='YYY'
 
+
+    const [active,setActive]=useState("open")
 
     useEffect(()=>{
         const UID= user.UID;
@@ -318,6 +322,7 @@ const handlebuy=()=>{
                                 </div>
                             );
                         })}
+                        
                     </div>
                     <div  className={classes.columPartContainers}>
                         <div className={classes.ChartTitleContainer}>
@@ -352,41 +357,122 @@ const handlebuy=()=>{
                         <div>
                             <Chart />
                         </div>
-                        <div style={{position:'relative',bottom:'-30px'}}>
-                        <div style={{color:'#515B6E',fontWeight:'bold',fontSize:'20px',textAlign:'left',backgroundColor:'#141126',
-                                border:'solid',borderWidth: "3px 0px 0px 0px",
-                                borderColor:"#37C24A",width:'130px', padding:'3px 9px 3px 9px'}}>EXCHANGE</div>
-                        <div className={classes.ExchangeContainer}>
-                            <div className={classes.Left}>
-                            <div className={classes.ExchangeButton}>
-                                <button className={classes.ExchangeButtonSetting}>Limit</button>
-                                <button className={classes.ExchangeButtonSetting}>Market</button>
-                            </div>
-                            <div><input type="number"  onChange={sellpricechange} min="0" className={classes.inputSetting} placeholder="Price"></input></div>
-                            <div><input type="number"  onChange={sellamountchange} min="0"  className={classes.inputSetting} placeholder="Amount"></input></div>
-                            <div style={{display:'grid', gridTemplateColumns:'auto auto',width: '100%',}}>
-                                        <div style={{color:'white',fontSize:'10px',textAlign:'left'}}>total</div>
+                        <div style={{position:'relative',bottom:'0px'}}>
+                            {active==="open" &&
+                            <div>
+                                <div className={classes.SwitchButtonContainer}>
+                                <div style={{color:'#515B6E',fontWeight:'bold',fontSize:'20px',textAlign:'left',backgroundColor:'#141126',
+                                    border:'solid',borderWidth: "3px 0px 0px 0px",
+                                    borderColor:"#37C24A",width:'180px', padding:'3px 9px 3px 9px'}} onClick={()=>setActive("open")}>Open</div>
+                                <div style={{color:'#515B6E',fontWeight:'bold',fontSize:'20px',textAlign:'left',width:'180px', padding:'3px 9px 3px 9px'}}
+                                 onClick={()=>setActive("close")}>Close</div>
+                                </div>
+                                <div className={classes.ExchangeContainer}>
+                                    <div className={classes.Left}>
+                                    <Slider
+                                        size="small"
+                                        defaultValue={70}
+                                        aria-label="Small"
+                                        valueLabelDisplay="auto"
+                                        color="primary"
+                                    />
+                                    <div><input type="number"  onChange={sellpricechange} min="0" className={classes.inputSetting} placeholder="Price"></input></div>
+                                    
+                                    <div><input type="number"  onChange={sellamountchange} min="0"  className={classes.inputSetting} placeholder="Amount"></input></div>
+                                    <div style={{display:'grid', gridTemplateColumns:'auto auto',width: '100%',}}>
+                                        <div style={{color:'green',fontSize:'10px',textAlign:'left'}}>Max Long: -- Count</div>
+                                        <div style={{color:'white',fontSize:'10px',textAlign:'right'}}> Available: --XXX</div>
+                                    </div>
+                                    <div style={{display:'grid', gridTemplateColumns:'auto auto',width: '100%',}}>
+                                        <div style={{color:'white',fontSize:'10px',textAlign:'left'}}>Total</div>
                                         <div style={{color:'white',fontSize:'10px',textAlign:'right'}}>{stotal}</div>
                                     </div>
-                            <div><button onClick={handleSell} className={classes.buttonSettingRed}>Sell</button></div>
-                            </div>
-                            <div>
-                            <div className={classes.verticleLine}/>
-                            </div>
-                            <div className={classes.Right}>
-                            <div className={classes.ExchangeButton}>
-                                <button className={classes.ExchangeButtonSetting}>Limit</button>
-                                <button className={classes.ExchangeButtonSetting}>Market</button>
-                            </div>
-                            <div><input type="number"  onChange={buypricechange} min="0"  className={classes.inputSetting} placeholder="Price" ></input></div>
-                            <div><input type="number" onChange={buyamountchange} min="0"  className={classes.inputSetting} placeholder="Amount" ></input></div>
-                            <div style={{display:'grid', gridTemplateColumns:'auto auto',width: '100%',}}>
-                                        <div style={{color:'white',fontSize:'10px',textAlign:'left'}}>total</div>
+                                    <div><button onClick={handleSell} className={classes.buttonSettingRed}>Sell</button></div>
+                                    </div>
+                                    <div>
+                                    <div className={classes.verticleLine}/>
+                                    </div>
+                                    <div className={classes.Right}>
+                                    <Slider
+                                        size="small"
+                                        defaultValue={70}
+                                        aria-label="Small"
+                                        valueLabelDisplay="auto"
+                                        color="primary"
+                                    />
+                                    <div><input type="number"  onChange={buypricechange} min="0"  className={classes.inputSetting} placeholder="Price" ></input></div>
+                                    <div><input type="number" onChange={buyamountchange} min="0"  className={classes.inputSetting} placeholder="Amount" ></input></div>
+                                    <div style={{display:'grid', gridTemplateColumns:'auto auto',width: '100%',}}>
+                                        <div style={{color:'red',fontSize:'10px',textAlign:'left'}}>Max Long: -- Count</div>
+                                        <div style={{color:'white',fontSize:'10px',textAlign:'right'}}> Available: --XXX</div>
+                                    </div>
+                                    <div style={{display:'grid', gridTemplateColumns:'auto auto',width: '100%',}}>
+                                        <div style={{color:'white',fontSize:'10px',textAlign:'left'}}>Total</div>
                                         <div style={{color:'white',fontSize:'10px',textAlign:'right'}}>{btotal}</div>
                                     </div>
-                            <div><button onClick={handlebuy} className={classes.buttonSettingGreen}>Buy</button></div>
+                                    <div><button onClick={handlebuy} className={classes.buttonSettingGreen}>Buy</button></div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                            }
+                            
+                            {active==="close" &&
+                            <div>
+                                <div className={classes.SwitchButtonContainer}>
+                                <div style={{color:'#515B6E',fontWeight:'bold',fontSize:'20px',textAlign:'left',width:'180px', padding:'3px 9px 3px 9px'}} onClick={()=>setActive("open")}>Open</div>
+                                <div style={{color:'#515B6E',fontWeight:'bold',fontSize:'20px',textAlign:'left',backgroundColor:'#141126',
+                                    border:'solid',borderWidth: "3px 0px 0px 0px",
+                                    borderColor:"#37C24A",width:'180px', padding:'3px 9px 3px 9px'}}
+                                 onClick={()=>setActive("close")}>Close</div>
+                            </div>
+                                <div className={classes.ExchangeContainer}>
+                                    <div className={classes.Left}>
+                                    <Slider
+                                        size="small"
+                                        defaultValue={70}
+                                        aria-label="Small"
+                                        valueLabelDisplay="auto"
+                                        color="primary"
+                                    />
+                                    <div><input type="number"  onChange={sellpricechange} min="0" className={classes.inputSetting} placeholder="Price"></input></div>
+                                    <div><input type="number"  onChange={sellamountchange} min="0"  className={classes.inputSetting} placeholder="Amount"></input></div>
+                                    <div style={{display:'grid', gridTemplateColumns:'auto auto',width: '100%',}}>
+                                        <div style={{color:'green',fontSize:'10px',textAlign:'left'}}>Max Long: -- Count</div>
+                                        <div style={{color:'white',fontSize:'10px',textAlign:'right'}}> Available: --XXX</div>
+                                    </div>
+                                    <div style={{display:'grid', gridTemplateColumns:'auto auto',width: '100%',}}>
+                                        <div style={{color:'white',fontSize:'10px',textAlign:'left'}}>Total</div>
+                                        <div style={{color:'white',fontSize:'10px',textAlign:'right'}}>{stotal}</div>
+                                    </div>
+                                    <div><button onClick={handleSell} className={classes.buttonSettingRed}>Sell</button></div>
+                                    </div>
+                                    <div>
+                                    <div className={classes.verticleLine}/>
+                                    </div>
+                                    <div className={classes.Right}>
+                                    <Slider
+                                        size="small"
+                                        defaultValue={70}
+                                        aria-label="Small"
+                                        valueLabelDisplay="auto"
+                                        color="primary"
+                                    />
+                                    <div><input type="number"  onChange={buypricechange} min="0"  className={classes.inputSetting} placeholder="Price" ></input></div>
+                                    <div><input type="number" onChange={buyamountchange} min="0"  className={classes.inputSetting} placeholder="Amount" ></input></div>
+                                    
+                                    <div style={{display:'grid', gridTemplateColumns:'auto auto',width: '100%',}}>
+                                        <div style={{color:'red',fontSize:'10px',textAlign:'left'}}>Max Long: -- Count</div>
+                                        <div style={{color:'white',fontSize:'10px',textAlign:'right'}}> Available: --XXX</div>
+                                    </div>
+                                    <div style={{display:'grid', gridTemplateColumns:'auto auto',width: '100%',}}>
+                                        <div style={{color:'white',fontSize:'10px',textAlign:'left'}}>Total</div>
+                                        <div style={{color:'white',fontSize:'10px',textAlign:'right'}}>{btotal}</div>
+                                    </div>
+                                    <div><button onClick={handlebuy} className={classes.buttonSettingGreen}>Buy</button></div>
+                                    </div>
+                                </div>
+                            </div>
+                            }
                         </div>
                     </div>
                     <div className={classes.columPartContainers}>
@@ -500,4 +586,4 @@ const handlebuy=()=>{
     )
 }
 
-export default Exchange
+export default Future

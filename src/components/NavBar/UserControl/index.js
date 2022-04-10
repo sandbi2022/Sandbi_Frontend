@@ -19,7 +19,7 @@ const UserControl=()=>{
         history.push('/setting')
     }
     const redirectProfile=()=>{
-        history.push('/Wallet')
+        history.push('/Dashboard')
     }
     const redirectLogin=()=>{
         dispatch(login({email:"",logged:false}))

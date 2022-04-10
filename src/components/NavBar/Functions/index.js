@@ -12,21 +12,30 @@ const Functions = () => {
     const redirectC2C=()=>{
         history.push('/C2C')
     }
+    const redirectMarket=()=>{
+        history.push('/Market')
+    }
+    const redirectMargin=()=>{
+        history.push('/Margin')
+    }
+    const redirectFuture=()=>{
+        history.push('/Future')
+    }
     return (
         <div className={classes.userControlsContainers}>
             <div className={classes.Button} onClick={redirectExchange}>
                 EXCHANGE
             </div>
-            <div className={classes.Button}>
+            <div className={classes.Button} onClick={redirectMarket}>
                 MARKET
             </div>
             <div className={classes.Button} onClick={redirectC2C}>
                 C2C
             </div>
-            <div className={classes.Button}>
-                MARGI
+            <div className={classes.Button}  onClick={redirectMargin}>
+                MARGIN
             </div>
-            <div className={classes.Button}>
+            <div className={classes.Button} onClick={redirectFuture}>
                 FUTURES
             </div>
         </div>

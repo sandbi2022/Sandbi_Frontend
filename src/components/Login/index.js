@@ -108,7 +108,7 @@ const Login =()=>{
                             className={classes.input}
                             type="password"
                             name="password"
-                            placeholder="{Password}"
+                            placeholder="Password"
                             onChange={updatePassword}
                         />
                     <div className={classes.buttonContainer}>

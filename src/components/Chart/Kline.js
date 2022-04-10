@@ -32,5 +32,5 @@ export default function Chart (data) {
     }
   }, []);
 
-  return <div id="simple_chart" style={{ height: 400 }}/>;
+  return <div id="simple_chart" style={{ height: 400}}/>;
 }

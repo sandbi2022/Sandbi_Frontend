@@ -23,13 +23,16 @@ const SideBar =()=>{
     const redirectIdVerify=()=>{
         history.push('/IdentityVerification')
     }
+    const redirectDashboard=()=>{
+        history.push('/Dashboard')
+    }
     const redirectLogOut=()=>{
         dispatch(login({email:"",logged:false}))
         history.push('/')
     }
     return(
         <div className={classes.sideBarContainer}>
-            <div className={classes.textStyle}>
+            <div className={classes.textStyle} onClick={redirectDashboard}>
                 Dashboard
             </div>
             <div  className={classes.textStyle} onClick={redirectWallet}>

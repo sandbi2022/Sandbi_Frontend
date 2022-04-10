@@ -150,7 +150,13 @@ export const useStyles = createUseStyles({
         padding:'0px 5px 0px 5px',
         margin:'0px 5px 0px 5px'
 
-    }
+    },
+    SwitchButtonContainer:{
+        display:'grid',
+        marginLeft:'0px',
+        gridTemplateColumns:'auto auto auto 50%',
+        width: '100%',
+    },
     
 
 })
