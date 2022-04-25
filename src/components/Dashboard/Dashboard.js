@@ -15,17 +15,20 @@ import 'echarts/lib/component/legend'
 import 'echarts/lib/component/markPoint'
 import ReactEcharts from 'echarts-for-react'
 import { Button } from 'bootstrap';
+import{useDispatch, useSelector} from 'react-redux';
 
 const Dashboard = () => {
     const classes = useStyles()
     const history = useHistory();
-
-    const redirectTransferIn=()=>{
+    const user = useSelector((state)=>state.user.value);
+    const redirectTransferIn = () => {
         history.push('/Transfer In')
     }
-    const redirectWithdraw=()=>{
+    const redirectWithdraw = () => {
         history.push('/Withdraw')
     }
+    const [active, setActive] = useState("CurrentBalance")
+
     const Announcement = [
         {
             comment: 'XXXXXXXXXXXXX',
@@ -36,25 +39,25 @@ const Dashboard = () => {
             date: 'XX/XX/XX'
         },
     ]
-    const data=[
+    const data = [
         {
-            type:'BTC',
-            value:10
+            name: 'BTC',
+            value: 10
         },
         {
-            type:'USDT',
-            value:20
+            name: 'USDT',
+            value: 20
         },
         {
-            type:'HT',
-            value:30
+            name: 'HT',
+            value: 30
         },
         {
-            type:'ETH',
-            value:50
+            name: 'ETH',
+            value: 50
         }
     ]
-
+    const typeArray=data.map(d=>d.name);
 
     return (
         <div>
@@ -66,83 +69,393 @@ const Dashboard = () => {
                 <div>
 
                     <div className={classes.UserInfoContainer}>
-                        <div className={classes.TitleContainer}>XXXXXXXXX@gmail.com</div>
-                        <div className={classes.TitleContainer}>User ID:XXXXXXXX</div>
+                        <div className={classes.TitleContainer}>{user.email}</div>
+                        <div className={classes.TitleContainer}>User Name:{user.username}</div>
                     </div>
                     <div className={classes.mainContainer}>
                         <div className={classes.TitleContainer}>
                             Account
                         </div>
-                        <div className={classes.TitleBalanceContainers}>
-                            <div className={classes.SubTitleContainer}>Current Balance</div>
-                            <div className={classes.SubTitleContainer}>C2C Trading</div>
-                            <div className={classes.SubTitleContainer}>Margin Account</div>
-                            <div className={classes.SubTitleContainer}>Future Account</div>
-                        </div>
-                        <hr
-                            style={{
-                                color: '#707070',
-                                height: 3,
-                                width: '90%'
-                            }} />
-                        <div className={classes.infoContainer}>
+                        {active === "CurrentBalance" &&
                             <div>
-                                <div className={classes.SubTitleContainer}>Account Balance</div>
-                                <div style={{ gridTemplateColumns: 'auto auto', display: 'grid', width: '40%' }}>
-                                    <div className={classes.AmountContainer}>0.010000</div>
-                                    <div className={classes.SubTitleContainer}>BTC</div>
+                                <div className={classes.TitleBalanceContainers}>
+                                    <div className={classes.SubTitleContainer2}>Current Balance</div>
+                                    <div className={classes.SubTitleContainer} onClick={() => setActive("ExchangeAccount")}>Exchange Account</div>
+                                    <div className={classes.SubTitleContainer} onClick={() => setActive("C2CTrading")}>C2C Trading</div>
+                                    <div className={classes.SubTitleContainer} onClick={() => setActive("MarginAccount")}>Margin Account</div>
+                                    <div className={classes.SubTitleContainer} onClick={() => setActive("FutureAccount")}>Future Account</div>
                                 </div>
-                                <div className={classes.SubTitleContainer}>total valuation</div>
-                                <div className={classes.PriceContainer}>$1000</div>
-                            </div>
-                            <div>
-                                <ReactEcharts
-                                    option={{
-                                        tooltip: {
-                                            trigger: 'item',
-                                            formatter: '{a} <br/>{b}: {c} ({d}%)'
-                                        },
-                                        legend: {
-                                            orient: 'vertical',
-                                            left: 10,
-                                            data: data.type
-                                        },
-                                        series: [
-                                            {
-                                                name: 'Utilization',
-                                                type: 'pie',
-                                                radius: ['50%', '70%'],
-                                                avoidLabelOverlap: false,
-                                                label: {
-                                                    show: false,
-                                                    position: 'center'
-                                                },
-                                                emphasis: {
-                                                    label: {
-                                                        show: true,
-                                                        fontSize: '30',
-                                                        fontWeight: 'bold'
-                                                    }
-                                                },
-                                                labelLine: {
-                                                    show: false
-                                                },
-                                                data: data
-                                            }
-                                        ]
-                                    }}
-                                />
-                            </div>
 
-                        </div>
-                        <div style={{ gridTemplateColumns: '50% 50%', display: 'grid', width: '100%' }}>
-                            <div>
-                                <button className={classes.buttonGreen} onClick={redirectTransferIn}>Transfer In</button>
+
+                                <hr
+                                    style={{
+                                        color: '#707070',
+                                        height: 3,
+                                        width: '90%'
+                                    }} />
+
+
+                                <div className={classes.infoContainer}>
+                                    <div>
+                                        <div className={classes.SubTitleContainer}>Account Balance</div>
+                                        <div style={{ gridTemplateColumns: 'auto auto', display: 'grid', width: '40%' }}>
+                                            <div className={classes.AmountContainer}>0.010000</div>
+                                            <div className={classes.SubTitleContainer}>BTC</div>
+                                        </div>
+                                        <div className={classes.SubTitleContainer}>total valuation</div>
+                                        <div className={classes.PriceContainer}>$1000</div>
+                                    </div>
+                                    <div>
+                                        <ReactEcharts
+                                            option={{
+                                                tooltip: {
+                                                    trigger: 'item',
+                                                    formatter: '{a} <br/>{b}: {c} ({d}%)'
+                                                },
+                                                legend: {
+                                                    orient: 'vertical',
+                                                    top:20,
+                                                    right: 10,
+                                                    data: typeArray
+                                                },
+                                                series: [
+                                                    {
+                                                        name: 'Utilization',
+                                                        type: 'pie',
+                                                        radius: ['50%', '70%'],
+                                                        avoidLabelOverlap: false,
+                                                        label: {
+                                                            show: false,
+                                                            position: 'center'
+                                                        },
+                                                        emphasis: {
+                                                            label: {
+                                                                show: true,
+                                                                fontSize: '30',
+                                                                fontWeight: 'bold'
+                                                            }
+                                                        },
+                                                        labelLine: {
+                                                            show: false
+                                                        },
+                                                        data: data
+                                                    }
+                                                ]
+                                            }}
+                                        />
+                                    </div>
+
+                                </div>
+
+                                <div style={{ gridTemplateColumns: '50% 50%', display: 'grid', width: '100%' }}>
+                                    <div>
+                                        <button className={classes.buttonGreen} onClick={redirectTransferIn}>Transfer In</button>
+                                    </div>
+                                    <div>
+                                        <button className={classes.buttonRed} onClick={redirectWithdraw}>Withdraw</button>
+                                    </div>
+                                </div>
                             </div>
+                        }
+                        {active === "ExchangeAccount" &&
                             <div>
-                                <button className={classes.buttonRed} onClick={redirectWithdraw}>Withdraw</button>
+                                <div className={classes.TitleBalanceContainers}>
+                                    <div className={classes.SubTitleContainer} onClick={() => setActive("CurrentBalance")}>Current Balance</div>
+                                    <div className={classes.SubTitleContainer2} >Exchange Account</div>
+                                    <div className={classes.SubTitleContainer} onClick={() => setActive("C2CTrading")}>C2C Trading</div>
+                                    <div className={classes.SubTitleContainer} onClick={() => setActive("MarginAccount")}>Margin Account</div>
+                                    <div className={classes.SubTitleContainer} onClick={() => setActive("FutureAccount")}>Future Account</div>
+                                </div>
+
+
+                                <hr
+                                    style={{
+                                        color: '#707070',
+                                        height: 3,
+                                        width: '90%'
+                                    }} />
+
+
+                                <div className={classes.infoContainer}>
+                                    <div>
+                                        <div className={classes.SubTitleContainer}>Account Balance</div>
+                                        <div style={{ gridTemplateColumns: 'auto auto', display: 'grid', width: '40%' }}>
+                                            <div className={classes.AmountContainer}>0.010000</div>
+                                            <div className={classes.SubTitleContainer}>BTC</div>
+                                        </div>
+                                        <div className={classes.SubTitleContainer}>total valuation</div>
+                                        <div className={classes.PriceContainer}>$1000</div>
+                                    </div>
+                                    <div>
+                                        <ReactEcharts
+                                            option={{
+                                                tooltip: {
+                                                    trigger: 'item',
+                                                    formatter: '{a} <br/>{b}: {c} ({d}%)'
+                                                },
+                                                legend: {
+                                                    orient: 'vertical',
+                                                    top:20,
+                                                    right: 10,
+                                                    data: typeArray
+                                                },
+                                                series: [
+                                                    {
+                                                        name: 'Utilization',
+                                                        type: 'pie',
+                                                        radius: ['50%', '70%'],
+                                                        avoidLabelOverlap: false,
+                                                        label: {
+                                                            show: false,
+                                                            position: 'center'
+                                                        },
+                                                        emphasis: {
+                                                            label: {
+                                                                show: true,
+                                                                fontSize: '30',
+                                                                fontWeight: 'bold'
+                                                            }
+                                                        },
+                                                        labelLine: {
+                                                            show: false
+                                                        },
+                                                        data: data
+                                                    }
+                                                ]
+                                            }}
+                                        />
+                                    </div>
+
+                                </div>
                             </div>
-                        </div>
+                        }
+
+
+
+                        {active === "C2CTrading" &&
+                            <div>
+                                <div className={classes.TitleBalanceContainers}>
+                                    <div className={classes.SubTitleContainer} onClick={() => setActive("CurrentBalance")}>Current Balance</div>
+                                    <div className={classes.SubTitleContainer} onClick={() => setActive("ExchangeAccount")}>Exchange Account</div>
+                                    <div className={classes.SubTitleContainer2}>C2C Trading</div>
+                                    <div className={classes.SubTitleContainer} onClick={() => setActive("MarginAccount")}>Margin Account</div>
+                                    <div className={classes.SubTitleContainer} onClick={() => setActive("FutureAccount")}>Future Account</div>
+                                </div>
+
+
+                                <hr
+                                    style={{
+                                        color: '#707070',
+                                        height: 3,
+                                        width: '90%'
+                                    }} />
+
+
+                                <div className={classes.infoContainer}>
+                                    <div>
+                                        <div className={classes.SubTitleContainer}>Account Balance</div>
+                                        <div style={{ gridTemplateColumns: 'auto auto', display: 'grid', width: '40%' }}>
+                                            <div className={classes.AmountContainer}>0.010000</div>
+                                            <div className={classes.SubTitleContainer}>BTC</div>
+                                        </div>
+                                        <div className={classes.SubTitleContainer}>total valuation</div>
+                                        <div className={classes.PriceContainer}>$1000</div>
+                                    </div>
+                                    <div>
+                                        <ReactEcharts
+                                            option={{
+                                                tooltip: {
+                                                    trigger: 'item',
+                                                    formatter: '{a} <br/>{b}: {c} ({d}%)'
+                                                },
+                                                legend: {
+                                                    orient: 'vertical',
+                                                    top:20,
+                                                    right: 10,
+                                                    data: typeArray
+                                                },
+                                                series: [
+                                                    {
+                                                        name: 'Utilization',
+                                                        type: 'pie',
+                                                        radius: ['50%', '70%'],
+                                                        avoidLabelOverlap: false,
+                                                        label: {
+                                                            show: false,
+                                                            position: 'center'
+                                                        },
+                                                        emphasis: {
+                                                            label: {
+                                                                show: true,
+                                                                fontSize: '30',
+                                                                fontWeight: 'bold'
+                                                            }
+                                                        },
+                                                        labelLine: {
+                                                            show: false
+                                                        },
+                                                        data: data
+                                                    }
+                                                ]
+                                            }}
+                                        />
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                        }
+
+                        {active === "MarginAccount" &&
+                            <div>
+                                <div className={classes.TitleBalanceContainers}>
+                                    <div className={classes.SubTitleContainer} onClick={() => setActive("CurrentBalance")}>Current Balance</div>
+                                    <div className={classes.SubTitleContainer} onClick={() => setActive("ExchangeAccount")}>Exchange Account</div>
+                                    <div className={classes.SubTitleContainer} onClick={() => setActive("C2CTrading")}>C2C Trading</div>
+                                    <div className={classes.SubTitleContainer2}>Margin Account</div>
+                                    <div className={classes.SubTitleContainer} onClick={() => setActive("FutureAccount")}>Future Account</div>
+                                </div>
+
+
+                                <hr
+                                    style={{
+                                        color: '#707070',
+                                        height: 3,
+                                        width: '90%'
+                                    }} />
+
+
+                                <div className={classes.infoContainer}>
+                                    <div>
+                                        <div className={classes.SubTitleContainer}>Account Balance</div>
+                                        <div style={{ gridTemplateColumns: 'auto auto', display: 'grid', width: '40%' }}>
+                                            <div className={classes.AmountContainer}>0.010000</div>
+                                            <div className={classes.SubTitleContainer}>BTC</div>
+                                        </div>
+                                        <div className={classes.SubTitleContainer}>total valuation</div>
+                                        <div className={classes.PriceContainer}>$1000</div>
+                                    </div>
+                                    <div>
+                                        <ReactEcharts
+                                            option={{
+                                                tooltip: {
+                                                    trigger: 'item',
+                                                    formatter: '{a} <br/>{b}: {c} ({d}%)'
+                                                },
+                                                legend: {
+                                                    orient: 'vertical',
+                                                    top:20,
+                                                    right: 10,
+                                                    data: typeArray
+                                                },
+                                                series: [
+                                                    {
+                                                        name: 'Utilization',
+                                                        type: 'pie',
+                                                        radius: ['50%', '70%'],
+                                                        avoidLabelOverlap: false,
+                                                        label: {
+                                                            show: false,
+                                                            position: 'center'
+                                                        },
+                                                        emphasis: {
+                                                            label: {
+                                                                show: true,
+                                                                fontSize: '30',
+                                                                fontWeight: 'bold'
+                                                            }
+                                                        },
+                                                        labelLine: {
+                                                            show: false
+                                                        },
+                                                        data: data
+                                                    }
+                                                ]
+                                            }}
+                                        />
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                        }
+
+                        {active === "FutureAccount" &&
+                            <div>
+                                <div className={classes.TitleBalanceContainers}>
+                                    <div className={classes.SubTitleContainer} onClick={() => setActive("CurrentBalance")}>Current Balance</div>
+                                    <div className={classes.SubTitleContainer} onClick={() => setActive("ExchangeAccount")}>Exchange Account</div>
+                                    <div className={classes.SubTitleContainer} onClick={() => setActive("C2CTrading")}>C2C Trading</div>
+                                    <div className={classes.SubTitleContainer} onClick={() => setActive("MarginAccount")}>Margin Account</div>
+                                    <div className={classes.SubTitleContainer2}>Future Account</div>
+                                </div>
+
+
+                                <hr
+                                    style={{
+                                        color: '#707070',
+                                        height: 3,
+                                        width: '90%'
+                                    }} />
+
+
+                                <div className={classes.infoContainer}>
+                                    <div>
+                                        <div className={classes.SubTitleContainer}>Account Balance</div>
+                                        <div style={{ gridTemplateColumns: 'auto auto', display: 'grid', width: '40%' }}>
+                                            <div className={classes.AmountContainer}>0.010000</div>
+                                            <div className={classes.SubTitleContainer}>BTC</div>
+                                        </div>
+                                        <div className={classes.SubTitleContainer}>total valuation</div>
+                                        <div className={classes.PriceContainer}>$1000</div>
+                                    </div>
+                                    <div>
+                                        <ReactEcharts
+                                            option={{
+                                                tooltip: {
+                                                    trigger: 'item',
+                                                    formatter: '{a} <br/>{b}: {c} ({d}%)'
+                                                },
+                                                legend: {
+                                                    orient: 'vertical',
+                                                    top:20,
+                                                    right: 10,
+                                                    data: typeArray
+                                                },
+                                                series: [
+                                                    {
+                                                        name: 'Utilization',
+                                                        type: 'pie',
+                                                        radius: ['50%', '70%'],
+                                                        avoidLabelOverlap: false,
+                                                        label: {
+                                                            show: false,
+                                                            position: 'center'
+                                                        },
+                                                        emphasis: {
+                                                            label: {
+                                                                show: true,
+                                                                fontSize: '30',
+                                                                fontWeight: 'bold'
+                                                            }
+                                                        },
+                                                        labelLine: {
+                                                            show: false
+                                                        },
+                                                        data: data
+                                                    }
+                                                ]
+                                            }}
+                                        />
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                        }
 
                     </div>
 

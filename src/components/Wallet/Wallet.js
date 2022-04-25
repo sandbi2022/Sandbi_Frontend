@@ -71,28 +71,28 @@ useEffect(()=>{
         setPBalance([
             {
              name:"BTC",
-             balance:data["BTC"],
+             balance:parseFloat(data["BTC"]).toFixed(2),
              available:data["BTC"]-data["FreezeBTC"]
             },
             {
              name:"BCH",
-             balance:data["BCH"],
+             balance:parseFloat(data["BCH"]).toFixed(2),
              available:data["BCH"]-data["FreezeBCH"]
             },
             {
                 name:"ETH",
-                balance:data["ETH"],
+                balance:parseFloat(data["ETH"]).toFixed(2),
                 available:data["ETH"]-data["FreezeETH"]  
             },
             {
                 name:"USDT",
-                balance:data["USDT"],
+                balance:parseFloat(data["USDT"]).toFixed(2),
                 available:data["USDT"]-data["FreezeUSDT"]  
             }
 
         ]);
         var totalBalance = parseFloat(BTC*data["BTC"]+0)+parseFloat(BCH*data["BCH"]+0)+parseFloat(ETH*data["ETH"]+0)+parseFloat(data["USDT"]+0)+0;
-        settotal(totalBalance) ;
+        settotal((totalBalance).toFixed(2)) ;
        
         });
        

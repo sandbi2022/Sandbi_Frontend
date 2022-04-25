@@ -97,6 +97,14 @@ export const useStyles = createUseStyles({
         backgroundColor:'white',
         textAlign:'left',
         marginLeft:'-100px'
-    }
+    },
+    inputSetting2:{
+        color:'white',
+        backgroundColor:'#04011A',
+        borderColor:'grey',
+        textAlign:'left',
+        marginLeft:'30px',
+        padding:'0px 20px 0px 20px'
+    },
     
 })

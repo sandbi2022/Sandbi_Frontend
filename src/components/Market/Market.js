@@ -5,60 +5,59 @@ import { useHistory } from 'react-router-dom';
 import AuthContext from "../../context/AuthProvider"
 import UserServer from '../../api/user-api';
 import CoinBar from '../Home/coinBar';
-import axios from 'axios';
+import MarketAPI from '../../api/market-api';
 
 const Market =()=>{
 
     const classes = useStyles();
     const history = useHistory();
-    const [formErrors, setFormErrors] = useState({})
-    const [PBalance,setPBalance] = useState()
-    const TradeData=[
-		{
-			Pair: "xxx",
-			LastPrice: 1000.000,
-            Change:0.1,
-            High:102.000,
-            Low:98.0000,
-            HVOL:100,
-            HTumover:10000
-		} ,
-        {
-			Pair: "xxx2",
-			LastPrice: 1000.000,
-            Change:-0.1,
-            High:102.000,
-            Low:98.0000,
-            HVOL:100,
-            HTumover:10000
-		} ,
-        {
-			Pair: "xxx3",
-			LastPrice: 1000.000,
-            Change:0.1,
-            High:102.000,
-            Low:98.0000,
-            HVOL:100,
-            HTumover:10000
-		} ,
-        {
-			Pair: "xxx4",
-			LastPrice: 1000.000,
-            Change:-0.1,
-            High:102.000,
-            Low:98.0000,
-            HVOL:100,
-            HTumover:10000
-		} ,
+    const [TradeData,setTradeData]=useState([])
+    const [headTrade,setheadTrade]= useState([])
+    const TradePairlist=[
+     "BTCUSDT","ETHUSDT","BCHUSDT"
     ]
+    
+    useEffect(()=>{
+        var test =[]
+        var newlist=[];
+        for(let obj in TradePairlist){
+                const response = MarketAPI.getGraphData({"TradePair":TradePairlist[obj],"Period":"1","Second":86400});
+                console.log(response)
+                test.push(response)
+        }
+        Promise.all(test).then((res)=>{
+            console.log(res);
+        for(let obj in res){
+            console.log(res[obj])
+              for (let key of Object.keys(res[obj].data)) {
+                   if(key!=="time"){
+                    var data= JSON.parse(res[obj].data[key])
+                    data["Pair"]=TradePairlist[obj]
+                    console.log(key)
+                    console.log(data)
+                    newlist.push(data)
+                  
+                  }
+            }
+         }
+         setTradeData(newlist)      
+        })
+        
+     },[])
+
+useEffect(()=>{
+    console.log(TradeData.slice(0,3))
+    setheadTrade(TradeData.slice(0,3))
+},[TradeData])
+
 
     return(
         <div>
             <div className={classes.coinContainers}>
-                <CoinBar CoinName={'XXX'} CoinPrice={222} CoinChange={111}/>
-                <CoinBar CoinName={'YYY'} CoinPrice={111} CoinChange={111}/>
-                <CoinBar CoinName={'ZZZ'} CoinPrice={333} CoinChange={111}/>
-                <CoinBar CoinName={'AAA'} CoinPrice={444} CoinChange={111}/>
+                {headTrade.map((item)=>{
+                return(
+                <CoinBar CoinName={item.Pair} CoinPrice={item.open} CoinChange={item.open-item.close}/>
+                )})}
             </div>
             <div className={classes.mainContainer}>
                 <div className={classes.TitleSetting}>
@@ -78,17 +77,17 @@ const Market =()=>{
                             <div>
                             <div  className={classes.infoContainers}>
                                 <div  className={classes.infoTextSetting}>{item.Pair}</div>
-                                <div  className={classes.infoTextSetting}>{item.LastPrice}</div>
+                                <div  className={classes.infoTextSetting}>{item.close}</div>
                     
-                                <div  style={{color: Math.sign(item.Change) === -1 ? "green" : "red",fontSize:'14px'}}>
+                                <div  style={{color: Math.sign(item.close-item.open) === -1 ? "green" : "red",fontSize:'14px'}}>
                                     {item.Change*100}%
                                 </div>
-                                <div  className={classes.infoTextSetting}>{item.High}</div>
+                                <div  className={classes.infoTextSetting}>{item.high}</div>
                                     
                                     
-                                <div  className={classes.infoTextSetting}>{item.Low}</div>
-                                <div  className={classes.infoTextSetting}>{item.HVOL}</div>
-                                <div  className={classes.infoTextSetting}>{item.HTumover}</div>
+                                <div  className={classes.infoTextSetting}>{item.low}</div>
+                                <div  className={classes.infoTextSetting}>{item.volume}</div>
+                                <div  className={classes.infoTextSetting}>{item.turnover}</div>
                             </div>
                             <hr
                             style={{

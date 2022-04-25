@@ -43,7 +43,7 @@ export const useStyles = createUseStyles({
     },
     TitleBalanceContainers:{
         display:'grid',
-        gridTemplateColumns:'auto auto auto auto',
+        gridTemplateColumns:'auto auto auto auto auto',
         width: '60%',
         
     },
@@ -63,6 +63,15 @@ export const useStyles = createUseStyles({
         marginLeft:'20px',
         padding:'10px 0px 0px 0px',
         margin:'0px 0px 5px 0px'
+    },
+    SubTitleContainer2:{
+        color:'white',
+        fontSize:'10px',
+        textAlign:'left',
+        marginLeft:'20px',
+        padding:'10px 0px 0px 0px',
+        margin:'0px 0px 5px 0px',
+        fontWeight:'bold'
     },
     AmountContainer:{
         color:'white',

@@ -47,6 +47,7 @@ const Home=()=>{
             <div className={classes.TitleForm}>
             <div className={classes.titleWrapper}>
                 <h3 className={classes.title}>Welcome to Sandbi</h3>
+                <h4 className={classes.little}>The most Trust place to exchange your crypto</h4>
             </div>
             </div>
             <div className={classes.coinContainers}>

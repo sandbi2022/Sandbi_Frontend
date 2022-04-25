@@ -5,9 +5,6 @@ import App from '../App';
 const Market_API_BASE_URL="http://sandbi.us:8080/SandBi";
 
 class MarketAPI{
-    
-  
-    
    
     getPrice(Currency){
         return axios.post(Market_API_BASE_URL+'/Price/Price.jsp',
@@ -55,7 +52,15 @@ class MarketAPI{
             }
         );
     }
-  
+    getUserHistoryOrder(Currency){
+        return axios.post(Market_API_BASE_URL+'/Trade/HistoryUserOrder.jsp',
+            JSON.stringify(Currency),
+            {
+                headers:{'Content-Type':'application/json'},
+                withCredentials:true
+            }
+        );
+    }
  
 
      submitTrade(Currency){

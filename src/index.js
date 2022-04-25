@@ -8,11 +8,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 //import {AuthProvider} from './context/AuthProvider'
 import { Provider } from 'react-redux';
 import  useReducer  from './features/user';
-import { configureStore } from '@reduxjs/toolkit'
+import tradeReducer from './features/trade';
+import { configureStore } from '@reduxjs/toolkit';
 
 const store = configureStore({
   reducer:{
-    user:useReducer
+    user:useReducer,
+    trade:tradeReducer,
   },
 })
 

@@ -32,9 +32,13 @@ const Exchange =()=>{
     const [buyprice,setbuyPrice]= useState()
     const [buyamount,setbuyamount]= useState()
     const [Tradepair,setTradepair]= useState("BTCUSDT")
-    const coin1='XXX'
-    const coin2='YYY'
-
+    const [change,setChange]=useState()
+    const coin1=Tradepair.slice(0,3)
+    const coin2='USDT'
+    const [openorder,setopenorder]= useState([])
+    const [orderH,setorderH]= useState([])
+    const [bottom,setbottom]= useState([])
+    const [Switch,setswitch]= useState(0)
 
     useEffect(()=>{
         const UID= user.UID;
@@ -49,7 +53,7 @@ const Exchange =()=>{
 
 
 
-useEffect(() => {
+    useEffect(() => {
         MarketAPI.getPrice({"TradePair":"BTCUSDT"}).then((response)=>{
         setBTC(response.data["price"])       
        }) 
@@ -70,7 +74,7 @@ useEffect(() => {
             setOPETH(parseFloat(response.data["price"]));    
              }) 
              
-      }, []);
+      }, [change]);
 
 
 useEffect(()=>{
@@ -123,7 +127,7 @@ useEffect(() => {
         fillsum(newlist)
         setbuyorder(newlist)
    }) 
-}, [Tradepair]);
+}, [Tradepair,change]);
 
 useEffect(() => {
     MarketAPI.getOrder({"TradePair":Tradepair,"TradeType":0}).then((response)=>{
@@ -143,7 +147,7 @@ useEffect(() => {
           fillbuysum(newlist)
         setsellorder(newlist)
    }) 
-}, [Tradepair]);
+}, [Tradepair,change]);
 
 
 
@@ -172,7 +176,6 @@ useEffect(() => {
 
 useEffect(() => {
     MarketAPI.getHistoryOrder({"TradePair":Tradepair}).then((response)=>{
-        console.log(response.data)
         var newlist=[]
         for (let value of Object.values(response.data)) {
             var data= JSON.parse(value)
@@ -188,7 +191,37 @@ useEffect(() => {
           console.log(newlist)
         setmarket(newlist)
    }) 
-}, [Tradepair]);
+}, [Tradepair,change]);
+
+
+useEffect(() => {
+    MarketAPI.getuserOrder({"TradePair":Tradepair,"UID":user.UID}).then((response)=>{
+        console.log(response.data)
+        var newlist=[]
+        for (let value of Object.values(response.data)) {
+            var data= JSON.parse(value)
+             newlist.push(data)
+            
+          }
+          console.log(newlist)
+        setopenorder(newlist)
+   }) 
+}, [Tradepair,change]);
+
+
+useEffect(() => {
+    MarketAPI.getUserHistoryOrder({"TradePair":Tradepair,"UID":user.UID}).then((response)=>{
+        console.log(response.data)
+        var newlist=[]
+        for (let value of Object.values(response.data)) {
+            var data= JSON.parse(value)
+             newlist.push(data)
+            
+          }
+          console.log(newlist)
+        setorderH(newlist)
+   }) 
+}, [Tradepair,change]);
 
 
 const sellpricechange=(event)=>{
@@ -238,6 +271,13 @@ const handleSell=()=>{
     else{
         alert("not enought BTC")
     }
+    if(change==1){
+        setChange(2)
+    }
+    else{
+        setChange(1)
+    }
+    
 }
 
 const handlebuy=()=>{
@@ -247,9 +287,53 @@ const handlebuy=()=>{
     else{
         alert("not enought USDT")
     }
+    if(change==1){
+        setChange(2)
+    }
+    else{
+        setChange(1)
+    }
+}
+ 
+const marketpricesellTrade=()=>{
+    console.log(buyorder[0]);
+    if(buyorder.length>0){
+        setbuyPrice(buyorder[0]["price"])
+    }
+    else{
+        alert("There is no available buy order")
+    }
+    
+
+
+}
+const marketpricebuyTrade=()=>{
+    console.log(sellorder[0]["price"]);
+    if(sellorder.length>0){
+        setbuyPrice(sellorder[0]["price"])
+    }
+    else{
+        alert("There is no available sell order")
+    }
+    
 }
 
 
+const SwitchOpenOrder=()=>{
+    setswitch(0);
+}
+const Switchistory=()=>{
+    setswitch(1);
+}
+useEffect(()=>{
+   if(Switch==0){
+       setbottom(openorder)
+   }else{
+       console.log(orderH)
+       setbottom(orderH)
+   }
+
+},[Switch,openorder,orderH])
 
     return(
         <div >
@@ -360,7 +444,7 @@ const handlebuy=()=>{
                             <div className={classes.Left}>
                             <div className={classes.ExchangeButton}>
                                 <button className={classes.ExchangeButtonSetting}>Limit</button>
-                                <button className={classes.ExchangeButtonSetting}>Market</button>
+                                <button className={classes.ExchangeButtonSetting} onClick={marketpricesellTrade}>Market</button>
                             </div>
                             <div><input type="number"  onChange={sellpricechange} min="0" className={classes.inputSetting} placeholder="Price"></input></div>
                             <div><input type="number"  onChange={sellamountchange} min="0"  className={classes.inputSetting} placeholder="Amount"></input></div>
@@ -376,9 +460,9 @@ const handlebuy=()=>{
                             <div className={classes.Right}>
                             <div className={classes.ExchangeButton}>
                                 <button className={classes.ExchangeButtonSetting}>Limit</button>
-                                <button className={classes.ExchangeButtonSetting}>Market</button>
+                                <button className={classes.ExchangeButtonSetting} onClick={marketpricebuyTrade}>Market</button>
                             </div>
-                            <div><input type="number"  onChange={buypricechange} min="0"  className={classes.inputSetting} placeholder="Price" ></input></div>
+                            <div><input type="number"  onChange={buypricechange} min="0"  className={classes.inputSetting} placeholder="Price"></input></div>
                             <div><input type="number" onChange={buyamountchange} min="0"  className={classes.inputSetting} placeholder="Amount" ></input></div>
                             <div style={{display:'grid', gridTemplateColumns:'auto auto',width: '100%',}}>
                                         <div style={{color:'white',fontSize:'10px',textAlign:'left'}}>total</div>
@@ -450,8 +534,8 @@ const handlebuy=()=>{
             </div>
 
             <div className={classes.buttonContainer}>
-             <button>Open Order</button>
-             <button>Order history</button>
+             <button onClick={SwitchOpenOrder}>Open Order</button>
+             <button onClick={Switchistory}>Order history</button>
           </div>
           <div className={classes.orderHistoryContainer}>
               <div className={classes.smallText2}>Time</div>
@@ -464,6 +548,24 @@ const handlebuy=()=>{
               <div className={classes.smallText2}>Executed</div>
               <div className={classes.smallText2}>Unexecuted</div>
           </div>
+          {bottom.map((item, index) => {
+                            return (
+                                <div >
+                                    <div className={classes.smallText}>{item.time}</div>
+                                    <div className={classes.smallText}>{item.tradePair}</div>
+                                    <div  className={classes.smallText}>{item.tradeType}</div>
+                                    <div className={classes.smallText}>{item.price}</div>
+                                    <div  className={classes.smallText}>{item.amount}</div>
+                                </div>
+                            );
+                        })}
+
+
+
+
+
+
+
 
          {/*<div className='exhange'>
          <label>Exchange</label>

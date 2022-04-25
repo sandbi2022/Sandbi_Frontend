@@ -23,10 +23,6 @@ export default function Chart (data) {
         chart.applyNewData(newlist);
    })  
    
-   
-   
-   
-
     return () => {
       dispose('simple_chart');
     }

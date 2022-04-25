@@ -19,6 +19,13 @@ export const useStyles = createUseStyles({
         fontSize: '30px',
         color:'#FFFFFF'
     },
+    little:{
+        color: 'black',
+        fontWeight: '300',
+        fontSize: '15px',
+        color:'#FFFFFF'
+
+    },
     coinContainers:{
         display:'grid',
         gridTemplateColumns:'auto auto auto auto',

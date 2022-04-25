@@ -68,18 +68,14 @@ const TransferIn = () => {
                     </div>
 
                     <div className={classes.textSetting} >Tokens</div>
-                    <div style={{ border: 'solid', borderColor: 'white', width: '160px', borderWidth: '2px', marginLeft: '30px' }}>
-                        <Dropdown style={{ textAlign: 'left', marginLeft: '30px', }}>
-                            <Dropdown.Toggle as="success" id="dropdown-basic" style={{ color: 'white' }}>
-                                {coin}
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu>
-                                <Dropdown.Item>BTC</Dropdown.Item>
-                                <Dropdown.Item>USDT</Dropdown.Item>
-                                <Dropdown.Item>HT</Dropdown.Item>
-                                <Dropdown.Item>ETH</Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown>
+                    <div style={{width: '160px', borderWidth: '2px', marginLeft: '10px',textAlign:'left'}}>
+                    <select className={classes.inputSetting2}> 
+                                
+                                    <option >USDT</option>
+                                    <option >HT</option>
+                                    <option >ETH</option>
+                                    <option >HT</option>
+                            </select>	
                     </div>
                     <div className={classes.infoContainer}>
                         <div className={classes.textSetting} >24H cumulative withdrawal limit</div>

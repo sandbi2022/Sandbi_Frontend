@@ -19,7 +19,7 @@ const Login =()=>{
     const [UID, setUID] = useState("");
     const [Password, setPassword] = useState("");
     const [errMsg,setErrMsg]=useState("");
-    const [success,setSuccess]=useState("");
+    const [success,setSuccess]=useState(false);
     const history = useHistory()
     useEffect(()=>{
         userRef.current.focus();
@@ -41,44 +41,47 @@ const Login =()=>{
         console.log(Email+","+Password);
         try{
             const response =await UserServer.getUser({Email,Password});
+            console.log(response);
             const data = response.data;
-            setusername(data["Username"])
+            
+            console.log(data)
+            setusername(data["UserName"])
             setUID(data["UID"])
+            
             console.log(data["UID"])
-            const accessToken=response?.data?.accessToken;
-            const roles =response?.data?.roles;
-            setAuth({Email,Password,roles,accessToken});
-
-            setEmail("");
-            setPassword("");
+           
             setSuccess(true);
-
+            
         }catch(err){
-            if(!err?.response){
+            console.log(err);
+            if(!err.response){
                 setErrMsg("no server response");
-            }else if(err.response?.status===400){
+            }else if(err.response.status===400){
+                alert('incorrect')
                 setErrMsg('Missing Username or Password');
-            }else if(err.response?.status===401){
+            }else if(err.response.status===401){
                 setErrMsg('Unauthorized');
             }else{
                 setErrMsg('login failed');
             }
             errRef.current.focus();
         }
-        
-        
+        // setEmail("");
+        // setPassword("");
         history.push("/");
         
     }
-
     useEffect(()=>{
-       dispatch(login({
-            email:Email,
-            logged:true,
-            username:username,
-            UID:UID,
-        }))
-    },[UID,username])
+        console.log(success);
+        dispatch(login({
+             email:Email,
+             logged:success,
+             username:username,
+             UID:UID,
+         }))
+     },[UID,username,success])
+
+
     const dispatch = useDispatch();
     return(
         <div className={classes.loginForm}>

@@ -11,6 +11,12 @@ export const useStyles = createUseStyles({
         display: 'grid',
         gridTemplateRows: 'min-content 20px'
     },
+    inputWrapper2: {
+        marginBottom: '10px',
+        display: 'grid',
+        textAlign:'left',
+        gridTemplateColumns:'auto 70%',
+    },
     
     input: {
         width: '60%',

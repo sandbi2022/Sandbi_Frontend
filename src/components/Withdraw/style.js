@@ -114,5 +114,13 @@ export const useStyles = createUseStyles({
         border: '2px solid #707070',
         borderRadius: '11px'
     },
+    inputSetting2:{
+        color:'white',
+        backgroundColor:'#04011A',
+        borderColor:'grey',
+        textAlign:'left',
+        marginLeft:'30px',
+        padding:'0px 20px 0px 20px'
+    },
     
 })
