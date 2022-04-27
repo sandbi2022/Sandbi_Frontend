@@ -7,7 +7,7 @@ export const useStyles = createUseStyles({
         position: 'fixed',
         width: '100%',
         height: '100%',
-        backgroundColor: '#DCDCDC'
+        backgroundColor: '#04011A'
     },
     loginContainer: {
         height: '100%',

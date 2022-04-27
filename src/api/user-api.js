@@ -10,7 +10,7 @@ class UserAPI{
     }
 
     createUser(User){
-        return axios.post(USER_API_BASE_URL+'/Register.jsp',
+        return axios.post(USER_API_BASE_URL+'/User/Register.jsp',
             JSON.stringify(User),
             {
                 headers:{
@@ -21,7 +21,21 @@ class UserAPI{
         );
     }
     getUser(User){
-        return axios.post(USER_API_BASE_URL+'/Login.jsp',
+        return axios.post(USER_API_BASE_URL+'/User/Login.jsp',
+            JSON.stringify(User),
+            {
+                headers:{'Content-Type':'application/json'},
+                withCredentials:true
+            }
+        ).catch((error) => {
+            if (error.response.status === 400) {
+               alert('Email or Password is not correct');
+              }
+        });
+    }
+
+    sendMail(User){
+        return axios.post(USER_API_BASE_URL+'/User/Mail.jsp',
             JSON.stringify(User),
             {
                 headers:{'Content-Type':'application/json'},
@@ -34,5 +48,46 @@ class UserAPI{
     getUserId(UserId){
         return axios.get(USER_API_BASE_URL+'/'+UserId);
     }
+
+
+    changePassword(User){
+        return axios.post(USER_API_BASE_URL+'/User/ResetPassword.jsp',
+        JSON.stringify(User),
+        {
+            headers:{'Content-Type':'application/json'},
+            withCredentials:true
+        }
+        );
+    }
+
+    IdentityVerification(data){
+        return axios.post(USER_API_BASE_URL+'/User/SetInfo.jsp',
+        JSON.stringify(data),
+        {
+            headers:{'Content-Type':'application/json'},
+            withCredentials:true
+        }
+        );
+    }
+
+    getC2CBal(data){
+        return axios.post(USER_API_BASE_URL+'/User/C2CBalance.jsp',
+        JSON.stringify(data),
+        {
+            headers:{'Content-Type':'application/json'},
+            withCredentials:true
+        }
+        );
+    }
+    getMarginBal(data){
+        return axios.post(USER_API_BASE_URL+'/User/MarginBalance.jsp',
+        JSON.stringify(data),
+        {
+            headers:{'Content-Type':'application/json'},
+            withCredentials:true
+        }
+        );
+    }
+
 }
 export default new UserAPI()

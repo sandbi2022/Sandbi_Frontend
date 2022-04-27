@@ -142,5 +142,12 @@ export const useStyles = createUseStyles({
     },
     image_setting:{
         width:"40px"
+    },
+    verifybutton:{
+        height:"35px",
+        width:'30%',
+        background: '#4566bf',
+        color: '#fff',
     }
+
 })

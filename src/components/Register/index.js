@@ -4,22 +4,26 @@ import UserServer from '../../api/user-api';
 import { Link } from 'react-router-dom';
 import { useHistory } from "react-router-dom";
 import validateRegistration from './validateRegistration';
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
 
-const Register=()=>{
+const Register = () => {
 
     const classes = useStyles();
     const history = useHistory();
-    const [Email,setEmail]=useState("");
-    const [Password,setPassword]=useState("");
-    const [confirmPassword,setConfirmPassword]=useState("");
-    const [UserName,setName]=useState("");
+    const [Email, setEmail] = useState("");
+    const [VCode, setVCode] = useState("");
+    const [Code, setCode] = useState("");
+    const [Password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [UserName, setName] = useState("");
     const [formErrors, setFormErrors] = useState({})
 
-    const updateEmail =(event)=>{
+    const updateEmail = (event) => {
         setEmail(event.target.value);
     }
 
-    const updatePassword=(event)=>{
+    const updatePassword = (event) => {
         setPassword(event.target.value);
     }
     const updateConfirmPassword = (event) => {
@@ -29,24 +33,43 @@ const Register=()=>{
     const updateName = (event) => {
         setName(event.target.value);
     }
-
-    const confirmRegister= async(event)=>{
-
-        event.preventDefault();
-        const errorsRegister= await validateRegistration({ UserName, Email, Password, confirmPassword })
-        setFormErrors(errorsRegister)
-
-        if(Object.keys(errorsRegister).length===0){
-            let user={UserName,Email,Password};
-            console.log('user:'+JSON.stringify(user));
-
-            UserServer.createUser(user).then(res=>{
-                this.props.history.push('/');
-            });
-        }
+    const updateCode = (event) => {
+        setCode(event.target.value);
+    }
+    const updateVCode = (event) => {
+        setVCode(event.target.value);
     }
 
-    return(
+    const confirmRegister = async (event) => {
+
+        event.preventDefault();
+        console.log("Code="+Code)
+        if (VCode == Code) {
+            const errorsRegister = await validateRegistration({ UserName, Email, Password, confirmPassword })
+            setFormErrors(errorsRegister)
+
+            if (Object.keys(errorsRegister).length === 0) {
+                let user = { UserName, Email, Password };
+                console.log('user:' + JSON.stringify(user));
+
+                await UserServer.createUser(user);
+                history.push('/');
+            }
+        }else{
+            console.log("fail")
+            console.log("Code="+Code)
+        }
+    }
+    const confirmEmail = async (event) => {
+        event.preventDefault();
+        var Code = Math.floor(Math.random() * 900000) + 100000;
+        setVCode(Code);
+        let user = { Email, Code };
+        console.log(Email + "," + Code);
+        console.log('user:' + JSON.stringify(user));
+        await UserServer.sendMail(user);
+    }
+    return (
         <div className={classes.loginForm}>
             <div className={classes.titleWrapper}>
                 <h3 className={classes.title}>Register Here</h3>
@@ -55,8 +78,8 @@ const Register=()=>{
                 <div className={classes.formGroup}>
                     <div className={classes.textToLeft}>Email</div>
                     <div className={classes.inputWrapper}>
-                    <input
-                            className={formErrors?.EmailError ? classes.inputError :classes.input}
+                        <input
+                            className={formErrors?.EmailError ? classes.inputError : classes.input}
                             type="email"
                             name="email"
                             placeholder="Email"
@@ -66,10 +89,12 @@ const Register=()=>{
                             <p className={classes.errorMsg}>{formErrors.EmailError}</p>
                         )}
                     </div>
+
+
                     <div className={classes.textToLeft}>Display Name</div>
                     <div className={classes.inputWrapper}>
-                    <input
-                            className={formErrors?.UsernameError ? classes.inputError :classes.input}
+                        <input
+                            className={formErrors?.UsernameError ? classes.inputError : classes.input}
                             type="name"
                             name="name"
                             placeholder="Display Name"
@@ -81,8 +106,8 @@ const Register=()=>{
                     </div>
                     <div className={classes.textToLeft}>Password</div>
                     <div className={classes.inputWrapper}>
-                    <input
-                            className={formErrors?.PasswordError ? classes.inputError :classes.input}
+                        <input
+                            className={formErrors?.PasswordError ? classes.inputError : classes.input}
                             type="password"
                             name="password"
                             placeholder="Password"
@@ -95,8 +120,8 @@ const Register=()=>{
 
                     <div className={classes.textToLeft}>Confirm Password</div>
                     <div className={classes.inputWrapper}>
-                    <input
-                            className={formErrors?.ConfirmPasswordError ? classes.inputError :classes.input}
+                        <input
+                            className={formErrors?.ConfirmPasswordError ? classes.inputError : classes.input}
                             type="password"
                             name="password"
                             placeholder="Enter Password Again"
@@ -107,11 +132,27 @@ const Register=()=>{
                         )}
                     </div>
 
-                    <div className={classes.buttonContainer}>
-                        <button type="submit" className={classes.button} onClick={confirmRegister}>
-                            Continue
-                        </button>
-                    </div>
+                    <Popup contentStyle={{ width: "40%", }} trigger={<button className={classes.button}>Continue</button>} position="center">
+                        {close => (
+                            <div style={{ width: "90%", textAlign: 'center', padding: '5%' }}>
+                                <div style={{ fontSize: '20px', fontWeight: 'bold' }}>verify your email</div>
+                                
+                                <div style={{display:'grid',gridTemplateColumns:'80% 20%',}}>
+                                <input
+                                    className={classes.input}
+                                    type="code"
+                                    name="code"
+                                    placeholder="Verification Code"
+                                    onChange={updateCode}
+                                />
+                                <button style={{}} onClick={confirmEmail}> send me code</button>
+                                </div>
+                                <button type="submit" className={classes.button} onClick={confirmRegister}>
+                                    Continue
+                                </button>
+                            </div>
+                        )}
+                    </Popup>
 
                 </div>
             </div>

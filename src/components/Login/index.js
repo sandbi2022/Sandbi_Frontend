@@ -5,6 +5,8 @@ import { useHistory } from 'react-router-dom';
 import AuthContext from "../../context/AuthProvider"
 import UserServer from '../../api/user-api';
 import axios from 'axios';
+import {useDispatch} from 'react-redux';
+import { login } from '../../features/user';
 const Login =()=>{
     const {setAuth}=useContext(AuthContext);
 
@@ -13,9 +15,11 @@ const Login =()=>{
 
     const classes = useStyles()
     const [Email, setEmail] = useState("");
+    const [username, setusername] = useState("");
+    const [UID, setUID] = useState("");
     const [Password, setPassword] = useState("");
     const [errMsg,setErrMsg]=useState("");
-    const [success,setSuccess]=useState("");
+    const [success,setSuccess]=useState(false);
     const history = useHistory()
     useEffect(()=>{
         userRef.current.focus();
@@ -37,30 +41,48 @@ const Login =()=>{
         console.log(Email+","+Password);
         try{
             const response =await UserServer.getUser({Email,Password});
-            console.log(JSON.stringify(response?.data));
-            const accessToken=response?.data?.accessToken;
-            const roles =response?.data?.roles;
-            setAuth({Email,Password,roles,accessToken});
-
-            setEmail("");
-            setPassword("");
+            console.log(response);
+            const data = response.data;
+            
+            console.log(data)
+            setusername(data["UserName"])
+            setUID(data["UID"])
+            
+            console.log(data["UID"])
+           
             setSuccess(true);
-
+            
         }catch(err){
-            if(!err?.response){
+            console.log(err);
+            if(!err.response){
                 setErrMsg("no server response");
-            }else if(err.response?.status===400){
+            }else if(err.response.status===400){
+                alert('incorrect')
                 setErrMsg('Missing Username or Password');
-            }else if(err.response?.status===401){
+            }else if(err.response.status===401){
                 setErrMsg('Unauthorized');
             }else{
                 setErrMsg('login failed');
             }
             errRef.current.focus();
         }
+        // setEmail("");
+        // setPassword("");
+        history.push("/");
         
     }
-    
+    useEffect(()=>{
+        console.log(success);
+        dispatch(login({
+             email:Email,
+             logged:success,
+             username:username,
+             UID:UID,
+         }))
+     },[UID,username,success])
+
+
+    const dispatch = useDispatch();
     return(
         <div className={classes.loginForm}>
             <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
@@ -79,6 +101,7 @@ const Login =()=>{
                             placeholder="Email"
                             onChange={updateEmail}
                         />
+                       
                         
 
                     </div>
@@ -88,7 +111,7 @@ const Login =()=>{
                             className={classes.input}
                             type="password"
                             name="password"
-                            placeholder="{Password}"
+                            placeholder="Password"
                             onChange={updatePassword}
                         />
                     <div className={classes.buttonContainer}>

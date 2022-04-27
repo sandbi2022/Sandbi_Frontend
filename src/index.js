@@ -5,15 +5,26 @@ import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {AuthProvider} from './context/AuthProvider'
+//import {AuthProvider} from './context/AuthProvider'
+import { Provider } from 'react-redux';
+import  useReducer  from './features/user';
+import tradeReducer from './features/trade';
+import { configureStore } from '@reduxjs/toolkit';
+
+const store = configureStore({
+  reducer:{
+    user:useReducer,
+    trade:tradeReducer,
+  },
+})
 
 ReactDOM.render(
   <React.StrictMode>
-    <AuthProvider>
+    <Provider store={store}>
       <BrowserRouter>
         <App />
       </BrowserRouter>
-    </AuthProvider>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

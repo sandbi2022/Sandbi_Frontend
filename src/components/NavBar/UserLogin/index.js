@@ -10,7 +10,11 @@ const UserLogin = () => {
 
     return (
         <div className={classes.userControlsContainers}>
-
+            <div className = {classes.LoginBtnContainer}>
+                <div className = {classes.LoginBtn} onClick={()=>history.push('/login')}>
+                    Log In
+                </div>
+            </div>
             <div className={classes.signUpButtonContainter}>
                 <div className={classes.signUpBtn} onClick={()=>history.push('/register')}>
                     Sign Up
@@ -18,11 +22,7 @@ const UserLogin = () => {
             </div>
 
 
-            <div className = {classes.LoginBtnContainer}>
-                <div className = {classes.LoginBtn} onClick={()=>history.push('/login')}>
-                    Log In
-                </div>
-            </div>
+            
         </div>
     )
 }
