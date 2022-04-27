@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import AuthContext from "../../context/AuthProvider"
 import WalletAPI from '../../api/wallet_api';
 import MarketAPI from '../../api/market-api';
+import InfoAPI from '../../api/Info-api';
 import{useDispatch, useSelector} from 'react-redux';
 import { useStyles } from "./style";
 import Chart from "../Chart/Kline";
@@ -15,14 +16,8 @@ const Exchange =()=>{
     const [formErrors, setFormErrors] = useState({})
     const [stotal,setstotal] = useState(0)
     const [btotal,setbtotal] = useState(0)
-    const [BTC,setBTC]= useState();
     const [UserBTC,setUBTC]= useState();
     const [USDT,setUusdt]= useState();
-    const [BCH,setBCH]= useState();
-    const [ETH,setETH]= useState();
-    const [OPBTC,setOPBTC]= useState();
-    const [OPBCH,setOPBCH]= useState();
-    const [OPETH,setOPETH]= useState();
     const [Coindata,setCoindata]=useState([])
     const [buyorder,setbuyorder]=useState([])
     const [sellorder,setsellorder]=useState([])
@@ -33,12 +28,14 @@ const Exchange =()=>{
     const [buyamount,setbuyamount]= useState()
     const [Tradepair,setTradepair]= useState("BTCUSDT")
     const [change,setChange]=useState()
-    const coin1=Tradepair.slice(0,3)
-    const coin2='USDT'
+    const [coin1,setcoin1]=useState("BTC")
+    const [coin2,setcoin2]=useState("USDT")
     const [openorder,setopenorder]= useState([])
     const [orderH,setorderH]= useState([])
     const [bottom,setbottom]= useState([])
     const [Switch,setswitch]= useState(0)
+    const [PairInfo,setInfo]= useState({})
+    const [CoinRender,setCoinRender]= useState([])
 
     useEffect(()=>{
         const UID= user.UID;
@@ -50,53 +47,57 @@ const Exchange =()=>{
         });
        },[])
 
-
+    useEffect(()=>{
+       InfoAPI.getTradePair().then((response)=>{
+           console.log(response.data)
+           var newlist={}
+        for (let [key,value] of Object.entries(response.data)) {
+            var data= JSON.parse(value)
+            newlist[key]=data
+          }
+          setInfo(newlist)
+       })
+       },[])
 
 
     useEffect(() => {
-        MarketAPI.getPrice({"TradePair":"BTCUSDT"}).then((response)=>{
-        setBTC(response.data["price"])       
-       }) 
-        MarketAPI.getPrice({"TradePair":"BCHUSDT"}).then((response)=>{
-                setBCH(response.data["price"])
-        }) 
-        MarketAPI.getPrice({"TradePair":"ETHUSDT"}).then((response)=>{    
-        setETH(parseFloat(response.data["price"]));    
-         }) 
+    var pairlist =[]
+    var Promiselist=[];
+    for (let [key,value] of Object.entries(PairInfo)) {
+        console.log(key)
+        console.log(value)
+        var Tpair= value["Coin1"]+value["Coin2"]
+        pairlist.push(Tpair)
+        const response = MarketAPI.getPrice({"TradePair":Tpair})
+        Promiselist.push(response)
+        const openresponse = MarketAPI.getOpenPrice({"TradePair":Tpair})
+        Promiselist.push(openresponse)
+      }
+    
+    Promise.all(Promiselist).then((res)=>{
+        console.log(res);
+        var newCoindata=[]
+    for(let i =0;i<pairlist.length;i++){
+        console.log(res[2*i].data)
+        console.log(res[2*i+1].data)
+        var price=res[2*i].data["price"]
+        var openprice =res[2*i+1].data["price"]
+        var digit =PairInfo[pairlist[i]]["LimitPrice"]
+        console.log(digit)
+        newCoindata.push({
+            Type:pairlist[i],
+            lastPrice:price.toFixed(digit),
+            change:(parseFloat((openprice-price)/price)*100).toFixed(2)
 
-        MarketAPI.getOpenPrice({"TradePair":"BTCUSDT"}).then((response)=>{
-            setOPBTC(parseFloat(response.data["price"]))       
-           }) 
-        MarketAPI.getOpenPrice({"TradePair":"BCHUSDT"}).then((response)=>{
-                    setOPBCH(parseFloat(response.data["price"]));
-            }) 
-        MarketAPI.getOpenPrice({"TradePair":"ETHUSDT"}).then((response)=>{
-            setOPETH(parseFloat(response.data["price"]));    
-             }) 
-             
-      }, [change]);
+        })
+     }
+     console.log(newCoindata)
+     setCoindata(newCoindata)
+     setCoinRender(newCoindata)
+      })
+    }, [PairInfo,change])
 
 
-useEffect(()=>{
-    setCoindata([
-        {
-         Type:"BTC",
-         lastPrice:BTC,
-         change:(parseFloat((OPBTC-BTC)/BTC)*100).toFixed(2)
-        },
-        {
-            Type:"BCH",
-            lastPrice:BCH,
-            change:(parseFloat((OPBCH-BCH)/BCH)*100).toFixed(2)
-        },
-        {
-            Type:"ETH",
-            lastPrice:ETH,
-            change:(parseFloat((OPETH-ETH)/ETH)*100).toFixed(2)
-        },
-    ]);
-
-},[BCH,OPBCH,ETH,OPETH,BCH,OPBCH])
     
 const perenatage=(number)=>{
     console.log(number)
@@ -125,7 +126,10 @@ useEffect(() => {
           
         newlist.sort(function(a, b){return -a.price + b.price})
         fillsum(newlist)
+        newlist=mergeArr(newlist)
         setbuyorder(newlist)
+        
+        console.log(newlist)
    }) 
 }, [Tradepair,change]);
 
@@ -145,7 +149,9 @@ useEffect(() => {
           
           newlist.sort(function(a, b){return -a.price + b.price})
           fillbuysum(newlist)
+          newlist=mergeArr(newlist)
         setsellorder(newlist)
+        
    }) 
 }, [Tradepair,change]);
 
@@ -170,8 +176,10 @@ useEffect(() => {
     }
 
     const changetradetype=(type)=>{ 
-        console.log(type);        
-        setTradepair(type+"USDT")
+        console.log(PairInfo[type]["Coin1"]);        
+        setTradepair(type);
+        setcoin1(PairInfo[type]["Coin1"])
+        setcoin2(PairInfo[type]["Coin2"])
     }
 
 useEffect(() => {
@@ -281,7 +289,7 @@ const handleSell=()=>{
 }
 
 const handlebuy=()=>{
-    if(USDT>buyamount*parseFloat(BTC)){
+    if(USDT>buyamount*buyprice){
         MarketAPI.submitTrade({"TradePair":Tradepair,"UID":user.UID,"Amount":buyamount,"Price":buyprice,"TradeType":0})
     }
     else{
@@ -308,6 +316,7 @@ const marketpricesellTrade=()=>{
 
 }
 const marketpricebuyTrade=()=>{
+    //console.log(sellorder);
     console.log(sellorder[0]["price"]);
     if(sellorder.length>0){
         setbuyPrice(sellorder[0]["price"])
@@ -335,8 +344,70 @@ useEffect(()=>{
 
 },[Switch,openorder,orderH])
 
+function mergeArr(arr){
+    let arrWarp=[]
+    let result=[]
+    console.log("test");
+    console.log(arr);
+    for (let item of arr){
+        if(arrWarp.includes(item.price)==false){
+            let obj={
+                price:item.price,
+                amount:item.amount,
+                sum:item.sum
+            }
+            result.push(obj)
+            arrWarp.push(item.price)
+
+        }else{
+            let index=arrWarp.indexOf(item.price)
+            result[index].amount+=item.amount
+            result[index].sum+=item.amount
+
+
+
+        }
+    }
+    console.log(result);
+    return result
+}
+
+
+
+
+const showCoin2=(unitchange)=>{
+   if(unitchange=="BTC"||unitchange=="USDT"){
+    var newlist =[]
+    for(let pair in Coindata){
+        var type=Coindata[pair].Type
+        var tmpCoin=PairInfo[type]["Coin2"]
+        if(tmpCoin==unitchange){
+            newlist.push(Coindata[pair])
+        }
+    }
+    console.log(newlist)
+    setCoinRender(newlist)
+    setTradepair(newlist[0].Type)
+    setcoin1(PairInfo[newlist[0].Type]["Coin1"])
+    setcoin2(PairInfo[newlist[0].Type]["Coin2"])
+   }
+   else{
+    setCoinRender(Coindata)
+    setTradepair(Coindata[0].Type)
+    setcoin1(PairInfo[Coindata[0].Type]["Coin1"])
+    setcoin2(PairInfo[Coindata[0].Type]["Coin2"])
+
+   }
+}
+
+
+
+
+
+
+
     return(
-        <div >
+        <div>
           {/*<div className='leftsideMarket' style={{left:0}}>
             {/* <div > 
 			    <input type="text"></input>
@@ -384,8 +455,9 @@ useEffect(()=>{
                     <div className={classes.columPartContainers}>
                         <div className={classes.leftSideCoinContainer}>
                             <div style={{color:'white', fontSize:'14px'}}>Coins:</div>
-                            <button className={classes.CoinSetting}>usdt</button>
-                            <button className={classes.CoinSetting}>btc</button>
+                            <button className={classes.CoinSetting} onClick={()=>showCoin2("ALL")}>ALL</button>
+                            <button className={classes.CoinSetting} onClick={()=>showCoin2("USDT")}>USDT</button>
+                            <button className={classes.CoinSetting} onClick={()=>showCoin2("BTC")}>BTC</button>
                             <div></div>
                         </div>
                         <div className={classes.leftSideContainer}>
@@ -393,7 +465,7 @@ useEffect(()=>{
                             <div className={classes.smallText2}>Last Price</div>
                             <div className={classes.smallText2}>Change</div>
                         </div>
-                        {Coindata.map((item, index) => {
+                        {CoinRender.map((item, index) => {
                             return (
                                 <div className={classes.leftSideContainer}>
                                     <div className={classes.smallText} onClick={()=>changetradetype(item.Type)}>{item.Type}</div>
@@ -475,20 +547,22 @@ useEffect(()=>{
                     </div>
                     <div className={classes.columPartContainers}>
                         <div className={classes.TitleText}>OrderBook</div>
-                        <div className={classes.leftSideContainer}>
-                            <div  className={classes.smallText2}>Price</div>
-                            <div  className={classes.smallText2}>Amount</div>
-                            <div  className={classes.smallText2}>sum</div>
+                        <div style={{height:'45%'}}>
+                            <div className={classes.leftSideContainer}>
+                                <div  className={classes.smallText2}>Price</div>
+                                <div  className={classes.smallText2}>Amount</div>
+                                <div  className={classes.smallText2}>sum</div>
+                            </div>
+                            {buyorder.map((item, index) => {
+                                return (
+                                    <div className={classes.leftSideContainer}>
+                                        <div className={classes.smallTextRed}>{item.price}</div>
+                                        <div  className={classes.smallText}>{item.amount.toFixed(5)}</div>
+                                        <div  className={classes.smallText}>{item.sum.toFixed(2)}</div>
+                                    </div>
+                                );
+                            })}
                         </div>
-                        {buyorder.map((item, index) => {
-                            return (
-                                <div className={classes.leftSideContainer}>
-                                    <div className={classes.smallTextRed}>{item.price}</div>
-                                    <div  className={classes.smallText}>{item.amount}</div>
-                                    <div  className={classes.smallText}>{item.sum.toFixed(2)}</div>
-                                </div>
-                            );
-                        })}
                         <div>
                         <hr
                             style={{
@@ -537,6 +611,7 @@ useEffect(()=>{
              <button onClick={SwitchOpenOrder}>Open Order</button>
              <button onClick={Switchistory}>Order history</button>
           </div>
+          <div style={{height:'1000px'}}>
           <div className={classes.orderHistoryContainer}>
               <div className={classes.smallText2}>Time</div>
               <div  className={classes.smallText2}>Pair</div>
@@ -559,42 +634,7 @@ useEffect(()=>{
                                 </div>
                             );
                         })}
-
-
-
-
-
-
-
-
-         {/*<div className='exhange'>
-         <label>Exchange</label>
-         <div className='left'>
-             
-             {/* <button>limit</button>
-             <button>Market</button>
-             <button>Stop-limit</button>
-             <button>Trigger order</button> 
-             <input type="number"  onChange={sellpricechange} min="0"></input>
-             <input type="number"  onChange={sellamountchange} min="0"></input>
-             <label>Total</label>
-             <label>{stotal}</label>
-             <button onClick={handleSell}>Sell</button>
-        </div> 
-        <div className='right'>
-             {/* <button>limit</button>
-             <button>Market</button>
-             <button>Stop-limit</button>
-             <button>Trigger order</button> 
-              <input type="number"  onChange={buypricechange} min="0"></input>
-             <input type="number" onChange={buyamountchange} min="0"></input>
-             <label>Total</label>
-             <label>{btotal}</label>
-             <button onClick={handlebuy}>Buy</button>
-        </div> 
-                    </div>*/}
-
-
+            </div>
 
           
 

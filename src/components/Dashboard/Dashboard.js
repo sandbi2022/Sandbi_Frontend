@@ -21,6 +21,8 @@ const Dashboard = () => {
     const classes = useStyles()
     const history = useHistory();
     const user = useSelector((state)=>state.user.value);
+    const [C2CBalance, setC2CBal]= useState({})
+    const [MBalance, setMBal]= useState({})
     const redirectTransferIn = () => {
         history.push('/Transfer In')
     }
@@ -28,6 +30,30 @@ const Dashboard = () => {
         history.push('/Withdraw')
     }
     const [active, setActive] = useState("CurrentBalance")
+
+    useEffect(() => {
+        UserServer.getC2CBal({"UID":user.UID}).then((response)=>{
+           
+           console.log(response.data)
+           setC2CBal(response.data)
+           
+       }
+       ) 
+      }, []);
+
+      useEffect(() => {
+        UserServer.getMarginBal({"UID":user.UID}).then((response)=>{
+           console.log(response.data)
+        //    setMBal(response.data)
+       }
+       ) 
+      }, []);
+
+
+
+
+
+
 
     const Announcement = [
         {
@@ -83,7 +109,6 @@ const Dashboard = () => {
                                     <div className={classes.SubTitleContainer} onClick={() => setActive("ExchangeAccount")}>Exchange Account</div>
                                     <div className={classes.SubTitleContainer} onClick={() => setActive("C2CTrading")}>C2C Trading</div>
                                     <div className={classes.SubTitleContainer} onClick={() => setActive("MarginAccount")}>Margin Account</div>
-                                    <div className={classes.SubTitleContainer} onClick={() => setActive("FutureAccount")}>Future Account</div>
                                 </div>
 
 
@@ -164,7 +189,6 @@ const Dashboard = () => {
                                     <div className={classes.SubTitleContainer2} >Exchange Account</div>
                                     <div className={classes.SubTitleContainer} onClick={() => setActive("C2CTrading")}>C2C Trading</div>
                                     <div className={classes.SubTitleContainer} onClick={() => setActive("MarginAccount")}>Margin Account</div>
-                                    <div className={classes.SubTitleContainer} onClick={() => setActive("FutureAccount")}>Future Account</div>
                                 </div>
 
 
@@ -239,7 +263,6 @@ const Dashboard = () => {
                                     <div className={classes.SubTitleContainer} onClick={() => setActive("ExchangeAccount")}>Exchange Account</div>
                                     <div className={classes.SubTitleContainer2}>C2C Trading</div>
                                     <div className={classes.SubTitleContainer} onClick={() => setActive("MarginAccount")}>Margin Account</div>
-                                    <div className={classes.SubTitleContainer} onClick={() => setActive("FutureAccount")}>Future Account</div>
                                 </div>
 
 
@@ -255,7 +278,7 @@ const Dashboard = () => {
                                     <div>
                                         <div className={classes.SubTitleContainer}>Account Balance</div>
                                         <div style={{ gridTemplateColumns: 'auto auto', display: 'grid', width: '40%' }}>
-                                            <div className={classes.AmountContainer}>0.010000</div>
+                                            <div className={classes.AmountContainer}>{C2CBalance.FreezeBTC}</div>
                                             <div className={classes.SubTitleContainer}>BTC</div>
                                         </div>
                                         <div className={classes.SubTitleContainer}>total valuation</div>
@@ -314,7 +337,6 @@ const Dashboard = () => {
                                     <div className={classes.SubTitleContainer} onClick={() => setActive("ExchangeAccount")}>Exchange Account</div>
                                     <div className={classes.SubTitleContainer} onClick={() => setActive("C2CTrading")}>C2C Trading</div>
                                     <div className={classes.SubTitleContainer2}>Margin Account</div>
-                                    <div className={classes.SubTitleContainer} onClick={() => setActive("FutureAccount")}>Future Account</div>
                                 </div>
 
 
@@ -389,7 +411,6 @@ const Dashboard = () => {
                                     <div className={classes.SubTitleContainer} onClick={() => setActive("ExchangeAccount")}>Exchange Account</div>
                                     <div className={classes.SubTitleContainer} onClick={() => setActive("C2CTrading")}>C2C Trading</div>
                                     <div className={classes.SubTitleContainer} onClick={() => setActive("MarginAccount")}>Margin Account</div>
-                                    <div className={classes.SubTitleContainer2}>Future Account</div>
                                 </div>
 
 

@@ -9,13 +9,9 @@ export const useStyles = createUseStyles({
         fontWeight:'bold'
     },
     mainContainer:{
-        width:'85%',
-        height:'1200px',
+        width:'100%',
+        height:'900px',
         backgroundColor:'#141126',
-        top:'90%',
-        left:'80%',
-        marginLeft:'7.5%',
-        marginTop:'0px'
     },
     SelectButtonSetting:{
         color:'white',

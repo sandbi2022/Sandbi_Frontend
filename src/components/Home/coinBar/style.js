@@ -2,7 +2,8 @@ import { createUseStyles } from 'react-jss'
 const flexCenter = { display: 'flex', justifyContent: 'center', alignItems: 'center' }
 export const useStyles = createUseStyles({
     coinBarContainer:{
-        background: '#141126',
+        //background: '#141126',
+        background:'rgba(255,255,255,0.1)',
         margin:'10px',
         borderRadius: '10px',
     },

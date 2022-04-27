@@ -1,13 +1,22 @@
 import { createUseStyles } from 'react-jss'
 const flexCenter = { display: 'flex', justifyContent: 'center', alignItems: 'center' }
+
 export const useStyles = createUseStyles({
+    // bg:{
+    //     background: URL('/opt/front/react-app-master/src/images/bg.jpeg')
+    // },
     TitleForm: {
         width: '900px',
         height: '400px',
         borderRadius: '14px',
         ...flexCenter,
         flexDirection: 'column',
-        background: '#141126'
+       
+        //background: '#141126',
+        background:'rgba(255,255,255,0.1)'
+        //opacity:0.2
+        //background:transparent
+        //background: url('/opt/front/react-app-master/src/images/bg.jpeg')
     },
     titleWrapper: {
         width: '100%',
@@ -30,7 +39,10 @@ export const useStyles = createUseStyles({
         display:'grid',
         gridTemplateColumns:'auto auto auto auto',
         width: '100%',
-        
+        background:'rgba(255,255,255,0.1)'
     },
+    // .bgimg{
+    //     background-image:('/opt/front/react-app-master/src/images/bg.jpeg"');
+    // }
 
 })

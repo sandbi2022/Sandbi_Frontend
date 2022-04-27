@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import AuthContext from "../../context/AuthProvider"
 import UserServer from '../../api/user-api';
 import CoinBar from '../Home/coinBar';
+import InfoAPI from '../../api/Info-api';
 import MarketAPI from '../../api/market-api';
 
 const Market =()=>{
@@ -13,9 +14,28 @@ const Market =()=>{
     const history = useHistory();
     const [TradeData,setTradeData]=useState([])
     const [headTrade,setheadTrade]= useState([])
-    const TradePairlist=[
-     "BTCUSDT","ETHUSDT","BCHUSDT"
-    ]
+    const [PairInfo,setInfo]= useState({})
+    
+    const [TradePairlist,setTradepairlist]=useState([])
+
+    useEffect(()=>{
+        InfoAPI.getTradePair().then((response)=>{
+            console.log(response.data)
+            var newlist={}
+            var tmpPairlist=[]
+         for (let [key,value] of Object.entries(response.data)) {
+             var data= JSON.parse(value)
+             newlist[key]=data
+             tmpPairlist.push(key)
+           }
+           setInfo(newlist)
+           setTradepairlist(tmpPairlist)
+        })
+        },[])
+
+
+
+
     
     useEffect(()=>{
         var test =[]
@@ -43,7 +63,7 @@ const Market =()=>{
          setTradeData(newlist)      
         })
         
-     },[])
+     },[TradePairlist])
 
 useEffect(()=>{
     console.log(TradeData.slice(0,3))

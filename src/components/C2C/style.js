@@ -42,9 +42,23 @@ export const useStyles = createUseStyles({
     bottonSetting:{
         color:'white',
         backgroundColor:'#141126',
-        margin:'0px 30px 0px 30px',
-        display:'inline-block',
+        margin:'0px 5px 0px 5px',
+
+        outline: 'none',
+        borderRadius: '5px',
+
+
         
+    },
+    bottonSetting2:{
+        color:'white',
+        backgroundColor:'#4566bf',
+        margin:'0px 5px 0px 5px',
+
+        outline: 'none',
+        borderRadius: '5px',
+
+
     },
     buttonContainer:{
         textAlign:'left',

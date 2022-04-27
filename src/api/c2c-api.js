@@ -72,7 +72,36 @@ class C2CAPI{
             }
         );
     }
-
+    FinishOrder(data){
+        console.log(data)
+        return axios.post(C2C_API_BASE_URL+'/C2CTrade/FinishOrder.jsp',
+            JSON.stringify(data),
+            {
+                headers:{'Content-Type':'application/json'},
+                withCredentials:true
+            }
+        );
+    }
+    CancelAcceptedOrder(data){
+        console.log(data)
+        return axios.post(C2C_API_BASE_URL+'/C2CTrade/CancelAcceptOrder.jsp',
+            JSON.stringify(data),
+            {
+                headers:{'Content-Type':'application/json'},
+                withCredentials:true
+            }
+        );
+    }
+    PayOrder(data){
+        console.log(data)
+        return axios.post(C2C_API_BASE_URL+'/C2CTrade/PayOrder.jsp',
+            JSON.stringify(data),
+            {
+                headers:{'Content-Type':'application/json'},
+                withCredentials:true
+            }
+        );
+    }
 
 }
 export default new C2CAPI()

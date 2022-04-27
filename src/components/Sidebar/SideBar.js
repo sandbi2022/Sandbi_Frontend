@@ -17,9 +17,7 @@ const SideBar =()=>{
     const redirectWallet=()=>{
         history.push('/Wallet')
     }
-    const redirectOrder=()=>{
-        history.push('/UserOrder')
-    }
+
     const redirectSetting=()=>{
         history.push('/Setting')
     }
@@ -40,9 +38,6 @@ const SideBar =()=>{
             </div>
             <div  className={classes.textStyle} onClick={redirectWallet}>
                 Wallet
-            </div>
-            <div className={classes.textStyle} onClick={redirectOrder}>
-               UserOrder
             </div>
             <div className={classes.textStyle} onClick={redirectSetting}>
                 Setting

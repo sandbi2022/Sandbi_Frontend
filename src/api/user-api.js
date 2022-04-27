@@ -69,5 +69,25 @@ class UserAPI{
         }
         );
     }
+
+    getC2CBal(data){
+        return axios.post(USER_API_BASE_URL+'/User/C2CBalance.jsp',
+        JSON.stringify(data),
+        {
+            headers:{'Content-Type':'application/json'},
+            withCredentials:true
+        }
+        );
+    }
+    getMarginBal(data){
+        return axios.post(USER_API_BASE_URL+'/User/MarginBalance.jsp',
+        JSON.stringify(data),
+        {
+            headers:{'Content-Type':'application/json'},
+            withCredentials:true
+        }
+        );
+    }
+
 }
 export default new UserAPI()

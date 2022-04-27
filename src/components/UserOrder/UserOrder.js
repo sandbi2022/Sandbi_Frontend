@@ -45,22 +45,23 @@ const UserOrder = () => {
         )
       }, []);
 
-
-
-
-
-
-
     const  handleCancel=(item)=>{
         c2cAPI.CancelPendingOrder({"TradePair":item.tradePair,"TID":item.Tid})
+    }
+    const  handleFinish=(item)=>{
+        c2cAPI.FinishOrder({"TradePair":item.tradePair,"TID":item.Tid})
+    }
+    const  handlePay=(item)=>{
+        c2cAPI.PayOrder({"TradePair":item.tradePair,"TID":item.Tid})
+    }
+    const  handleCancelAccepted=(item)=>{
+        c2cAPI.CancelAcceptedOrder({"TradePair":item.tradePair,"TID":item.Tid})
     }
 
 
 
     return (
         <div >
-            <div className={classes.TitleSetting}>C2C Trading</div>
-           
                 <div className={classes.mainContainer}>
                     <div className={classes.buttonContainer}>
                         {/* <button className={classes.SelectButtonSetting}>BUY</button>
@@ -109,26 +110,6 @@ const UserOrder = () => {
                         <div className={classes.subTitleSetting2}>Payment</div>
                         <div className={classes.subTitleSetting2}>Trade</div>
                     </div>
-
-
-
-                    {/* <div className={classes.infoContainers}>
-                        <div className={classes.infoTextSetting}>{info.Advertiser}</div>
-                        <div className={classes.infoTextSetting}>{info.Price}</div>
-                        <div>
-                            <div className={classes.infoTextSetting}>
-                                Limit:{info.Limit}
-
-                            </div>
-                            <div className={classes.infoTextSetting}>
-                                Available{info.Available}
-                            </div>
-                        </div>
-                        <div className={classes.infoTextSetting}>{info.Payment}</div>
-                        <div><button className={classes.SelectButtonSetting2}>Buy xxx</button></div>
-                    </div> */}
-
-
                     {renderlist.map((item, index) => {
                         return (
                             <div className={classes.infoContainers}>
@@ -145,20 +126,11 @@ const UserOrder = () => {
                                 </div>
                                 <div className={classes.infoTextSetting}>{item.Payment}</div>
                                 <div><button className={classes.SelectButtonSetting2} onClick={()=>{handleCancel(item)}}>Cancel</button></div>
+                                <div><button className={classes.SelectButtonSetting2} onClick={()=>{handleFinish(item)}}>Finish</button></div>
                             </div>
 
                         );
                     })}
-                    {/*<li key={index} className={item.cName}>
-                            {item.Asset} 
-                            <span>  {item.Advertiser}  </span>
-                            <span>  {item.Price}</span>
-                            <span>  {item.Limit}</span>
-                            <span>  {item.Availabke}</span>
-                            <span>  {item.Payment}</span>
-                            <button>bUY xxx</button>
-                        </li>
-                        */}
 
                 </div>
             

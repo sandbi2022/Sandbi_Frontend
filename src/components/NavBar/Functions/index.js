@@ -18,9 +18,6 @@ const Functions = () => {
     const redirectMargin=()=>{
         history.push('/Margin')
     }
-    const redirectFuture=()=>{
-        history.push('/Future')
-    }
     return (
         <div className={classes.userControlsContainers}>
             <div className={classes.Button} onClick={redirectExchange}>
@@ -34,9 +31,6 @@ const Functions = () => {
             </div>
             <div className={classes.Button}  onClick={redirectMargin}>
                 MARGIN
-            </div>
-            <div className={classes.Button} onClick={redirectFuture}>
-                FUTURES
             </div>
         </div>
     )
