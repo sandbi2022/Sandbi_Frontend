@@ -1,6 +1,7 @@
 import { createUseStyles } from 'react-jss'
 const flexCenter = { display: 'flex', justifyContent: 'center', alignItems: 'center' }
 
+
 export const useStyles = createUseStyles({
     // bg:{
     //     background: URL('/opt/front/react-app-master/src/images/bg.jpeg')
@@ -13,7 +14,7 @@ export const useStyles = createUseStyles({
         flexDirection: 'column',
        
         //background: '#141126',
-        background:'rgba(255,255,255,0.1)'
+        background: 'rgba(20, 17, 38,0.7)',
         //opacity:0.2
         //background:transparent
         //background: url('/opt/front/react-app-master/src/images/bg.jpeg')

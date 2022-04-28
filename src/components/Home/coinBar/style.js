@@ -3,7 +3,7 @@ const flexCenter = { display: 'flex', justifyContent: 'center', alignItems: 'cen
 export const useStyles = createUseStyles({
     coinBarContainer:{
         //background: '#141126',
-        background:'rgba(255,255,255,0.1)',
+        background: 'rgba(20, 17, 38,0.7)',
         margin:'10px',
         borderRadius: '10px',
     },

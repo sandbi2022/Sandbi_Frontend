@@ -2,7 +2,7 @@ import axios from 'axios'
 import { config } from 'dotenv';
 import App from '../App';
 
-const C2C_API_BASE_URL="http://sandbi.us:8080/SandBi";
+const C2C_API_BASE_URL="https://sandbi.us:8443/SandBi";
 class C2CAPI{
     getPUOrder(data){
         return axios.post(C2C_API_BASE_URL+'/C2CTrade/PendingUserOrder.jsp',

@@ -2,7 +2,7 @@ import axios from 'axios'
 import { config } from 'dotenv';
 import App from '../App';
 
-const Wallet_API_BASE_URL="http://sandbi.us:8080/SandBi";
+const Wallet_API_BASE_URL="https://sandbi.us:8443/SandBi";
 
 class WalletAPI{
     
