@@ -8,6 +8,7 @@ import InfoAPI from '../../api/Info-api';
 import{useDispatch, useSelector} from 'react-redux';
 import { useStyles } from "./style";
 import Chart from "../Chart/Kline";
+import AssetTable from '../TradeData/Asset/AssetTable';
 
 const Exchange =()=>{
     const classes=useStyles()
@@ -61,43 +62,43 @@ const Exchange =()=>{
        },[])
 
 
-    useEffect(() => {
-    var pairlist =[]
-    var Promiselist=[];
-    for (let [key,value] of Object.entries(PairInfo)) {
-        console.log(key)
-        console.log(value)
-        var Tpair= value["Coin1"]+value["Coin2"]
-        pairlist.push(Tpair)
-        const response = MarketAPI.getPrice({"TradePair":Tpair})
-        Promiselist.push(response)
-        const openresponse = MarketAPI.getOpenPrice({"TradePair":Tpair})
-        Promiselist.push(openresponse)
-      }
+    // useEffect(() => {
+    // var pairlist =[]
+    // var Promiselist=[];
+    // for (let [key,value] of Object.entries(PairInfo)) {
+    //     console.log(key)
+    //     console.log(value)
+    //     var Tpair= value["Coin1"]+value["Coin2"]
+    //     pairlist.push(Tpair)
+    //     const response = MarketAPI.getPrice({"TradePair":Tpair})
+    //     Promiselist.push(response)
+    //     const openresponse = MarketAPI.getOpenPrice({"TradePair":Tpair})
+    //     Promiselist.push(openresponse)
+    //   }
     
-    Promise.all(Promiselist).then((res)=>{
-        console.log(res);
-        var newCoindata=[]
-    for(let i =0;i<pairlist.length;i++){
-        console.log(res[2*i].data)
-        console.log(res[2*i+1].data)
-        var price=res[2*i].data["price"]
-        var openprice =res[2*i+1].data["price"]
-        var digit =PairInfo[pairlist[i]]["LimitPrice"]
-        console.log(digit)
-        newCoindata.push({
-            Type:pairlist[i],
-            lastPrice:price.toFixed(digit),
-            change:(parseFloat((openprice-price)/price)*100).toFixed(2)
+    // Promise.all(Promiselist).then((res)=>{
+    //     console.log(res);
+    //     var newCoindata=[]
+    // for(let i =0;i<pairlist.length;i++){
+    //     console.log(res[2*i].data)
+    //     console.log(res[2*i+1].data)
+    //     var price=res[2*i].data["price"]
+    //     var openprice =res[2*i+1].data["price"]
+    //     var digit =PairInfo[pairlist[i]]["LimitPrice"]
+    //     console.log(digit)
+    //     newCoindata.push({
+    //         Type:pairlist[i],
+    //         lastPrice:price.toFixed(digit),
+    //         change:(parseFloat((openprice-price)/price)*100).toFixed(2)
 
-        })
-     }
-     console.log(newCoindata)
-     setCoindata(newCoindata)
-     setCoinRender(newCoindata)
-      })
+    //     })
+    //  }
+    //  console.log(newCoindata)
+    //  setCoindata(newCoindata)
+    //  setCoinRender(newCoindata)
+    //   })
       
-    }, [PairInfo,change])
+    // }, [PairInfo,change])
 
 
     
@@ -377,30 +378,30 @@ function mergeArr(arr){
 
 
 
-const showCoin2=(unitchange)=>{
-   if(unitchange=="BTC"||unitchange=="USDT"){
-    var newlist =[]
-    for(let pair in Coindata){
-        var type=Coindata[pair].Type
-        var tmpCoin=PairInfo[type]["Coin2"]
-        if(tmpCoin==unitchange){
-            newlist.push(Coindata[pair])
-        }
-    }
-    console.log(newlist)
-    setCoinRender(newlist)
-    setTradepair(newlist[0].Type)
-    setcoin1(PairInfo[newlist[0].Type]["Coin1"])
-    setcoin2(PairInfo[newlist[0].Type]["Coin2"])
-   }
-   else{
-    setCoinRender(Coindata)
-    setTradepair(Coindata[0].Type)
-    setcoin1(PairInfo[Coindata[0].Type]["Coin1"])
-    setcoin2(PairInfo[Coindata[0].Type]["Coin2"])
+// const showCoin2=(unitchange)=>{
+//    if(unitchange=="BTC"||unitchange=="USDT"){
+//     var newlist =[]
+//     for(let pair in Coindata){
+//         var type=Coindata[pair].Type
+//         var tmpCoin=PairInfo[type]["Coin2"]
+//         if(tmpCoin==unitchange){
+//             newlist.push(Coindata[pair])
+//         }
+//     }
+//     console.log(newlist)
+//     setCoinRender(newlist)
+//     setTradepair(newlist[0].Type)
+//     setcoin1(PairInfo[newlist[0].Type]["Coin1"])
+//     setcoin2(PairInfo[newlist[0].Type]["Coin2"])
+//    }
+//    else{
+//     setCoinRender(Coindata)
+//     setTradepair(Coindata[0].Type)
+//     setcoin1(PairInfo[Coindata[0].Type]["Coin1"])
+//     setcoin2(PairInfo[Coindata[0].Type]["Coin2"])
 
-   }
-}
+//    }
+// }
 
 
 
@@ -454,7 +455,8 @@ const showCoin2=(unitchange)=>{
           </div>*/}
           <div className={classes.UpContainers}>
                 <div className={classes.columContainers}>
-                    <div className={classes.columPartContainers}>
+                <AssetTable  ChangeType={changetradetype} setTPair={(value)=>{setTradepair(value)}} setC1={setcoin1} setC2={setcoin2}/>
+                    {/* <div className={classes.columPartContainers}>
                         <div className={classes.leftSideCoinContainer}>
                             <div style={{color:'white', fontSize:'14px'}}>Coins:</div>
                             <button className={classes.CoinSetting} onClick={()=>showCoin2("ALL")}>ALL</button>
@@ -476,7 +478,7 @@ const showCoin2=(unitchange)=>{
                                 </div>
                             );
                         })}
-                    </div>
+                    </div> */}
                     <div  className={classes.columPartContainers}>
                         <div className={classes.ChartTitleContainer}>
                             <div>
@@ -638,7 +640,7 @@ const showCoin2=(unitchange)=>{
                         })}
             </div>
 
-          
+        
 
         </div>
     )
