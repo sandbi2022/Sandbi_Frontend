@@ -39,7 +39,7 @@ export const useStyles = createUseStyles({
     AnnouncementContainer:{
         backgroundColor:'#141126',
         height:'700px',
-        marginLeft:'20px'
+        marginLeft:'10px'
     },
     TitleBalanceContainers:{
         display:'grid',
@@ -52,7 +52,7 @@ export const useStyles = createUseStyles({
         fontSize:'20px',
         fontWeight:'bold',
         textAlign:'left',
-        marginLeft:'5px',
+        marginLeft:'120px',
         padding:'10px 0px 0px 0px',
         margin:'0px 0px 10px 0px'
     },

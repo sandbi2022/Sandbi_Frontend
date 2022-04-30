@@ -7,6 +7,7 @@ import UserServer from '../../api/user-api';
 import CoinBar from '../Home/coinBar';
 import InfoAPI from '../../api/Info-api';
 import MarketAPI from '../../api/market-api';
+import CoinBarContainer from '../CoinBarContiner/CoinBarContiner';
 
 const Market =()=>{
 
@@ -73,12 +74,9 @@ useEffect(()=>{
 
     return(
         <div>
-            <div className={classes.coinContainers}>
-                {headTrade.map((item)=>{
-                return(
-                <CoinBar CoinName={item.Pair} CoinPrice={item.open} CoinChange={item.open-item.close}/>
-                )})}
-            </div>
+            
+            <CoinBarContainer/>
+            
             <div className={classes.mainContainer}>
                 <div className={classes.TitleSetting}>
                     EXCHANGE
@@ -100,7 +98,7 @@ useEffect(()=>{
                                 <div  className={classes.infoTextSetting}>{item.close}</div>
                     
                                 <div  style={{color: Math.sign(item.close-item.open) === -1 ? "green" : "red",fontSize:'14px'}}>
-                                    {item.Change*100}%
+                                    {(item.close-item.open)*100}%
                                 </div>
                                 <div  className={classes.infoTextSetting}>{item.high}</div>
                                     

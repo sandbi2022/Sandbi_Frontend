@@ -46,11 +46,12 @@ function readEnvFile(file, type) {
 // Get the https config
 // Return cert files if provided in env, otherwise just true or false
 function getHttpsConfig() {
-  const { SSL_CRT_FILE, SSL_KEY_FILE, HTTPS } = process.env;
-  // const SSL_CRT_FILE = "/opt/front/react-app-master/cert1.pem";
-  // const SSL_KEY_FILE = "/opt/front/react-app-master/key1.pem";
-  // const isHttps = true;
-  const isHttps = HTTPS === 'true';
+  
+  const SSL_CRT_FILE = "/opt/front/react-app-master/cert1.pem";
+  const SSL_KEY_FILE = "/opt/front/react-app-master/key1.pem";
+  const isHttps = true;
+  // const { SSL_CRT_FILE, SSL_KEY_FILE, HTTPS } = process.env;
+  // const isHttps = HTTPS === 'true';
 
   if (isHttps && SSL_CRT_FILE && SSL_KEY_FILE) {
     const crtFile = path.resolve(paths.appPath, SSL_CRT_FILE);

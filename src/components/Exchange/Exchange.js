@@ -57,6 +57,7 @@ const Exchange =()=>{
           }
           setInfo(newlist)
        })
+  
        },[])
 
 
@@ -95,6 +96,7 @@ const Exchange =()=>{
      setCoindata(newCoindata)
      setCoinRender(newCoindata)
       })
+      
     }, [PairInfo,change])
 
 
@@ -131,7 +133,7 @@ useEffect(() => {
         
         console.log(newlist)
    }) 
-}, [Tradepair,change]);
+}, [PairInfo,Tradepair,change]);
 
 useEffect(() => {
     MarketAPI.getOrder({"TradePair":Tradepair,"TradeType":0}).then((response)=>{
@@ -153,7 +155,7 @@ useEffect(() => {
         setsellorder(newlist)
         
    }) 
-}, [Tradepair,change]);
+}, [PairInfo,Tradepair,change]);
 
 
 
@@ -199,7 +201,7 @@ useEffect(() => {
           console.log(newlist)
         setmarket(newlist)
    }) 
-}, [Tradepair,change]);
+}, [PairInfo,Tradepair,change]);
 
 
 useEffect(() => {
@@ -556,9 +558,9 @@ const showCoin2=(unitchange)=>{
                             {buyorder.map((item, index) => {
                                 return (
                                     <div className={classes.leftSideContainer}>
-                                        <div className={classes.smallTextRed}>{item.price}</div>
-                                        <div  className={classes.smallText}>{item.amount.toFixed(5)}</div>
-                                        <div  className={classes.smallText}>{item.sum.toFixed(2)}</div>
+                                        <div className={classes.smallTextRed}>{item.price.toFixed(PairInfo[Tradepair]["LimitPrice"])}</div>
+                                        <div  className={classes.smallText}>{item.amount.toFixed(PairInfo[Tradepair]["LimitCount"])}</div>
+                                        <div  className={classes.smallText}>{item.sum.toFixed(PairInfo[Tradepair]["LimitCount"])}</div>
                                     </div>
                                 );
                             })}
@@ -579,9 +581,9 @@ const showCoin2=(unitchange)=>{
                         {sellorder.map((item, index) => {
                             return (
                                 <div className={classes.leftSideContainer}>
-                                    <div className={classes.smallTextGreen}>{item.price}</div>
-                                    <div  className={classes.smallText}>{item.amount}</div>
-                                    <div  className={classes.smallText}>{item.sum.toFixed(2)}</div>
+                                    <div className={classes.smallTextGreen}>{item.price.toFixed(PairInfo[Tradepair]["LimitPrice"])}</div>
+                                    <div  className={classes.smallText}>{item.amount.toFixed(PairInfo[Tradepair]["LimitCount"])}</div>
+                                    <div  className={classes.smallText}>{item.sum.toFixed(PairInfo[Tradepair]["LimitCount"])}</div>
                                 </div>
                             );
                         })}
@@ -597,8 +599,8 @@ const showCoin2=(unitchange)=>{
                             return (
                                 <div className={classes.leftSideContainer}>
                                     <div className={classes.smallText}>{item.time}</div>
-                                    <div  className={classes.smallText}>{item.price}</div>
-                                    <div  className={classes.smallText}>{item.amount}</div>
+                                    <div  className={classes.smallText}>{item.price.toFixed(PairInfo[Tradepair]["LimitPrice"])}</div>
+                                    <div  className={classes.smallText}>{item.amount.toFixed(PairInfo[Tradepair]["LimitCount"])}</div>
                                 </div>
                             );
                         })}

@@ -16,6 +16,8 @@ import 'echarts/lib/component/markPoint'
 import ReactEcharts from 'echarts-for-react'
 import { Button } from 'bootstrap';
 import{useDispatch, useSelector} from 'react-redux';
+import WalletAPI from '../../api/wallet_api';
+
 
 const Dashboard = () => {
     const classes = useStyles()
@@ -23,6 +25,7 @@ const Dashboard = () => {
     const user = useSelector((state)=>state.user.value);
     const [C2CBalance, setC2CBal]= useState({})
     const [MBalance, setMBal]= useState({})
+    const [exBalance, setexBal]= useState({})
     const redirectTransferIn = () => {
         history.push('/Transfer In')
     }
@@ -31,9 +34,45 @@ const Dashboard = () => {
     }
     const [active, setActive] = useState("CurrentBalance")
 
+    const [BTC,setBTC]= useState();
+    const [BCH,setBCH]= useState();
+    const [ETH,setETH]= useState();
+
+
+
+    useEffect(() => {
+        WalletAPI.getPrice({"TradePair":"BTCUSDT"}).then((response)=>{
+           console.log(response.data)
+           setBTC(response.data["price"])
+
+           
+       }
+       ) 
+      }, []);
+
+
+      useEffect(()=>{
+         WalletAPI.getPrice({"TradePair":"BCHUSDT"}).then((response)=>{
+        console.log(response.data)
+        setBCH(response.data["price"])
+    }
+    ) 
+       },[])
+
+
+
+useEffect(()=>{
+ WalletAPI.getPrice({"TradePair":"ETHUSDT"}).then((response)=>{
+        console.log(response.data)
+        setETH(response.data["price"]);
+        
+    }
+    ) 
+},[])
+
     useEffect(() => {
         UserServer.getC2CBal({"UID":user.UID}).then((response)=>{
-           
+           console.log("c2c")
            console.log(response.data)
            setC2CBal(response.data)
            
@@ -43,15 +82,22 @@ const Dashboard = () => {
 
       useEffect(() => {
         UserServer.getMarginBal({"UID":user.UID}).then((response)=>{
+            console.log("margin")
            console.log(response.data)
-        //    setMBal(response.data)
+           setMBal(response.data)
        }
        ) 
       }, []);
 
+      useEffect(()=>{
+        WalletAPI.getBalance({"UID":user.UID}).then((response) => {
+            console.log("exchange")
+           console.log(response.data)
+           setexBal(response.data)
+        }
+        )
 
-
-
+      },[])
 
 
 
@@ -75,16 +121,78 @@ const Dashboard = () => {
             value: 20
         },
         {
-            name: 'HT',
+            name: 'BCH',
             value: 30
         },
         {
             name: 'ETH',
-            value: 50
+            value: 40
         }
     ]
-    const typeArray=data.map(d=>d.name);
+     const typeArray=data.map(d=>d.name);
 
+     const dataex = [
+        {
+            name: 'BTC: '+parseFloat(exBalance.BTC+0).toFixed(5),
+            
+        },
+        {
+            name: 'USDT: '+parseFloat(exBalance.USDT+0).toFixed(5),
+            
+        },
+        {
+            name: 'BCH: '+parseFloat(exBalance.BCH+0).toFixed(5),
+           
+        },
+        {
+            name: 'ETH: '+parseFloat(exBalance.ETH+0).toFixed(5),
+            
+        }
+    ]
+     const typeArrayex=dataex.map(d=>d.name);
+
+
+     const datamar = [
+        {
+            name: 'BTC: '+MBalance.BTC,
+            
+        },
+        {
+            name: 'USDT: '+MBalance.USDT,
+            
+        },
+        {
+            name: 'BCH: '+MBalance.BCH,
+            
+        },
+        {
+            name: 'ETH: '+MBalance.ETH,
+            
+        }
+    ]
+     const typeArraymar=datamar.map(d=>d.name);
+
+    const datac2c = [
+        {
+            name: 'BTC: '+C2CBalance.BTC,
+            
+        },
+        {
+            name: 'USDT: '+C2CBalance.USDT,
+            
+        },
+        {
+            name: 'BCH: '+C2CBalance.BCH,
+            
+        },
+        {
+            name: 'ETH: '+C2CBalance.ETH,
+           
+        }
+    ]
+     const typeArrayc2c=datac2c.map(x=>x.name);
+     console.log('array'+typeArrayc2c)
+    //  console.log('array'+typeArray)
     return (
         <div>
             <div>
@@ -139,9 +247,12 @@ const Dashboard = () => {
                                                 },
                                                 legend: {
                                                     orient: 'vertical',
-                                                    top:20,
-                                                    right: 10,
-                                                    data: typeArray
+                                                    top:'20%',
+                                                    left: '-10%',
+                                                    data: typeArray,
+                                                    textStyle:{
+                                                        color:'fffdd0'
+                                                    }
                                                 },
                                                 series: [
                                                     {
@@ -204,11 +315,11 @@ const Dashboard = () => {
                                     <div>
                                         <div className={classes.SubTitleContainer}>Account Balance</div>
                                         <div style={{ gridTemplateColumns: 'auto auto', display: 'grid', width: '40%' }}>
-                                            <div className={classes.AmountContainer}>0.010000</div>
+                                            <div className={classes.AmountContainer}>{((parseFloat(BTC*exBalance.BTC+0)+parseFloat(BCH*exBalance.BCH+0)+parseFloat(ETH*exBalance.ETH+0)+parseFloat(exBalance.USDT+0)+0)/BTC).toFixed(5)}</div>
                                             <div className={classes.SubTitleContainer}>BTC</div>
                                         </div>
                                         <div className={classes.SubTitleContainer}>total valuation</div>
-                                        <div className={classes.PriceContainer}>$1000</div>
+                                        <div className={classes.PriceContainer}>{parseFloat(BTC*exBalance.BTC+0)+parseFloat(BCH*exBalance.BCH+0)+parseFloat(ETH*exBalance.ETH+0)+parseFloat(exBalance.USDT+0)+0}</div>
                                     </div>
                                     <div>
                                         <ReactEcharts
@@ -221,7 +332,10 @@ const Dashboard = () => {
                                                     orient: 'vertical',
                                                     top:20,
                                                     right: 10,
-                                                    data: typeArray
+                                                    data: typeArrayex,
+                                                    textStyle:{
+                                                        color:'fffdd0'
+                                                    }
                                                 },
                                                 series: [
                                                     {
@@ -243,7 +357,7 @@ const Dashboard = () => {
                                                         labelLine: {
                                                             show: false
                                                         },
-                                                        data: data
+                                                        data: [{name:typeArrayex[0],value:exBalance.BTC},{name:typeArrayex[1],value:exBalance.USDT/BTC},{name:typeArrayex[2],value:parseFloat(BCH*exBalance.BCH+0)/BTC},{name:typeArrayex[3],value:parseFloat(ETH*exBalance.ETH+0)/BTC}]
                                                     }
                                                 ]
                                             }}
@@ -278,11 +392,11 @@ const Dashboard = () => {
                                     <div>
                                         <div className={classes.SubTitleContainer}>Account Balance</div>
                                         <div style={{ gridTemplateColumns: 'auto auto', display: 'grid', width: '40%' }}>
-                                            <div className={classes.AmountContainer}>{C2CBalance.FreezeBTC}</div>
+                                            <div className={classes.AmountContainer}>{((parseFloat(BTC*C2CBalance.BTC+0)+parseFloat(BCH*C2CBalance.BCH+0)+parseFloat(ETH*C2CBalance.ETH+0)+parseFloat(C2CBalance.USDT+0)+0)/BTC).toFixed(5)}</div>
                                             <div className={classes.SubTitleContainer}>BTC</div>
                                         </div>
                                         <div className={classes.SubTitleContainer}>total valuation</div>
-                                        <div className={classes.PriceContainer}>$1000</div>
+                                        <div className={classes.PriceContainer}>{/*C2CBalance.BTC*BTC+C2CBalance.USDT+C2CBalance.BCH*BCH+C2CBalance.ETH*ETH*/parseFloat(BTC*C2CBalance.BTC+0)+parseFloat(BCH*C2CBalance.BCH+0)+parseFloat(ETH*C2CBalance.ETH+0)+parseFloat(C2CBalance.USDT+0)+0}</div>
                                     </div>
                                     <div>
                                         <ReactEcharts
@@ -293,13 +407,16 @@ const Dashboard = () => {
                                                 },
                                                 legend: {
                                                     orient: 'vertical',
-                                                    top:20,
-                                                    right: 10,
-                                                    data: typeArray
+                                                    top:0,
+                                                    right: 0,
+                                                    data: typeArrayc2c,
+                                                    textStyle:{
+                                                        color:'fffdd0'
+                                                    }
                                                 },
                                                 series: [
                                                     {
-                                                        name: 'Utilization',
+                                                        name: 'Value ratio',
                                                         type: 'pie',
                                                         radius: ['50%', '70%'],
                                                         avoidLabelOverlap: false,
@@ -317,7 +434,7 @@ const Dashboard = () => {
                                                         labelLine: {
                                                             show: false
                                                         },
-                                                        data: data
+                                                        data: [{name:typeArrayc2c[0],value:C2CBalance.BTC},{name:typeArrayc2c[1],value:C2CBalance.USDT/BTC},{name:typeArrayc2c[2],value:parseFloat(BCH*C2CBalance.BCH+0)/BTC},{name:typeArrayc2c[3],value:parseFloat(ETH*C2CBalance.ETH+0)/BTC}]
                                                     }
                                                 ]
                                             }}
@@ -352,11 +469,11 @@ const Dashboard = () => {
                                     <div>
                                         <div className={classes.SubTitleContainer}>Account Balance</div>
                                         <div style={{ gridTemplateColumns: 'auto auto', display: 'grid', width: '40%' }}>
-                                            <div className={classes.AmountContainer}>0.010000</div>
+                                            <div className={classes.AmountContainer}>{((parseFloat(BTC*MBalance.BTC+0)+parseFloat(BCH*MBalance.BCH+0)+parseFloat(ETH*MBalance.ETH+0)+parseFloat(MBalance.USDT+0)+0)/BTC).toFixed(5)}</div>
                                             <div className={classes.SubTitleContainer}>BTC</div>
                                         </div>
                                         <div className={classes.SubTitleContainer}>total valuation</div>
-                                        <div className={classes.PriceContainer}>$1000</div>
+                                        <div className={classes.PriceContainer}>{parseFloat(BTC*MBalance.BTC+0)+parseFloat(BCH*MBalance.BCH+0)+parseFloat(ETH*MBalance.ETH+0)+parseFloat(MBalance.USDT+0)+0}</div>
                                     </div>
                                     <div>
                                         <ReactEcharts
@@ -369,11 +486,14 @@ const Dashboard = () => {
                                                     orient: 'vertical',
                                                     top:20,
                                                     right: 10,
-                                                    data: typeArray
+                                                    data: typeArraymar,
+                                                    textStyle:{
+                                                        color:'fffdd0'
+                                                    }
                                                 },
                                                 series: [
                                                     {
-                                                        name: 'Utilization',
+                                                        name: 'Value ratio',
                                                         type: 'pie',
                                                         radius: ['50%', '70%'],
                                                         avoidLabelOverlap: false,
@@ -391,7 +511,7 @@ const Dashboard = () => {
                                                         labelLine: {
                                                             show: false
                                                         },
-                                                        data: data
+                                                        data: [{name:typeArraymar[0],value:MBalance.BTC},{name:typeArraymar[1],value:MBalance.USDT/BTC},{name:typeArraymar[2],value:parseFloat(BCH*MBalance.BCH+0)/BTC},{name:typeArraymar[3],value:parseFloat(ETH*MBalance.ETH+0)/BTC}]
                                                     }
                                                 ]
                                             }}
@@ -404,79 +524,7 @@ const Dashboard = () => {
                             </div>
                         }
 
-                        {active === "FutureAccount" &&
-                            <div>
-                                <div className={classes.TitleBalanceContainers}>
-                                    <div className={classes.SubTitleContainer} onClick={() => setActive("CurrentBalance")}>Current Balance</div>
-                                    <div className={classes.SubTitleContainer} onClick={() => setActive("ExchangeAccount")}>Exchange Account</div>
-                                    <div className={classes.SubTitleContainer} onClick={() => setActive("C2CTrading")}>C2C Trading</div>
-                                    <div className={classes.SubTitleContainer} onClick={() => setActive("MarginAccount")}>Margin Account</div>
-                                </div>
-
-
-                                <hr
-                                    style={{
-                                        color: '#707070',
-                                        height: 3,
-                                        width: '90%'
-                                    }} />
-
-
-                                <div className={classes.infoContainer}>
-                                    <div>
-                                        <div className={classes.SubTitleContainer}>Account Balance</div>
-                                        <div style={{ gridTemplateColumns: 'auto auto', display: 'grid', width: '40%' }}>
-                                            <div className={classes.AmountContainer}>0.010000</div>
-                                            <div className={classes.SubTitleContainer}>BTC</div>
-                                        </div>
-                                        <div className={classes.SubTitleContainer}>total valuation</div>
-                                        <div className={classes.PriceContainer}>$1000</div>
-                                    </div>
-                                    <div>
-                                        <ReactEcharts
-                                            option={{
-                                                tooltip: {
-                                                    trigger: 'item',
-                                                    formatter: '{a} <br/>{b}: {c} ({d}%)'
-                                                },
-                                                legend: {
-                                                    orient: 'vertical',
-                                                    top:20,
-                                                    right: 10,
-                                                    data: typeArray
-                                                },
-                                                series: [
-                                                    {
-                                                        name: 'Utilization',
-                                                        type: 'pie',
-                                                        radius: ['50%', '70%'],
-                                                        avoidLabelOverlap: false,
-                                                        label: {
-                                                            show: false,
-                                                            position: 'center'
-                                                        },
-                                                        emphasis: {
-                                                            label: {
-                                                                show: true,
-                                                                fontSize: '30',
-                                                                fontWeight: 'bold'
-                                                            }
-                                                        },
-                                                        labelLine: {
-                                                            show: false
-                                                        },
-                                                        data: data
-                                                    }
-                                                ]
-                                            }}
-                                        />
-                                    </div>
-
-                                </div>
-
-
-                            </div>
-                        }
+                        
 
                     </div>
 
