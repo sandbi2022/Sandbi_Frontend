@@ -224,6 +224,17 @@ const C2C = () => {
         setbuyplist(temp2)
 
     }
+    useEffect(()=>{
+        var header=document.getElementById("button");
+        var btns=header.getElementsByClassName("btn");
+        for(var i=0;i<btns.length;i++){
+            btns[i].addEventListener("click", function() {
+                var current = document.getElementsByClassName("active");
+                current[0].className = current[0].className.replace(" active", "");
+                this.className += " active";
+                });
+        }
+    },[])
 
 
     return (
@@ -232,14 +243,14 @@ const C2C = () => {
             {active === "Buy" &&
                 <div className={classes.mainContainer}>
                     <div style={{ display: 'grid', gridTemplateColumns: '70% 30%' }}>
-                        <div className={classes.buttonContainer}>
+                        <div id="button" className={ classes.buttonContainer}>
                             <button className={classes.SelectButtonSetting}>BUY</button>
                             <button className={classes.UnselectButtonSetting} onClick={() => setActive("Sell")}>Sell</button>
-                            <button className={classes.bottonSetting} onClick={showall}>ALL</button>
-                            <button className={classes.bottonSetting} onClick={showBTC}>BTC</button>
-                            <button className={classes.bottonSetting} onClick={showBCH}>BCH</button>
-                            <button className={classes.bottonSetting} onClick={showETH}>ETH</button>
-                            <button className={classes.bottonSetting} onClick={showall}>USDT</button>
+                            <button class="btn active" className={classes.bottonSetting} onClick={showall}>ALL</button>
+                            <button class="btn" className={classes.bottonSetting} onClick={showBTC}>BTC</button>
+                            <button class="btn" className={classes.bottonSetting} onClick={showBCH}>BCH</button>
+                            <button class="btn" className={classes.bottonSetting} onClick={showETH}>ETH</button>
+                            <button class="btn" className={classes.bottonSetting} onClick={showall}>USDT</button>
                         </div>
                         <div className={classes.buttonContainer}>
                             <Popup contentStyle={{
