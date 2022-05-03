@@ -38,7 +38,7 @@ export const useStyles = createUseStyles({
         display:'grid',
         gridTemplateColumns:'auto auto auto auto',
         width: '100%',
-        background:'rgba(255,255,255,0.1)'
+        background:'rgba(255,255,255,0.0)'
     },
     // .bgimg{
     //     background-image:('/opt/front/react-app-master/src/images/bg.jpeg"');

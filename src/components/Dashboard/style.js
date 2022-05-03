@@ -17,9 +17,9 @@ export const useStyles = createUseStyles({
     },
     totalContainer:{
         marginLeft: "15vw",
-        marginRight:'20vw',
+        marginRight:'10vw',
         display:'grid',
-        gridTemplateColumns:'auto auto',
+        gridTemplateColumns:'65% 35%',
     },
     mainContainer: {
         
@@ -32,9 +32,9 @@ export const useStyles = createUseStyles({
         height:'80px',
         marginBottom:'20px',
         display:'grid',
-        gridTemplateColumns:'auto auto 30%',
+        gridTemplateColumns:'40% 60%',
         textAlign:'left',
-        paddingLeft:'30px',
+        
     },
     AnnouncementContainer:{
         backgroundColor:'#141126',
@@ -52,26 +52,35 @@ export const useStyles = createUseStyles({
         fontSize:'20px',
         fontWeight:'bold',
         textAlign:'left',
-        marginLeft:'120px',
+        marginLeft:'5%',
         padding:'10px 0px 0px 0px',
         margin:'0px 0px 10px 0px'
     },
     SubTitleContainer:{
         color:'white',
-        fontSize:'10px',
+        fontSize:'12px',
         textAlign:'left',
         marginLeft:'20px',
         padding:'10px 0px 0px 0px',
-        margin:'0px 0px 5px 0px'
+        margin:'0px 0px 5px 0px',
+        fontWeight:'300'
     },
     SubTitleContainer2:{
         color:'white',
-        fontSize:'10px',
+        fontSize:'12px',
         textAlign:'left',
         marginLeft:'20px',
         padding:'10px 0px 0px 0px',
         margin:'0px 0px 5px 0px',
         fontWeight:'bold'
+    },
+    manage:{
+        backgroundColor: '#4CAF50',
+        
+        color: 'white',
+        
+        
+        
     },
     AmountContainer:{
         color:'white',
@@ -92,6 +101,7 @@ export const useStyles = createUseStyles({
         borderRadius:'5px',
         right:'0px'
     },
+    
     infoContainer:{
         display:'grid',
         marginLeft:'60px 20px 60px 20px',
@@ -109,6 +119,23 @@ export const useStyles = createUseStyles({
         padding:'2px 50px 2px 50px',
         color:'white',
         fontWeight:'bold'
+    },
+    inputSetting2:{
+        color:'white',
+        width:'70%',
+        backgroundColor:'#04011A',
+        borderColor:'grey',
+        textAlign:'left',
+        marginLeft:'10%',
+        padding:'0px 20px 0px 20px'
+    },
+    inputSetting:{
+        color:'white',
+        backgroundColor:'#04011A',
+        borderColor:'grey',
+        textAlign:'left',
+        marginLeft:'10%',
+        borderRadius:'10px'
     },
     
 })

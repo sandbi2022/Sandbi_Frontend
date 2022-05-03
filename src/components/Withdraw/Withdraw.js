@@ -9,9 +9,11 @@ import { useStyles } from "./style";
 import SideBar from '../Sidebar/SideBar';
 import { render } from '@testing-library/react';
 import QR_CODE from '../../images/QR_code.png';
+import{useDispatch, useSelector} from 'react-redux';
 
 const Withdraw = () => {
     const classes = useStyles()
+    const user = useSelector((state)=>state.user.value);
     const history = useHistory();
     const [coin, setCoin] = React.useState('Select a Coin')
     const [Address, setAddress] = useState("");
@@ -28,17 +30,9 @@ const Withdraw = () => {
     }
     const data = [
         {
-            type: 'ERC20',
+            type: 'test net',
         },
-        {
-            type: 'TRC20',
-        },
-        {
-            type: 'BEP20',
-        },
-        {
-            type: 'HECO',
-        }
+
     ]
     return (
         <div>
@@ -47,9 +41,9 @@ const Withdraw = () => {
             </div>
 
             <div className={classes.UserInfoContainer}>
-                <div className={classes.TitleContainer}>XXXXXXXXX@gmail.com</div>
-                <div className={classes.TitleContainer}>User ID:XXXXXXXX</div>
-            </div>
+                        <div className={classes.TitleContainer}>{user.email}</div>
+                        <div className={classes.TitleContainer}>User Name:{user.username}</div>
+                    </div>
             <div className={classes.SwitchButtonContainer}>
 
                 <div style={{ color: 'white', fontWeight: 'bold', fontSize: '20px', textAlign: 'center', width: '180px', padding: '3px 9px 3px 9px' }} onClick={redirectTransferIn}>Transfer In</div>
@@ -77,10 +71,9 @@ const Withdraw = () => {
                     <div style={{width: '160px', borderWidth: '2px', marginLeft: '10px',textAlign:'left'}}>
                     <select className={classes.inputSetting2}> 
                                 
-                                    <option >USDT</option>
-                                    <option >HT</option>
-                                    <option >ETH</option>
-                                    <option >HT</option>
+                                    <option >BTC</option>
+
+
                             </select>	
                     </div>
                     <div className={classes.infoContainer}>

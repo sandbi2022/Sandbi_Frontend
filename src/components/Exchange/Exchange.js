@@ -60,25 +60,7 @@ const Exchange = () => {
         })
 
     }, [])
-    
-    useEffect(() => {
-        MarketAPI.getGraphData({"TradePair":Tradepair,"Period":"1","Second":86400}).then((res)=>{
-            console.log(res.data)
-            var newlist={}
-            
-                for (let key of Object.keys(res.data)) {
-                     if(key!=="time"){
-                      var data= JSON.parse(res.data[key])
-                      newlist=data
-                      console.log(newlist)
-                    }
-              }
-           
-           setTPINFO(newlist)
-        })
-        
 
-    }, [PairInfo, Tradepair, change])
 
     useEffect(() => {
         MarketAPI.getOrder({ "TradePair": Tradepair, "TradeType": 1 }).then((response) => {
@@ -306,7 +288,7 @@ const Exchange = () => {
         }
 
     }, [Switch, openorder, orderH])
-    
+
     const perenatage=(number)=>{
         console.log(number)
         if (number>0){
@@ -347,48 +329,7 @@ const Exchange = () => {
 
     return (
         <div>
-            {/*<div className='leftsideMarket' style={{left:0}}>
-            {/* <div > 
-			    <input type="text"></input>
-			    <button >Search </button>   
-		    </div>  
-            {Coindata.map((item, index) => {
-                return (
-                  <li key={index} className={item.cName}>
-                      {item.Type} 
-                      <span>  {item.lastPrice}  </span>
-                      <span>  {item.change}</span>
-                  </li>
-                );
-              })}
-          </div>
-          <div className='orderbook'>
-            <div>Order Book</div>
-            {order.map((item, index) => {
-                return (
-                  <li key={index} className={item.cName}>
-                      {item.price} 
-                      <span>  {item.amount}  </span>
-                      <span>  {item.sum}</span>
-                  </li>
-                );
-              })}
-
-          </div>
-
-          <div className='Market'>
-            <div>Market trading</div>
-            {market.map((item, index) => {
-                return (
-                  <li key={index} className={item.cName}>
-                      {item.time} 
-                      <span>  {item.price}</span>
-                      <span>  {item.amount}  </span>
-                  </li>
-                );
-              })}
-
-          </div>*/}
+            
             <div className={classes.UpContainers}>
                 <div className={classes.columContainers}>
                     <AssetTable setTPair={(value) => { setTradepair(value) }} setC1={setcoin1} setC2={setcoin2} />
@@ -423,7 +364,7 @@ const Exchange = () => {
                                     {coin1}/{coin2}
                                 </div>
                                 <div className={classes.ChartTitleInfoContainer}>
-                                    <div style={{ color: 'green', fontSize: '10px' }}>{Tpinfo.close}</div>
+                                <div style={{ color: 'green', fontSize: '10px' }}>{Tpinfo.close}</div>
                                     <div style={{ color: 'grey', fontSize: '10px' }}>=1 {coin2}</div>
                                     <div style={{ color: 'red', fontSize: '10px' }}>{perenatage(Tpinfo.close-Tpinfo.open)}</div>
                                 </div>
@@ -433,7 +374,7 @@ const Exchange = () => {
                                     24H High
                                 </div>
                                 <div style={{ color: '#BFBFBF', fontSize: '14px' }}>
-                                    {Tpinfo.high}
+                                {Tpinfo.high}
                                 </div>
                             </div>
                             <div>

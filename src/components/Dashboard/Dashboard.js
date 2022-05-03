@@ -17,8 +17,8 @@ import ReactEcharts from 'echarts-for-react'
 import { Button } from 'bootstrap';
 import{useDispatch, useSelector} from 'react-redux';
 import WalletAPI from '../../api/wallet_api';
-
-
+import Manage from './manage';
+import Popup from 'reactjs-popup';
 const Dashboard = () => {
     const classes = useStyles()
     const history = useHistory();
@@ -37,6 +37,9 @@ const Dashboard = () => {
     const [BTC,setBTC]= useState();
     const [BCH,setBCH]= useState();
     const [ETH,setETH]= useState();
+    // const [Exchange,setExchange]=useState()
+    // const [C2C,setC2C]=useState()
+    // const [Margin,setMargin]=useState()
 
 
 
@@ -75,6 +78,7 @@ useEffect(()=>{
            console.log("c2c")
            console.log(response.data)
            setC2CBal(response.data)
+        //    setC2C(((parseFloat(BTC*C2CBalance.BTC+0)+parseFloat(BCH*C2CBalance.BCH+0)+parseFloat(ETH*C2CBalance.ETH+0)+parseFloat(C2CBalance.USDT+0)+0)/BTC).toFixed(5))
            
        }
        ) 
@@ -85,6 +89,8 @@ useEffect(()=>{
             console.log("margin")
            console.log(response.data)
            setMBal(response.data)
+        //    setMargin(((parseFloat(BTC*MBalance.BTC+0)+parseFloat(BCH*MBalance.BCH+0)+parseFloat(ETH*MBalance.ETH+0)+parseFloat(MBalance.USDT+0)+0)/BTC).toFixed(5))
+        //    console("margin total"+Margin)
        }
        ) 
       }, []);
@@ -94,6 +100,8 @@ useEffect(()=>{
             console.log("exchange")
            console.log(response.data)
            setexBal(response.data)
+          // setExchange(((parseFloat(BTC*exBalance.BTC+0)+parseFloat(BCH*exBalance.BCH+0)+parseFloat(ETH*exBalance.ETH+0)+parseFloat(exBalance.USDT+0)+0)/BTC).toFixed(5))
+           
         }
         )
 
@@ -103,7 +111,7 @@ useEffect(()=>{
 
     const Announcement = [
         {
-            comment: 'XXXXXXXXXXXXX',
+            comment: 'Thank you so much for registering to our website',
             date: 'XX/XX/XX'
         },
         {
@@ -113,22 +121,22 @@ useEffect(()=>{
     ]
     const data = [
         {
-            name: 'BTC',
-            value: 10
+            name: 'Exchange Account',
+            
         },
         {
-            name: 'USDT',
-            value: 20
+            name: 'C2C Account',
+            
         },
         {
-            name: 'BCH',
-            value: 30
+            name: 'Margin Account',
+            
         },
-        {
-            name: 'ETH',
-            value: 40
-        }
+       
     ]
+    const Exchange =((parseFloat(BTC*exBalance.BTC+0)+parseFloat(BCH*exBalance.BCH+0)+parseFloat(ETH*exBalance.ETH+0)+parseFloat(exBalance.USDT+0)+0)/BTC).toFixed(5);
+    const C2C=((parseFloat(BTC*C2CBalance.BTC+0)+parseFloat(BCH*C2CBalance.BCH+0)+parseFloat(ETH*C2CBalance.ETH+0)+parseFloat(C2CBalance.USDT+0)+0)/BTC).toFixed(5);
+    const Margin=((parseFloat(BTC*MBalance.BTC+0)+parseFloat(BCH*MBalance.BCH+0)+parseFloat(ETH*MBalance.ETH+0)+parseFloat(MBalance.USDT+0)+0)/BTC).toFixed(5);
      const typeArray=data.map(d=>d.name);
 
      const dataex = [
@@ -217,26 +225,31 @@ useEffect(()=>{
                                     <div className={classes.SubTitleContainer} onClick={() => setActive("ExchangeAccount")}>Exchange Account</div>
                                     <div className={classes.SubTitleContainer} onClick={() => setActive("C2CTrading")}>C2C Trading</div>
                                     <div className={classes.SubTitleContainer} onClick={() => setActive("MarginAccount")}>Margin Account</div>
+                                    <Popup contentStyle={{ 
+                                            width: "20%",height:'40%',backgroundColor:'#04011A'}} 
+                                            position="bottom right"
+                                            trigger={<button className={classes.buttonSetting} 
+                                            >Manage</button>}>
+                                            {close=>(
+                                            <Manage/>
+                                            )}
+                                    </Popup>
                                 </div>
-
-
                                 <hr
                                     style={{
                                         color: '#707070',
                                         height: 3,
                                         width: '90%'
                                     }} />
-
-
                                 <div className={classes.infoContainer}>
                                     <div>
                                         <div className={classes.SubTitleContainer}>Account Balance</div>
                                         <div style={{ gridTemplateColumns: 'auto auto', display: 'grid', width: '40%' }}>
-                                            <div className={classes.AmountContainer}>0.010000</div>
+                                            <div className={classes.AmountContainer}>{(parseFloat(C2C+0)+parseFloat(Exchange+0)+parseFloat(Margin+0)).toFixed(5)}</div>
                                             <div className={classes.SubTitleContainer}>BTC</div>
                                         </div>
                                         <div className={classes.SubTitleContainer}>total valuation</div>
-                                        <div className={classes.PriceContainer}>$1000</div>
+                                        <div className={classes.PriceContainer}>{((parseFloat(C2C+0)+parseFloat(Exchange+0)+parseFloat(Margin+0))*BTC).toFixed(5)}</div>
                                     </div>
                                     <div>
                                         <ReactEcharts
@@ -247,8 +260,8 @@ useEffect(()=>{
                                                 },
                                                 legend: {
                                                     orient: 'vertical',
-                                                    top:'20%',
-                                                    left: '-10%',
+                                                    top:'5%',
+                                                    left: '0%',
                                                     data: typeArray,
                                                     textStyle:{
                                                         color:'fffdd0'
@@ -256,9 +269,9 @@ useEffect(()=>{
                                                 },
                                                 series: [
                                                     {
-                                                        name: 'Utilization',
+                                                        name: 'Total Balance',
                                                         type: 'pie',
-                                                        radius: ['50%', '70%'],
+                                                        radius: ['25%', '40%'],
                                                         avoidLabelOverlap: false,
                                                         label: {
                                                             show: false,
@@ -267,14 +280,14 @@ useEffect(()=>{
                                                         emphasis: {
                                                             label: {
                                                                 show: true,
-                                                                fontSize: '30',
+                                                                fontSize: '10px',
                                                                 fontWeight: 'bold'
                                                             }
                                                         },
                                                         labelLine: {
                                                             show: false
                                                         },
-                                                        data: data
+                                                        data: [{name:typeArray[0],value:Exchange},{name:typeArray[1],value:C2C},{name:typeArray[2],value:Margin}]
                                                     }
                                                 ]
                                             }}
@@ -300,9 +313,16 @@ useEffect(()=>{
                                     <div className={classes.SubTitleContainer2} >Exchange Account</div>
                                     <div className={classes.SubTitleContainer} onClick={() => setActive("C2CTrading")}>C2C Trading</div>
                                     <div className={classes.SubTitleContainer} onClick={() => setActive("MarginAccount")}>Margin Account</div>
+                                    <Popup contentStyle={{ 
+                                            width: "20%",height:'40%',backgroundColor:'#04011A'}} 
+                                            position="bottom right"
+                                            trigger={<button className={classes.buttonSetting} 
+                                            >Manage</button>}>
+                                            {close=>(
+                                            <Manage/>
+                                            )}
+                                    </Popup>
                                 </div>
-
-
                                 <hr
                                     style={{
                                         color: '#707070',
@@ -315,7 +335,7 @@ useEffect(()=>{
                                     <div>
                                         <div className={classes.SubTitleContainer}>Account Balance</div>
                                         <div style={{ gridTemplateColumns: 'auto auto', display: 'grid', width: '40%' }}>
-                                            <div className={classes.AmountContainer}>{((parseFloat(BTC*exBalance.BTC+0)+parseFloat(BCH*exBalance.BCH+0)+parseFloat(ETH*exBalance.ETH+0)+parseFloat(exBalance.USDT+0)+0)/BTC).toFixed(5)}</div>
+                                            <div className={classes.AmountContainer}>{Exchange}</div>
                                             <div className={classes.SubTitleContainer}>BTC</div>
                                         </div>
                                         <div className={classes.SubTitleContainer}>total valuation</div>
@@ -330,8 +350,9 @@ useEffect(()=>{
                                                 },
                                                 legend: {
                                                     orient: 'vertical',
-                                                    top:20,
-                                                    right: 10,
+                                                    top:'5%',
+                                                    left: '0%',
+                                                    fontSize:'5',
                                                     data: typeArrayex,
                                                     textStyle:{
                                                         color:'fffdd0'
@@ -339,18 +360,19 @@ useEffect(()=>{
                                                 },
                                                 series: [
                                                     {
-                                                        name: 'Utilization',
+                                                        name: 'Value ratio',
                                                         type: 'pie',
-                                                        radius: ['50%', '70%'],
+                                                        radius: ['25%', '40%'],
                                                         avoidLabelOverlap: false,
                                                         label: {
                                                             show: false,
+                                                            
                                                             position: 'center'
                                                         },
                                                         emphasis: {
                                                             label: {
                                                                 show: true,
-                                                                fontSize: '30',
+                                                                fontSize: '10',
                                                                 fontWeight: 'bold'
                                                             }
                                                         },
@@ -367,9 +389,6 @@ useEffect(()=>{
                                 </div>
                             </div>
                         }
-
-
-
                         {active === "C2CTrading" &&
                             <div>
                                 <div className={classes.TitleBalanceContainers}>
@@ -377,17 +396,22 @@ useEffect(()=>{
                                     <div className={classes.SubTitleContainer} onClick={() => setActive("ExchangeAccount")}>Exchange Account</div>
                                     <div className={classes.SubTitleContainer2}>C2C Trading</div>
                                     <div className={classes.SubTitleContainer} onClick={() => setActive("MarginAccount")}>Margin Account</div>
+                                    <Popup contentStyle={{ 
+                                            width: "20%",height:'40%',backgroundColor:'#04011A'}} 
+                                            position="bottom right"
+                                            trigger={<button className={classes.buttonSetting} 
+                                            >Manage</button>}>
+                                            {close=>(
+                                            <Manage/>
+                                            )}
+                                    </Popup>
                                 </div>
-
-
                                 <hr
                                     style={{
                                         color: '#707070',
                                         height: 3,
                                         width: '90%'
                                     }} />
-
-
                                 <div className={classes.infoContainer}>
                                     <div>
                                         <div className={classes.SubTitleContainer}>Account Balance</div>
@@ -396,7 +420,7 @@ useEffect(()=>{
                                             <div className={classes.SubTitleContainer}>BTC</div>
                                         </div>
                                         <div className={classes.SubTitleContainer}>total valuation</div>
-                                        <div className={classes.PriceContainer}>{/*C2CBalance.BTC*BTC+C2CBalance.USDT+C2CBalance.BCH*BCH+C2CBalance.ETH*ETH*/parseFloat(BTC*C2CBalance.BTC+0)+parseFloat(BCH*C2CBalance.BCH+0)+parseFloat(ETH*C2CBalance.ETH+0)+parseFloat(C2CBalance.USDT+0)+0}</div>
+                                        <div className={classes.PriceContainer}>{/*C2CBalance.BTC*BTC+C2CBalance.USDT+C2CBalance.BCH*BCH+C2CBalance.ETH*ETH*/parseFloat(BTC*C2CBalance.BTC+0)+parseFloat(BCH*C2CBalance.BCH+0)+parseFloat(ETH*C2CBalance.ETH+0)+parseFloat(C2CBalance.USDT+0)+0}</div>    
                                     </div>
                                     <div>
                                         <ReactEcharts
@@ -407,8 +431,8 @@ useEffect(()=>{
                                                 },
                                                 legend: {
                                                     orient: 'vertical',
-                                                    top:0,
-                                                    right: 0,
+                                                    top:'5%',
+                                                    left: '0%',
                                                     data: typeArrayc2c,
                                                     textStyle:{
                                                         color:'fffdd0'
@@ -418,10 +442,11 @@ useEffect(()=>{
                                                     {
                                                         name: 'Value ratio',
                                                         type: 'pie',
-                                                        radius: ['50%', '70%'],
+                                                        radius: ['25%', '40%'],
                                                         avoidLabelOverlap: false,
                                                         label: {
                                                             show: false,
+                                                            fontSize:'10px',
                                                             position: 'center'
                                                         },
                                                         emphasis: {
@@ -440,13 +465,9 @@ useEffect(()=>{
                                             }}
                                         />
                                     </div>
-
                                 </div>
-
-
                             </div>
                         }
-
                         {active === "MarginAccount" &&
                             <div>
                                 <div className={classes.TitleBalanceContainers}>
@@ -454,9 +475,16 @@ useEffect(()=>{
                                     <div className={classes.SubTitleContainer} onClick={() => setActive("ExchangeAccount")}>Exchange Account</div>
                                     <div className={classes.SubTitleContainer} onClick={() => setActive("C2CTrading")}>C2C Trading</div>
                                     <div className={classes.SubTitleContainer2}>Margin Account</div>
+                                    <Popup contentStyle={{ 
+                                            width: "20%",height:'40%',backgroundColor:'#04011A'}} 
+                                            position="bottom right"
+                                            trigger={<button className={classes.buttonSetting} 
+                                            >Manage</button>}>
+                                            {close=>(
+                                            <Manage/>
+                                            )}
+                                    </Popup>
                                 </div>
-
-
                                 <hr
                                     style={{
                                         color: '#707070',
@@ -484,8 +512,8 @@ useEffect(()=>{
                                                 },
                                                 legend: {
                                                     orient: 'vertical',
-                                                    top:20,
-                                                    right: 10,
+                                                    top:'5%',
+                                                    left: '0%',
                                                     data: typeArraymar,
                                                     textStyle:{
                                                         color:'fffdd0'
@@ -495,7 +523,7 @@ useEffect(()=>{
                                                     {
                                                         name: 'Value ratio',
                                                         type: 'pie',
-                                                        radius: ['50%', '70%'],
+                                                        radius: ['25%', '40%'],
                                                         avoidLabelOverlap: false,
                                                         label: {
                                                             show: false,
@@ -504,7 +532,7 @@ useEffect(()=>{
                                                         emphasis: {
                                                             label: {
                                                                 show: true,
-                                                                fontSize: '30',
+                                                                fontSize: '10',
                                                                 fontWeight: 'bold'
                                                             }
                                                         },
@@ -517,19 +545,10 @@ useEffect(()=>{
                                             }}
                                         />
                                     </div>
-
                                 </div>
-
-
-                            </div>
+                            </div>          
                         }
-
-                        
-
                     </div>
-
-
-
                 </div>
                 <div className={classes.AnnouncementContainer}>
                     <div className={classes.TitleContainer}>

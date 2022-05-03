@@ -60,6 +60,16 @@ class UserAPI{
         );
     }
 
+    getInfo(data){
+        return axios.post(USER_API_BASE_URL+'/User/GetInfo.jsp',
+        JSON.stringify(data),
+        {
+            headers:{'Content-Type':'application/json'},
+            withCredentials:true
+        }
+        );
+    }
+
     IdentityVerification(data){
         return axios.post(USER_API_BASE_URL+'/User/SetInfo.jsp',
         JSON.stringify(data),

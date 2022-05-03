@@ -12,7 +12,6 @@ const AssetTable= params =>{
     const [CoinRender,setCoinRender]= useState([])
     const [Coindata,setCoindata]=useState([])
     const [change,setChange]=useState()
-    console.log(params)
     const setTradepair=params.setTPair ;
     const setcoin1= params.setC1;
     const setcoin2= params.setC2;
@@ -21,7 +20,6 @@ const AssetTable= params =>{
 
 useEffect(()=>{
     InfoAPI.getTradePair().then((response)=>{
-        console.log(response.data)
         var newlist={}
      for (let [key,value] of Object.entries(response.data)) {
          var data= JSON.parse(value)
@@ -31,15 +29,17 @@ useEffect(()=>{
     })
 },[])
 
-
+const changetradetype=(type)=>{        
+    setTradepair(type);
+    setcoin1(PairInfo[type]["Coin1"])
+    setcoin2(PairInfo[type]["Coin2"])
+}
 
 
      useEffect(() => {
      var pairlist =[]
      var Promiselist=[];
      for (let [key,value] of Object.entries(PairInfo)) {
-         console.log(key)
-         console.log(value)
          var Tpair= value["Coin1"]+value["Coin2"]
          pairlist.push(Tpair)
          const response = MarketAPI.getPrice({"TradePair":Tpair})
@@ -49,15 +49,11 @@ useEffect(()=>{
        }
      
      Promise.all(Promiselist).then((res)=>{
-         console.log(res);
          var newCoindata=[]
      for(let i =0;i<pairlist.length;i++){
-         console.log(res[2*i].data)
-         console.log(res[2*i+1].data)
          var price=res[2*i].data["price"]
          var openprice =res[2*i+1].data["price"]
          var digit =PairInfo[pairlist[i]]["LimitPrice"]
-         console.log(digit)
          newCoindata.push({
              Type:pairlist[i],
              lastPrice:price.toFixed(digit),
@@ -65,7 +61,6 @@ useEffect(()=>{
  
          })
       }
-      console.log(newCoindata)
       setCoindata(newCoindata)
       setCoinRender(newCoindata)
        })
@@ -82,7 +77,6 @@ useEffect(()=>{
                  newlist.push(Coindata[pair])
              }
          }
-         console.log(newlist)
          setCoinRender(newlist)
          setTradepair(newlist[0].Type)
          setcoin1(PairInfo[newlist[0].Type]["Coin1"])
@@ -98,7 +92,6 @@ useEffect(()=>{
      }
 
      const perenatage=(number)=>{
-        console.log(number)
         if (number>0){
          return "+"+number+"%"
         }
@@ -123,7 +116,7 @@ useEffect(()=>{
         {CoinRender.map((item, index) => {
             return (
                 <div className={classes.leftSideContainer}>
-                    <div className={classes.smallText} onClick={()=>params.ChangeType(item.Type)}>{item.Type}</div>
+                    <div className={classes.smallText} onClick={()=>changetradetype(item.Type)}>{item.Type}</div>
                     <div  className={classes.smallText}>{item.lastPrice}</div>
                     <div  style={{color: Math.sign(item.Change) === -1 ? "red" : "green",fontSize:'14px'}}>{perenatage(item.change)}</div>
                 </div>

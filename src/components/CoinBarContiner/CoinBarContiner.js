@@ -69,12 +69,22 @@ const CoinBarContainer=()=>{
         })
       }, [PairInfo])
 
-
+      const perenatage=(number)=>{
+        console.log(number)
+        if (number>0){
+         return "+"+number+"%"
+        }
+        else{
+            return "-"+number+"%"
+        }
+    
+    
+    }
 
     return(
     <div className={classes.coinContainers}>
         {TradePair.map((item, index) => {
-            return <CoinBar CoinName={item} CoinPrice={Pricelist[index]} CoinChange={Clist[index]} CoinVolume={Vollist[index]} Round={Precionlist[index]}  />
+            return <CoinBar CoinName={item} CoinPrice={Pricelist[index]} CoinChange={perenatage(Clist[index])} CoinVolume={Vollist[index]} Round={Precionlist[index]}  />
         })
         }      
     </div>

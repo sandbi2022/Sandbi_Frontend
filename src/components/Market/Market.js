@@ -97,7 +97,8 @@ useEffect(()=>{
                                 <div  className={classes.infoTextSetting}>{item.Pair}</div>
                                 <div  className={classes.infoTextSetting}>{item.close}</div>
                     
-                                <div  style={{color: Math.sign(item.close-item.open) === -1 ? "green" : "red",fontSize:'14px'}}>
+                                <div  style={{color: Math.sign(item.close-item.open) === -1 ? "green" : "red",fontSize:'14px',textAlign:'Left',
+                                marginLeft:'10%',}}>
                                     {(item.close-item.open)*100}%
                                 </div>
                                 <div  className={classes.infoTextSetting}>{item.high}</div>

@@ -30,14 +30,14 @@ export const useStyles = createUseStyles({
 
     },
     UserInfoContainer:{
-        marginLeft: "15vw",
+
         backgroundColor:'#141126',
         height:'80px',
         marginBottom:'20px',
         display:'grid',
-        gridTemplateColumns:'auto auto 30%',
+        gridTemplateColumns:'40% 60%',
         textAlign:'left',
-        paddingLeft:'30px',
+        
     },
     SwitchButtonContainer:{
         marginLeft: "15vw",
@@ -56,7 +56,7 @@ export const useStyles = createUseStyles({
         fontSize:'20px',
         fontWeight:'bold',
         textAlign:'left',
-        marginLeft:'5px',
+        marginLeft:'5%',
         padding:'10px 0px 0px 0px',
         margin:'0px 0px 10px 0px'
     },

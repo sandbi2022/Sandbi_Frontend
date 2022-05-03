@@ -15,8 +15,8 @@ export const useStyles = createUseStyles({
     },
     leftSideContainer:{
         display:'grid',
-        marginLeft:'10px',
-        gridTemplateColumns:'auto auto auto',
+        marginLeft:'5%',
+        gridTemplateColumns:'30% 40% 30%',
         width: '100%',
         
     },
@@ -43,11 +43,13 @@ export const useStyles = createUseStyles({
         border: "solid",
         borderWidth: "0px 3px 0px 3px",
         borderColor:"#242044",
-        height:'700px'
+        height:'16%'
     },
     smallText:{
         color:'white',
-        fontSize:'14px'
+        fontSize:'14px',
+        textAlign:'left',
+        marginLeft:'5%'
     },
     smallTextRed:{
         color:'red',
@@ -58,7 +60,9 @@ export const useStyles = createUseStyles({
         fontSize:'14px'
     },
     smallText2:{
-        color:'grey'
+        color:'grey',
+        textAlign:'left',
+        marginLeft:'8%'
     },
     ExchangeContainer:{
         display:'grid',
