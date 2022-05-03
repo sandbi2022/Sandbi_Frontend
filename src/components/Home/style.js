@@ -14,7 +14,7 @@ export const useStyles = createUseStyles({
         flexDirection: 'column',
        
         //background: '#141126',
-        background: 'rgba(20, 17, 38,0.7)',
+        background: 'rgb(20, 17, 38)',
         //opacity:0.2
         //background:transparent
         //background: url('/opt/front/react-app-master/src/images/bg.jpeg')
@@ -40,7 +40,7 @@ export const useStyles = createUseStyles({
         display:'grid',
         gridTemplateColumns:'auto auto auto auto',
         width: '100%',
-        background:'rgba(255,255,255,0.1)'
+        background:'rgb(255,255,255)'
     },
     // .bgimg{
     //     background-image:('/opt/front/react-app-master/src/images/bg.jpeg"');

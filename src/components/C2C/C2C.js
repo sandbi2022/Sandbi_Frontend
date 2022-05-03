@@ -11,6 +11,8 @@ import UserOrder from '../UserOrder/UserOrder'
 import Popup from 'reactjs-popup';
 import InfoAPI from '../../api/Info-api';
 import 'reactjs-popup/dist/index.css';
+import BuyOrder from './BuyOrder';
+//import C2Cinfo from  "../C2C/BuyOrder";
 const C2C = () => {
 
     const classes = useStyles();
@@ -23,73 +25,79 @@ const C2C = () => {
     const [PairInfo,setInfo]= useState({})
     const dispatch = useDispatch();
     const [TradePairlist,setTradepairlist]=useState([])
+    const [min,setMin]=useState();
+    const [max,setMax]=useState();
+    // const sendInfo = (item) => {
+        
+    //     setMin(item.minAmount);
+    //     setMax(item.maxAmount);
+    //     console.log("min max"+min)
+    //   }
+    useEffect(()=>{
+        InfoAPI.getTradePair().then((response)=>{
+            console.log(response.data)
+            var newlist={}
+            var tmpPairlist=[]
+         for (let [key,value] of Object.entries(response.data)) {
+             var data= JSON.parse(value)
+             newlist[key]=data
+             tmpPairlist.push(key)
+           }
+           setInfo(newlist)
+           setTradepairlist(tmpPairlist)
+        })
+        },[])
 
-
-    // useEffect(()=>{
-    //     InfoAPI.getTradePair().then((response)=>{
-    //         console.log(response.data)
-    //         var newlist={}
-    //         var tmpPairlist=[]
-    //      for (let [key,value] of Object.entries(response.data)) {
-    //          var data= JSON.parse(value)
-    //          newlist[key]=data
-    //          tmpPairlist.push(key)
-    //        }
-    //        setInfo(newlist)
-    //        setTradepairlist(tmpPairlist)
-    //     })
-    //     },[])
-
-    //     useEffect(() => {
-    //         var pairlist =[]
-    //         var PromiseBUYlist=[];
-    //         var PromiseSelllist=[];
-    //         for (let [key,value] of Object.entries(PairInfo)) {
-    //             var Tpair= value["Coin1"]+value["Coin2"]
-    //             pairlist.push(Tpair)
-    //             const buyres = c2cAPI.getPOrder({"TradePair":Tpair,"TradeType":0 })
-    //             PromiseBUYlist.push(buyres)
-    //             const sellres = c2cAPI.getPOrder({"TradePair":Tpair,"TradeType":1 })
-    //             PromiseSelllist.push(sellres)
-    //           }
+        useEffect(() => {
+            var pairlist =[]
+            var PromiseBUYlist=[];
+            var PromiseSelllist=[];
+            for (let [key,value] of Object.entries(PairInfo)) {
+                var Tpair= value["Coin1"]+"USD"
+                console.log(Tpair)
+                pairlist.push(Tpair)
+                const buyres = c2cAPI.getPOrder({"TradePair":Tpair,"TradeType":0 })
+                PromiseBUYlist.push(buyres)
+                const sellres = c2cAPI.getPOrder({"TradePair":Tpair,"TradeType":1 })
+                PromiseSelllist.push(sellres)
+              }
             
-    //         Promise.all(PromiseSelllist).then((res)=>{
-    //             console.log(res);
-            
-    //           })
+            Promise.all(PromiseSelllist).then((res)=>{
+                console.log(res);
+                var newList=[]
+                for(let i in res){
+                    for (let value of Object.values(res[i].data)) {
+                        var data= JSON.parse(value)
+                        newList.push(data)
+                    }
+                }
+                   
+                    console.log(newList)
+                    var final = newList.filter(order => (order.amount-order.doneAmount) > 0);
+                    console.log("final")
 
-
-
-
-    //         }, [PairInfo])
-
-    useEffect(() => {
-        c2cAPI.getPOrder({"TradePair":"BTCUSD","TradeType":0 }).then((response) => {
-          var newList=[]
-          for (let value of Object.values(response.data)) {
-            var data= JSON.parse(value)
-             newList.push(data)
-            
-          }
-           console.log(newList)
-           setbuyplist(newList)
-        }
-        )
-      }, []);
-
-    useEffect(() => {
-        c2cAPI.getPOrder({"TradePair":"BTCUSD","TradeType":1 }).then((response) => {
-          var newList=[]
-          for (let value of Object.values(response.data)) {
-              var data= JSON.parse(value)
-               newList.push(data)
+                    console.log(final)
+                    setsellplist(final)
+              }, [PairInfo])
               
-            }
-             console.log(newList)
-             setsellplist(newList)
-        }
-        )
-      }, []);
+            
+            
+              Promise.all(PromiseBUYlist).then((res)=>{
+                console.log(res);
+                var newList=[]
+                for(let i in res){
+                    for (let value of Object.values(res[i].data)) {
+                        var data= JSON.parse(value)
+                        newList.push(data)
+                    }
+                }
+                
+                    console.log(newList)
+                    var final = newList.filter(order => (order.amount-order.doneAmount) > 0);
+                    setbuyplist(final)
+              })
+
+            }, [PairInfo])
 
 
 
@@ -100,36 +108,61 @@ const C2C = () => {
             TradePair:item.tradePair,
             Seller:item.seller,  
         }))
-        history.push('/BuyOrder')
+        //history.push('/BuyOrder')
     }
+    const showall = () =>{
+        setsellplist(sellplist)
+
+    }
+    const showBTC = () =>{
+        var temp=[]
+        for(let i in sellplist){
+            if(i.tradePair=="BTCUSD"){
+                temp.push(i)
+            }
+        }
+        setsellplist(i)
+        var temp2=[]
+        for(let i in buyplist){
+            if(i.tradePair=="BTCUSD"){
+                temp.push(i)
+            }
+        }
+        setbuyplist(i)
+
+    }
+    
 
     return (
         <div >
             <div className={classes.TitleSetting}>C2C Trading</div>
             {active === "Buy" &&
                 <div className={classes.mainContainer}>
-                    <div style={{display:'grid', gridTemplateColumns:'60% 40%'}}>
+                    <div style={{display:'grid', gridTemplateColumns:'70% 30%'}}>
                         <div className={classes.buttonContainer}>
                             <button className={classes.SelectButtonSetting}>BUY</button>
                             <button className={classes.UnselectButtonSetting} onClick={() => setActive("Sell")}>Sell</button>
+                            <button className={classes.bottonSetting}>ALL</button>
                             <button className={classes.bottonSetting}>BTC</button>
                             <button className={classes.bottonSetting}>BCH</button>
                             <button className={classes.bottonSetting}>ETH</button>
                             <button className={classes.bottonSetting}>USDT</button>
                         </div>
                         <div className={classes.buttonContainer}>
-                        <Popup contentStyle={{ width: "60%",height:'40%'}} trigger={<button className={classes.bottonSetting2} onClick={()=>{history.push('/CreateOrder')}}>Create</button>}>
+                        <Popup contentStyle={{ 
+                            width: "40%",height:'600px',backgroundColor:'#04011A'}} position="bottom right"trigger={<button className={classes.bottonSetting2} onClick={()=>{history.push('/CreateOrder')}}>Create</button>}>
                             {close=>(
-                                <div>
+                                
                                     <CreateOrder/>
-                                </div>
+                                
                             )}
                          </Popup>
-                         <Popup contentStyle={{ width: "60%",height:'50%'}} trigger={<button className={classes.bottonSetting2}>User Order</button>}>
+                         <Popup contentStyle={{ 
+                             width: "60%",height:'60%', backgroundColor:'#04011A'}} position="bottom right" trigger={<button className={classes.bottonSetting2}>User Order</button>}>
                             {close=>(
-                                <div>
+                                
                                     <UserOrder/>
-                                </div>
+                                
                             )}
                          </Popup>    
                             
@@ -143,7 +176,7 @@ const C2C = () => {
                         }} />
                     <div className={classes.searchContainers}>
                         <div className={classes.subTitleContainer}>
-                            <div className={classes.subTitleSetting}>Amout</div>
+                            <div className={classes.subTitleSetting}>Amount</div>
                             <div className={classes.subsearchContainers}>
                                 <input type="text" className={classes.inputSetting} placeholder="Enter Amount"></input>
                                 <button className={classes.searchbuttonSetting}>Search </button>
@@ -172,29 +205,6 @@ const C2C = () => {
                         <div className={classes.subTitleSetting2}>Trade</div>
                     </div>
 
-
-
-                    {/* <div className={classes.infoContainers}>
-                        <div className={classes.infoTextSetting}>{info.Advertiser}</div>
-                        <div className={classes.infoTextSetting}>{info.Price}</div>
-                        <div>
-                            <div className={classes.infoTextSetting}>
-                                Limit:{info.Limit}
-
-                            </div>
-                            <div className={classes.infoTextSetting}>
-                                Available{info.Available}
-                            </div>
-                        </div>
-                        <div className={classes.infoTextSetting}>{info.Payment}</div>
-                        <div><button className={classes.SelectButtonSetting2}>Buy xxx</button></div>
-                    </div> */}
-
-
-
-
-
-
                     {buyplist.map((item, index) => {
                         return (
                             <div className={classes.infoContainers}>
@@ -202,15 +212,18 @@ const C2C = () => {
                                 <div className={classes.infoTextSetting}>{item.price}</div>
                                 <div>
                                     <div className={classes.infoTextSetting}>
-                                        Limit:{item.maxAmount}
+                                        Limit:{item.maxAmount}-{item.minAmount}
 
                                     </div>
                                     <div className={classes.infoTextSetting}>
-                                        Available{item.amount-item.doneAmount}
+                                        Available:{item.amount-item.doneAmount}
                                     </div>
                                 </div>
                                 <div className={classes.infoTextSetting}>{item.Payment}</div>
-                                <div><button className={classes.SelectButtonSetting2} onClick={()=>{handleBuy(item)}}>Buy</button></div>
+                                <div><Popup contentStyle={{ 
+                                    width: "20%",height:'20%',backgroundColor:'#04011A'}} position="bottom right" trigger={<button className={classes.SelectButtonSetting3} >Buy</button>} onOpen={()=>{handleBuy(item)}}>
+                                    <BuyOrder/>
+                                </Popup></div>
                             </div>
 
                         );
@@ -230,6 +243,7 @@ const C2C = () => {
             }
             {active === "Sell" &&
                 <div className={classes.mainContainer}>
+                    <div  style={{display:'grid', gridTemplateColumns:'70% 30%'}}>
                     <div className={classes.buttonContainer}>
                         <button className={classes.UnselectButtonSetting} onClick={() => setActive("Buy")}>BUY</button>
                         <button className={classes.SelectButtonSetting}>Sell</button>
@@ -238,8 +252,25 @@ const C2C = () => {
                         <button className={classes.bottonSetting}>ETH</button>
                         <button className={classes.bottonSetting}>USDT</button>
                     </div>
-                    <div>
-                        <button className={classes.bottonSetting} onClick={()=>{history.push('/CreateOrder')}}>Create</button>
+                    <div className={classes.buttonContainer}>
+                        <Popup contentStyle={{ 
+                            width: "40%",height:'600px',backgroundColor:'#04011A'}} position="bottom right" trigger={<button className={classes.bottonSetting2} onClick={()=>{history.push('/CreateOrder')}}>Create</button>}>
+                            {close=>(
+                                
+                                    <CreateOrder/>
+                                
+                            )}
+                         </Popup>
+                         <Popup contentStyle={{ 
+                             width: "60%",height:'60%',backgroundColor:'#04011A'}} position="bottom right" trigger={<button className={classes.bottonSetting2}>User Order</button>}>
+                            {close=>(
+                                
+                                    <UserOrder/>
+                                
+                            )}
+                         </Popup>    
+                            
+                    </div>
                     </div>
                     <hr
                         style={{
@@ -249,7 +280,7 @@ const C2C = () => {
                         }} />
                     <div className={classes.searchContainers}>
                         <div className={classes.subTitleContainer}>
-                            <div className={classes.subTitleSetting}>Amout</div>
+                            <div className={classes.subTitleSetting}>Amount</div>
                             <div className={classes.subsearchContainers}>
                                 <input type="text" className={classes.inputSetting} placeholder="Enter Amount"></input>
                                 <button className={classes.searchbuttonSetting}>Search </button>
@@ -284,19 +315,35 @@ const C2C = () => {
                                 <div className={classes.infoTextSetting}>{item.price}</div>
                                 <div>
                                     <div className={classes.infoTextSetting}>
-                                        Limit:{item.maxAmount}
+                                        max:{item.maxAmount} min:{item.minAmount}
 
                                     </div>
                                     <div className={classes.infoTextSetting}>
-                                        Available{item.amount-item.doneAmount}
+                                        Available: {item.amount-item.doneAmount}
                                     </div>
                                 </div>
                                 <div className={classes.infoTextSetting}>{item.Payment}</div>
-                                <div><button className={classes.SelectButtonSetting2} onClick={()=>{handleBuy(item)}}>Buy</button></div>
+                                <div>
+                                <Popup contentStyle={{ 
+                                    width: "20%",height:'20%',backgroundColor:'#04011A'}} position="bottom right" trigger={<button  className={classes.SelectButtonSetting2} >Sell</button>} onOpen={()=>{handleBuy(item)}}>
+                                    <BuyOrder sendInfo={item}/>
+                                </Popup>
+                                    
+                                </div>
                             </div>
 
                         );
                     })}
+                    {/*
+                     const handleBuy =(item)=>{
+        console.log(item)
+        dispatch(Pend({
+            TID:item.Tid,
+            TradePair:item.tradePair,
+            Seller:item.seller,  
+        }))
+        history.push('/BuyOrder')
+    }*/}
                     {/*<li key={index} className={item.cName}>
                             {item.Asset} 
                             <span>  {item.Advertiser}  </span>

@@ -10,8 +10,8 @@ export const useStyles = createUseStyles({
     },
     mainContainer:{
         width:'100%',
-        height:'900px',
-        backgroundColor:'#141126',
+        height:'100%',
+        backgroundColor:'#04011A',
     },
     SelectButtonSetting:{
         color:'white',
@@ -66,7 +66,8 @@ export const useStyles = createUseStyles({
     },
     subTitleContainer:{
         textAlign:'left',
-        marginLeft:'100px'
+        marginLeft:'15%',
+        marginBottom:'5%'
     },
     subTitleContainer2:{
         textAlign:'Right',
@@ -101,7 +102,7 @@ export const useStyles = createUseStyles({
     },
     infoContainers:{
         display:'grid',
-        gridTemplateColumns:'auto auto auto auto auto',
+        gridTemplateColumns:'20% 20% 25% 20% 15%',
         width: '100%',
         margin:'0px 0px 15px 0px'
         

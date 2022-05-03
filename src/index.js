@@ -5,25 +5,23 @@ import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
-//import {AuthProvider} from './context/AuthProvider'
 import { Provider } from 'react-redux';
-import  useReducer  from './features/user';
-import tradeReducer from './features/trade';
-import { configureStore } from '@reduxjs/toolkit';
+import { PersistGate } from 'redux-persist/integration/react';
+import { persistStore } from 'redux-persist';
+import { store } from './app/store'
 
-const store = configureStore({
-  reducer:{
-    user:useReducer,
-    trade:tradeReducer,
-  },
-})
+
+let persistor = persistStore(store);
+
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
+      <PersistGate loading={null} persistor={persistor}>
+        <BrowserRouter>
         <App />
-      </BrowserRouter>
+        </BrowserRouter>
+      </PersistGate>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')

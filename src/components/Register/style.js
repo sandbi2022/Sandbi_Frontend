@@ -10,10 +10,12 @@ export const useStyles = createUseStyles({
     },
     titleWrapper: {
         width: '100%',
-        marginBottom: '25px'
+        marginTop:'3%',
+        marginBottom: '3%'
     },
     title: {
-        color: 'black',
+        marginTop:'3%',
+        color: '#154B67',
         fontWeight: '600',
         fontSize: '30px'
     },
@@ -33,15 +35,15 @@ export const useStyles = createUseStyles({
         ...flexCenter,
         flexDirection: 'column',
         background: '#ffffff',
-        marginTop: "50px",
-        overflowY: "auto"
+        marginTop: "20%",
+        //overflowY: "auto"
     },
     formGroup: {
         width: '100%',
         height: 'auto'
     },
     inputWrapper: {
-        marginBottom: '10px',
+        
         display: 'grid',
         gridTemplateRows: 'min-content 20px'
     },
@@ -86,22 +88,23 @@ export const useStyles = createUseStyles({
     buttonContainer: {
         width: '100%',
         height: 'auto',
-        padding: '20px 0',
         ...flexCenter
     },
     button: {
         border: 'none',
         outline: 'none',
-        borderRadius: '5px',
-        width: '100%',
-        padding: '15px 0',
+        borderRadius: '10px',
+        padding:'4% 0 4% 0',
+        width: '60%',
         color: '#fff',
         fontSize: '16px',
+        fontWeight:'bold',
         letterSpacing: '1px',
         justifyContent: 'center',
-        background: '#4566bf',
+        background: '#154B67',
         display: 'flex',
-        cursor: 'pointer'
+        cursor: 'pointer',
+        
     },
     link: {
         textDecoration: 'none'
@@ -148,6 +151,13 @@ export const useStyles = createUseStyles({
         width:'30%',
         background: '#4566bf',
         color: '#fff',
+    },
+    signupText:{
+        marginTop:'6%',
+        textAlign:'right',
+        fontSize:'13px',
+        textDecoration:'underline',
+        color:'blue'
     }
 
 })

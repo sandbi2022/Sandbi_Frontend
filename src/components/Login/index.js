@@ -35,6 +35,9 @@ const Login =()=>{
     const updatePassword=(event)=>{
         setPassword(event.target.value)
     }
+    const jumpToRegister=()=>{
+        history.push("/Register")
+    }
 
     const confirmLogin=async(event)=>{
         event.preventDefault();
@@ -119,7 +122,9 @@ const Login =()=>{
                             Login
                         </button>
                     </div>
-                    <div className={classes.divider}></div>    
+                    <div className={classes.signupText} onClick={jumpToRegister}>
+                        don't have account yet?
+                    </div>
                     </div>
                 </div>
             </div>

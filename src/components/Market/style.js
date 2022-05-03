@@ -20,17 +20,19 @@ export const useStyles = createUseStyles({
         marginBottom: '10px',
         display:'grid',
         //marginLeft:'20px',
-        gridTemplateColumns:'auto auto auto auto auto auto auto',
+        gridTemplateColumns:'15% 13.5% 13.5% 14% 14% 15% 15%',
         width: '95%',
         
     },
     infoTitleSetting:{
-        color:'#757575'
+        color:'#757575',
+        textAlign:'Left',
+        marginLeft:'10%',
     },
     TitleSetting:{
         color:'white',
         textAlign:'Left',
-        marginLeft:'20px',
+        marginLeft:'5%',
         fontSize:'20px',
         fontWeight:'bold'
     },
@@ -38,7 +40,7 @@ export const useStyles = createUseStyles({
         color:'white',
         fontSize:'14px',
         textAlign:'Left',
-        marginLeft:'30px',
+        marginLeft:'10%',
     }
 
 })

@@ -39,7 +39,9 @@ const Register = () => {
     const updateVCode = (event) => {
         setVCode(event.target.value);
     }
-
+    const jumpToRegister=()=>{
+        history.push("/Login")
+    }
     const confirmRegister = async (event) => {
 
         event.preventDefault();
@@ -131,13 +133,13 @@ const Register = () => {
                             <p className={classes.errorMsg}>{formErrors.ConfirmPasswordError}</p>
                         )}
                     </div>
-
+                    <div className={classes.buttonContainer}>
                     <Popup contentStyle={{ width: "40%", }} trigger={<button className={classes.button}>Continue</button>} position="center">
                         {close => (
-                            <div style={{ width: "90%", textAlign: 'center', padding: '5%' }}>
-                                <div style={{ fontSize: '20px', fontWeight: 'bold' }}>verify your email</div>
+                            <div style={{ width: "90%",height:'50%', textAlign: 'center', padding: '5%' }}>
+                                <div style={{ fontSize: '30px', fontWeight: 'bold',color:'#154B67'}}>verify your email</div>
                                 
-                                <div style={{display:'grid',gridTemplateColumns:'80% 20%',}}>
+                                <div style={{display:'grid',gridTemplateColumns:'80% 20%',marginBottom:'4%'}}>
                                 <input
                                     className={classes.input}
                                     type="code"
@@ -145,14 +147,21 @@ const Register = () => {
                                     placeholder="Verification Code"
                                     onChange={updateCode}
                                 />
-                                <button style={{}} onClick={confirmEmail}> send me code</button>
+                                <button style={{ backgroundColor:'#154B67', color:'white', 
+                                    fontSize:'10px',borderRadius:'10px'}} onClick={confirmEmail} > send me code</button>
                                 </div>
+                                <div className={classes.buttonContainer}>
                                 <button type="submit" className={classes.button} onClick={confirmRegister}>
                                     Continue
                                 </button>
+                                </div>
                             </div>
                         )}
                     </Popup>
+                    </div>
+                    <div className={classes.signupText} onClick={jumpToRegister}>
+                        have an account already?
+                    </div>
 
                 </div>
             </div>

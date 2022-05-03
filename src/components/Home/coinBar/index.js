@@ -3,12 +3,13 @@ import { useStyles } from "./style";
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 
-const CoinBar=({CoinName,CoinPrice,CoinChange,CoinRound})=>{
+const CoinBar=({CoinName,CoinPrice,CoinChange,CoinVolume,CoinRound})=>{
     const classes = useStyles()
     const Name=CoinName
     const Price=CoinPrice
-    const Change=CoinChange
+    const Change = CoinChange
     const Round=CoinRound
+    const Volumn= CoinVolume
     return(
         <div className={classes.coinBarContainer}>
             <div className={classes.Title}>
@@ -24,10 +25,10 @@ const CoinBar=({CoinName,CoinPrice,CoinChange,CoinRound})=>{
             </div>
             <div className={classes.columContainers}>
                 <div className={classes.change}>
-                    {Change}
+                    {Change}%
                 </div>
                 <div className={classes.usdPrice}>
-                    24HVOL
+                    {Volumn} 24HVOL
                 </div>
             </div>
         </div>

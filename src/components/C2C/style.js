@@ -26,7 +26,17 @@ export const useStyles = createUseStyles({
     },
     SelectButtonSetting2:{
         color:'white',
+        backgroundColor:'#BC4A4A',
+        width:'60%',
+        fontWeight:'bold',
+        borderRadius:'10px',
+        padding:'0px 10px 0px 10px',
+    },
+    SelectButtonSetting3:{
+        color:'white',
         backgroundColor:'#4ABCBB',
+        width:'60%',
+        fontWeight:'bold',
         borderRadius:'10px',
         padding:'0px 10px 0px 10px',
     },
@@ -84,7 +94,8 @@ export const useStyles = createUseStyles({
     },
     subTitleContainer:{
         textAlign:'left',
-        marginLeft:'100px'
+        marginLeft:'15%',
+        marginBottom:'5%'
     },
     subTitleContainer2:{
         textAlign:'Right',
@@ -119,7 +130,7 @@ export const useStyles = createUseStyles({
     },
     infoContainers:{
         display:'grid',
-        gridTemplateColumns:'auto auto auto auto auto',
+        gridTemplateColumns:'20% 20% 25% 20% 15%',
         width: '100%',
         margin:'0px 0px 15px 0px'
         
@@ -128,5 +139,21 @@ export const useStyles = createUseStyles({
         color:'white',
         textAlign:'left',
         marginLeft:'60px',
-    }
+    },
+    CreateOrderInputContainer:{
+        display:'grid',
+        gridTemplateColumns:'30% 70%',
+        marginLeft:'25%',
+        marginTop:'4%'
+    },
+    inputWrapper:{
+        width:'70%'
+    },
+    inputSetting3:{
+        color:'black',
+        backgroundColor:'white',
+        borderColor:'grey',
+        width:'70%',
+        padding:'0px 20px 0px 20px'
+    },
 })
