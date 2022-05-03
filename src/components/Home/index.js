@@ -9,55 +9,12 @@ import bg from "/opt/front/react-app-master/src/images/bg.jpeg"
 
 
 const Home = () => {
-
-  // const [BTC, setBTC] = useState();
-  // const [BCH, setBCH] = useState();
-  // const [ETH, setETH] = useState();
-  // const [ETHBTC, setETHBTC] = useState();
-
-  // useEffect(() => {
-  //   WalletAPI.getPrice({ "TradePair": "BTCUSDT" }).then((response) => {
-  //     console.log(response.data)
-  //     setBTC(response.data["price"].toFixed(2))
-  //   }
-  //   )
-  // }, []);
-
-
-  // useEffect(() => {
-  //   WalletAPI.getPrice({ "TradePair": "BCHUSDT" }).then((response) => {
-  //     console.log(response.data)
-  //     setBCH(response.data["price"])
-  //   }
-  //   )
-  // }, [])
-
-
-
-  // useEffect(() => {
-  //   WalletAPI.getPrice({ "TradePair": "ETHUSDT" }).then((response) => {
-  //     console.log(response.data)
-  //     setETH(response.data["price"]);
-
-  //   }
-  //   )
-  // }, [])
-
-  // useEffect(() => {
-  //   WalletAPI.getPrice({ "TradePair": "ETHBTC" }).then((response) => {
-  //     console.log(response.data)
-  //     setETHBTC(response.data["price"].toFixed(2));
-
-  //   }
-  //   )
-  // }, [])
-
   
   const classes = useStyles()
   return (
     
     
-    <div >
+    <div style={{marginTop:'10%'}}>
 
       <div className={classes.TitleForm} >
         <div className={classes.titleWrapper}>
@@ -68,12 +25,6 @@ const Home = () => {
 
     <CoinBarContainer/>
       
-      {/* <div className={classes.coinContainers}>
-        <CoinBar CoinName={'BTCUSDT'} CoinPrice={BTC} CoinChange={111} Round={2} />
-        <CoinBar CoinName={'ETHUSDT'} CoinPrice={ETH} CoinChange={111} Round={6} />
-        <CoinBar CoinName={'BCHUSDT'} CoinPrice={BCH} CoinChange={111} Round={1}/>
-        <CoinBar CoinName={'ETHBTC'} CoinPrice={ETHBTC} CoinChange={111} Round={2}/>
-      </div> */}
     </div>
   )
 }

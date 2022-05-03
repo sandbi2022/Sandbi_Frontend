@@ -86,7 +86,8 @@ export const useStyles = createUseStyles({
         width: '80%',
     },
     buttonContainer:{
-        textAlign:'left'
+        textAlign:'left',
+        marginLeft:'20%'
     },
     TitleText:{
         color:'white',

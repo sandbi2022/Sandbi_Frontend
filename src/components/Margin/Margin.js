@@ -51,6 +51,8 @@ const Margin = () => {
     const [openorder, setopenorder] = useState([])
     const [orderH, setorderH] = useState([])
     const [bottom, setbottom] = useState([])
+    const [PairInfo, setInfo] = useState({})
+    const [Tpinfo,setTPINFO]=useState({close:0,high:0,low:0})
     useEffect(() => {
         const UID = user.UID;
         console.log(UID);
@@ -182,8 +184,8 @@ const Margin = () => {
             for (let value of Object.values(response.data)) {
                 var data = JSON.parse(value)
                 newlist.push({
-                    price: data["price"],
-                    amount: data["amount"] - data["doneAmount"],
+                    price: data["price"].toFixed(PairInfo[Tradepair]["LimitPrice"]),
+                    amount: data["amount"] - data["doneAmount"].toFixed(PairInfo[Tradepair]["LimitCount"]),
                     sum: 0
                 })
                 console.log(newlist)
@@ -346,6 +348,7 @@ const Margin = () => {
                                     segments={5}
                                     endColor="green"
                                     textColor='grey'
+                                    
                                 />
                             </div>
                         </div>
@@ -357,9 +360,9 @@ const Margin = () => {
                                     {coin1}/{coin2}
                                 </div>
                                 <div className={classes.ChartTitleInfoContainer}>
-                                    <div style={{ color: 'green', fontSize: '10px' }}>10,000</div>
-                                    <div style={{ color: 'grey', fontSize: '10px' }}>=1 USD</div>
-                                    <div style={{ color: 'red', fontSize: '10px' }}>-1%</div>
+                                    <div style={{ color: 'green', fontSize: '10px' }}>{Tpinfo.close}</div>
+                                    <div style={{ color: 'grey', fontSize: '10px' }}>=1 {coin2}</div>
+                                    <div style={{ color: 'red', fontSize: '10px' }}>{perenatage(Tpinfo.close-Tpinfo.open)}</div>
                                 </div>
                             </div>
                             <div>
@@ -367,7 +370,7 @@ const Margin = () => {
                                     24H High
                                 </div>
                                 <div style={{ color: '#BFBFBF', fontSize: '14px' }}>
-                                    10,000
+                                {Tpinfo.high}
                                 </div>
                             </div>
                             <div>
@@ -375,7 +378,7 @@ const Margin = () => {
                                     24H Low
                                 </div>
                                 <div style={{ color: '#BFBFBF', fontSize: '14px' }}>
-                                    10,000
+                                {Tpinfo.low}
                                 </div>
                             </div>
 
@@ -470,6 +473,7 @@ const Margin = () => {
                     </div>
                     <div className={classes.columPartContainers}>
                         <div className={classes.TitleText}>OrderBook</div>
+                        <div style={{ height: '45%' }}>
                         <div className={classes.leftSideContainer}>
                             <div className={classes.smallText2}>Price</div>
                             <div className={classes.smallText2}>Amount</div>
@@ -484,6 +488,7 @@ const Margin = () => {
                                 </div>
                             );
                         })}
+                        </div>
                         <div>
                             <hr
                                 style={{
@@ -531,13 +536,13 @@ const Margin = () => {
             <div className={classes.buttonContainer}>
                 {active == "openOrder" &&
                     <div>
-                <button onClick={() => { SwitchOpenOrder(); setActive("openOrder") }} >Open Order</button>
+                <button onClick={() => { SwitchOpenOrder(); setActive("openOrder"); }} >Open Order</button>
                 <button style={{backgroundColor:'#04011A',color:'white'}}onClick={() => { Switchistory(); setActive("orderHistory") }}>Order history</button>
                 </div>}
                 {active == "orderHistory" &&
                     <div>
                 <button style={{backgroundColor:'#04011A',color:'white'}} onClick={() => { SwitchOpenOrder(); setActive("openOrder") }} >Open Order</button>
-                <button onClick={() => { Switchistory(); setActive("orderHistory") }}>Order history</button>
+                <button onClick={() => { Switchistory(); setActive("orderHistory"); }}>Order history</button>
                 </div>}
             </div>
             {active == "openOrder" &&
@@ -583,7 +588,6 @@ const Margin = () => {
                         );
                     })}
                 </div>}
-
         </div>
     )
 }

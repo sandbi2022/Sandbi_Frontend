@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useStyles } from "./style";
 import Chart from "../Chart/Kline";
 import AssetTable from '../TradeData/Asset/AssetTable';
+import { useLocation } from "react-router-dom";
+
 
 const Exchange = () => {
     const classes = useStyles()
@@ -38,6 +40,7 @@ const Exchange = () => {
     const [Sellactive,setSellactive]=useState("Limit")
     const [Buyactive,setBuyactive]=useState("Limit")
     const [Tpinfo,setTPINFO]=useState({close:0,high:0,low:0})
+    const location = useLocation();
 
     useEffect(() => {
         const UID = user.UID;
@@ -60,7 +63,35 @@ const Exchange = () => {
         })
 
     }, [])
+    useEffect(()=>{
+        if(typeof location.state !== 'undefined'){
+            console.log(location.state.detail)
+            setTradepair(location.state.detail)
+            if(Object.keys(PairInfo).length !== 0){
+                console.log(PairInfo)
+                setcoin1(PairInfo[location.state.detail]["Coin1"])
+                 setcoin2(PairInfo[location.state.detail]["Coin2"])
+            }
+            
+        }
+    },[PairInfo])
 
+    useEffect(() => {
+        MarketAPI.getGraphData({"TradePair":Tradepair,"Period":"1","Second":86400}).then((response) => {
+             console.log(response.data)
+            var newlist = {}
+            for (let key of Object.keys(response.data)) {
+                if(key!=="time"){
+                 var data= JSON.parse(response.data[key])
+                 console.log(data)
+                 newlist=data
+               
+               }
+         }
+            setTPINFO(newlist)
+        })
+
+    }, [])
 
     useEffect(() => {
         MarketAPI.getOrder({ "TradePair": Tradepair, "TradeType": 1 }).then((response) => {
@@ -317,9 +348,6 @@ const Exchange = () => {
                 let index = arrWarp.indexOf(item.price)
                 result[index].amount += Number(item.amount)
                 result[index].sum =(Number(result[index].sum)+ Number(item.amount)).toFixed(PairInfo[Tradepair]["LimitCount"])
-
-
-
             }
         }
         console.log(result);
@@ -332,31 +360,8 @@ const Exchange = () => {
             
             <div className={classes.UpContainers}>
                 <div className={classes.columContainers}>
-                    <AssetTable setTPair={(value) => { setTradepair(value) }} setC1={setcoin1} setC2={setcoin2} />
-                    {/* repleace by AssetTable */}
-                    {/* <div className={classes.columPartContainers}>
-                        <div className={classes.leftSideCoinContainer}>
-                            <div style={{color:'white', fontSize:'14px'}}>Coins:</div>
-                            <button className={classes.CoinSetting} onClick={()=>showCoin2("ALL")}>ALL</button>
-                            <button className={classes.CoinSetting} onClick={()=>showCoin2("USDT")}>USDT</button>
-                            <button className={classes.CoinSetting} onClick={()=>showCoin2("BTC")}>BTC</button>
-                            <div></div>
-                        </div>
-                        <div className={classes.leftSideContainer}>
-                            <div className={classes.smallText2}>Asset</div>
-                            <div className={classes.smallText2}>Last Price</div>
-                            <div className={classes.smallText2}>Change</div>
-                        </div>
-                        {CoinRender.map((item, index) => {
-                            return (
-                                <div className={classes.leftSideContainer}>
-                                    <div className={classes.smallText} onClick={()=>changetradetype(item.Type)}>{item.Type}</div>
-                                    <div  className={classes.smallText}>{item.lastPrice}</div>
-                                    <div  style={{color: Math.sign(item.Change) === -1 ? "red" : "green",fontSize:'14px'}}>{perenatage(item.change)}</div>
-                                </div>
-                            );
-                        })}
-                    </div> */}
+                <AssetTable setTPair={(value) => { setTradepair(value) }} setC1={setcoin1} setC2={setcoin2} Refresh={change} />
+
                     <div className={classes.columPartContainers}>
                         <div className={classes.ChartTitleContainer}>
                             <div>
@@ -392,14 +397,14 @@ const Exchange = () => {
                             gridTemplateColumns: '5% 5% 5% 5% 5% 5% 5% 5% 5% 65%',
                         }}>
                             <div style={{ color: 'white' }}>Time</div>
-                            <div style={{ color: 'white' }} onClick={() => setTime(60)}>1m</div>
-                            <div style={{ color: 'white' }} onClick={() => setTime(300)}>5m</div>
-                            <div style={{ color: 'white' }} onClick={() => setTime(900)}>15m</div>
-                            <div style={{ color: 'white' }} onClick={() => setTime(1800)}>30m</div>
-                            <div style={{ color: 'white' }} onClick={() => setTime(3600)}>1H</div>
-                            <div style={{ color: 'white' }} onClick={() => setTime(14400)}>4H</div>
-                            <div style={{ color: 'white' }} onClick={() => setTime(86400)}>1D</div>
-                            <div style={{ color: 'white' }} onClick={() => setTime(604800)}>1W</div>
+                            <div class="btn" style={{ color: 'white' }} onClick={() => setTime(60)}>1m</div>
+                            <div class="btn" style={{ color: 'white' }} onClick={() => setTime(300)}>5m</div>
+                            <div class="btn" style={{ color: 'white' }} onClick={() => setTime(900)}>15m</div>
+                            <div class="btn active" style={{ color: 'white' }} onClick={() => setTime(1800)}>30m</div>
+                            <div class="btn" style={{ color: 'white' }} onClick={() => setTime(3600)}>1H</div>
+                            <div class="btn" style={{ color: 'white' }} onClick={() => setTime(14400)}>4H</div>
+                            <div class="btn" style={{ color: 'white' }} onClick={() => setTime(86400)}>1D</div>
+                            <div class="btn" style={{ color: 'white' }} onClick={() => setTime(604800)}>1W</div>
                         </div>
                         <div>
                             <Chart time={Time} Type={Tradepair} />

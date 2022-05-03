@@ -65,7 +65,7 @@ const changetradetype=(type)=>{
       setCoinRender(newCoindata)
        })
        
-     }, [PairInfo,change])
+     }, [PairInfo,params.Refresh])
 
     const showCoin2=(unitchange)=>{
         if(unitchange=="BTC"||unitchange=="USDT"){

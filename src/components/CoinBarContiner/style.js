@@ -36,7 +36,7 @@ export const useStyles = createUseStyles({
     // },
     coinContainers:{
         display:'grid',
-        gridTemplateColumns:'auto auto auto auto',
+        gridTemplateColumns:'25% 25% 25% 25%',
         width: '100%',
         background:'rgba(255,255,255,0.0)'
     },

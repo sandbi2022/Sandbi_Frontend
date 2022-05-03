@@ -10,6 +10,19 @@ const CoinBar=({CoinName,CoinPrice,CoinChange,CoinVolume,CoinRound})=>{
     const Change = CoinChange
     const Round=CoinRound
     const Volumn= CoinVolume
+    
+
+    const perenatage = (number) => {
+        console.log(number)
+        if (number > 0) {
+            return "+" + number + "%"
+        }
+        else {
+            return "-" + number + "%"
+        }
+
+
+    }
     return(
         <div className={classes.coinBarContainer}>
             <div className={classes.Title}>
@@ -25,10 +38,10 @@ const CoinBar=({CoinName,CoinPrice,CoinChange,CoinVolume,CoinRound})=>{
             </div>
             <div className={classes.columContainers}>
                 <div className={classes.change}>
-                    {Change}%
+                    {Change}
                 </div>
                 <div className={classes.usdPrice}>
-                    {Volumn} 24HVOL
+                    {Volumn.toFixed(6)} 24HVOL
                 </div>
             </div>
         </div>

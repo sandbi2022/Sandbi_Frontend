@@ -7,7 +7,7 @@ import c2cAPI from '../../api/c2c-api';
 import { useDispatch, useSelector } from 'react-redux';
 
 
-const CreateOrder = () => {
+const CreateOrder = params => {
         const user = useSelector((state) => state.user.value)
         const classes = useStyles();
         const history = useHistory();
@@ -18,6 +18,7 @@ const CreateOrder = () => {
         const [price, setprice] = useState(0)
         const [side,setSide]=useState()
         const TradeType = 1
+        const setRefresh=params.Refresh;
 
         const confirmCreation = () => {
                 c2cAPI.createOrder({
@@ -29,6 +30,7 @@ const CreateOrder = () => {
                         "Price": price,
                         "TradeType": TradeType
                 })
+                setRefresh(1)
                 history.push('/C2C');
         }
 
