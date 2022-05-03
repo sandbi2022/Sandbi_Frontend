@@ -16,7 +16,7 @@ export const useStyles = createUseStyles({
     leftSideContainer:{
         display:'grid',
         marginLeft:'10px',
-        gridTemplateColumns:'auto auto auto',
+        gridTemplateColumns:'30% 40% 30%',
         width: '100%',
         
     },
@@ -47,18 +47,26 @@ export const useStyles = createUseStyles({
     },
     smallText:{
         color:'white',
-        fontSize:'14px'
+        fontSize:'14px',
+        textAlign:'left',
+        marginLeft:'10%'
     },
     smallTextRed:{
         color:'red',
-        fontSize:'14px'
+        fontSize:'14px',
+        textAlign:'left',
+        marginLeft:'8%'
     },
     smallTextGreen:{
         color:'green',
-        fontSize:'14px'
+        fontSize:'14px',
+        textAlign:'left',
+        marginLeft:'8%'
     },
     smallText2:{
-        color:'grey'
+        color:'grey',
+        textAlign:'left',
+        marginLeft:'5%'
     },
     ExchangeContainer:{
         display:'grid',
@@ -69,8 +77,13 @@ export const useStyles = createUseStyles({
     },
     orderHistoryContainer:{
         display:'grid',
-        gridTemplateColumns:'auto auto auto auto auto auto auto auto auto',
+        gridTemplateColumns:'20% 20% 20% 20% 20%',
         width: '100%',
+    },
+    openOrderContainer:{
+        display:'grid',
+        gridTemplateColumns:'17% 17% 17% 17% 17% 15%',
+        width: '80%',
     },
     buttonContainer:{
         textAlign:'left'
@@ -154,7 +167,7 @@ export const useStyles = createUseStyles({
     SwitchButtonContainer:{
         display:'grid',
         marginLeft:'0px',
-        gridTemplateColumns:'auto auto auto 50%',
+        gridTemplateColumns:'40% auto',
         width: '100%',
     },
     

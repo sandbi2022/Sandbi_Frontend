@@ -66,10 +66,9 @@ const UserOrder = () => {
                     <div className={classes.buttonContainer}>
                         {/* <button className={classes.SelectButtonSetting}>BUY</button>
                         <button className={classes.UnselectButtonSetting} onClick={() => setActive("Sell")}>Sell</button> */}
-                        <button className={classes.bottonSetting}>BTC</button>
-                        <button className={classes.bottonSetting}>BCH</button>
-                        <button className={classes.bottonSetting}>ETH</button>
-                        <button className={classes.bottonSetting}>USDT</button>
+                        <button className={classes.bottonSetting}>Finished Order</button>
+                        <button className={classes.bottonSetting}>Processing Order</button>
+
                     </div>
                     {/* <div>
                         <button className={classes.bottonSetting} onClick={()=>{history.push('/CreateOrder')}}>Create</button>

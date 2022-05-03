@@ -9,7 +9,7 @@ export const useStyles = createUseStyles({
         width: '100%',
         height: '100%',
         backgroundColor: '#04011A',
-        backgroundImage:`url(${Background})`
+        
     },
     loginContainer: {
         position: 'fixed',

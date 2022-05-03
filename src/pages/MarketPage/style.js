@@ -9,10 +9,10 @@ export const useStyles = createUseStyles({
     },
     loginContainer: {
         position: 'fixed',
-        width:'900px',
+        width:'60%',
         top: '5%',
-        left: '50%',
+        left: '20%',
         marginTop:'0px',
-        marginLeft:'-450px',
+        //marginLeft:'-450px',
     },
 })

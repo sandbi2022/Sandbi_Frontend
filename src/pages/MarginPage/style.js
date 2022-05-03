@@ -4,6 +4,7 @@ export const useStyles = createUseStyles({
         position: 'fixed',
         width: '100%',
         height: '100%',
-        backgroundColor: '#04011A'
+        backgroundColor: '#04011A',
+        overflow:'scroll'
     },
 })

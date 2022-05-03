@@ -1,3 +1,4 @@
+import { textAlign } from '@mui/system'
 import { createUseStyles } from 'react-jss'
 
 const flexCenter = { display: 'flex', justifyContent: 'center', alignItems: 'center' }
@@ -6,16 +7,16 @@ export const useStyles = createUseStyles({
     loginContainer: {
         width: '100%',
         height: '100%',
-        ...flexCenter
+        
     },
     titleWrapper: {
         width: '100%',
-        marginBottom: '25px'
+        marginBottom: '3%'
     },
     title: {
-        color: 'black',
+        color: '#154B67',
         fontWeight: '600',
-        fontSize: '30px'
+        fontSize: '35px',
     },
     logo: {
         width: '100%',
@@ -27,12 +28,11 @@ export const useStyles = createUseStyles({
     },
     loginForm: {
         width: '100%',
-        height: 'auto',
+        height: '50%',
         maxWidth: '500px',
-        minHeight: '400px',
-        padding: '40px',
+        padding: '10%',
         borderRadius: '14px',
-        ...flexCenter,
+        
         flexDirection: 'column',
         background: '#ffffff'
     },
@@ -41,7 +41,7 @@ export const useStyles = createUseStyles({
         height: 'auto'
     },
     inputWrapper: {
-        marginBottom: '10px',
+        marginBottom: '1%',
         display: 'grid',
         gridTemplateRows: 'min-content 20px'
     },
@@ -84,23 +84,25 @@ export const useStyles = createUseStyles({
     },
     buttonContainer: {
         width: '100%',
-        height: 'auto',
+        marginTop:'5%',
         padding: '20px 0',
         ...flexCenter
     },
     button: {
         border: 'none',
         outline: 'none',
-        borderRadius: '5px',
-        width: '100%',
-        padding: '15px 0',
+        borderRadius: '10px',
+        padding:'4% 0 4% 0',
+        width: '60%',
         color: '#fff',
         fontSize: '16px',
+        fontWeight:'bold',
         letterSpacing: '1px',
         justifyContent: 'center',
-        background: '#4566bf',
+        background: '#154B67',
         display: 'flex',
-        cursor: 'pointer'
+        cursor: 'pointer',
+        
     },
     link: {
         textDecoration: 'none'
@@ -138,4 +140,11 @@ export const useStyles = createUseStyles({
         color: 'red',
         textAlign: 'left'
     },
+    signupText:{
+        marginTop:'16%',
+        textAlign:'right',
+        fontSize:'13px',
+        textDecoration:'underline',
+        color:'blue'
+    }
 })
