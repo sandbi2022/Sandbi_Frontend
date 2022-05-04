@@ -32,16 +32,14 @@ const CoinBar=({CoinName,CoinPrice,CoinChange,CoinVolume,CoinRound})=>{
                 <div className={classes.Price}>
                     {Price}
                 </div>
-                <div className={classes.usdPrice}>
-                    ={(Price*6).toFixed(Round)}
-                </div>
+
             </div>
             <div className={classes.columContainers}>
                 <div className={classes.change}>
                     {Change}
                 </div>
                 <div className={classes.usdPrice}>
-                    {Volumn.toFixed(6)} 24HVOL
+                    {Volumn} 24HVOL
                 </div>
             </div>
         </div>

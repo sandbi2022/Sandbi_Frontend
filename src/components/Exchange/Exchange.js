@@ -538,9 +538,8 @@ const Exchange = () => {
             </div>
             {active == "openOrder" &&
                 <div style={{ height: '1000px' }}>
-                    <div className={classes.openOrderContainer}>
+                    <div className={classes.orderHistoryContainer}>
                         <div className={classes.smallText2}>Pair</div>
-                        <div className={classes.smallText2}>Type</div>
                         <div className={classes.smallText2}>Side</div>
                         <div className={classes.smallText2}>Price</div>
                         <div className={classes.smallText2}>Amount</div>

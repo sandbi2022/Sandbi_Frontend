@@ -36,9 +36,9 @@ const SideBar =()=>{
             <div className={classes.textStyle} onClick={redirectDashboard}>
                 Dashboard
             </div>
-            <div  className={classes.textStyle} onClick={redirectWallet}>
+            {/*<div  className={classes.textStyle} onClick={redirectWallet}>
                 Wallet
-            </div>
+            </div>*/}
             <div className={classes.textStyle} onClick={redirectSetting}>
                 Setting
             </div>

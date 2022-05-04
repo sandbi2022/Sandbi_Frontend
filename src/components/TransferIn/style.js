@@ -51,6 +51,37 @@ export const useStyles = createUseStyles({
         width: '60%',
         
     },
+    PopUpContainer:{
+        display:'grid',
+        gridTemplateColumns:'70% 30%',
+        width: '90%',
+        
+        
+    },
+    PopUpButton:{
+        backgroundColor:'#4ABCBB',
+        color:'white',
+        marginTop:'20%',
+        width:'40%',
+        fontWeight:'bold'
+        
+    },
+    PopUpTitle:{
+        color:'white',
+        fontSize:'15px',
+        textAlign:'left',
+        paddingLeft:'10%',
+        marginBottom:'3%',
+        fontWeight:'bold'
+        
+    },
+    PopUptext:{
+        color:'white',
+        fontSize:'12px',
+        textAlign:'left',
+        paddingLeft:'10%'
+        
+    },
     TitleContainer:{
         color:'white',
         fontSize:'20px',

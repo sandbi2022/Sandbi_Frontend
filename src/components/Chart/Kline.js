@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { init, dispose } from 'klinecharts';
 import MarketAPI from '../../api/market-api';
 
-export default function Chart({time}) {
+export default function Chart({time,Type}) {
   useEffect(() => {
     // Init chart
     
@@ -10,7 +10,7 @@ export default function Chart({time}) {
     , {
       candle: {
         tooltip: {
-          labels: ['Time: ', 'Open: ', 'Receive: ', 'High: ', 'Low: ', 'Volume: '],
+          labels: ['Time: ', 'Open: ', 'Close: ', 'High: ', 'Low: ', 'Volume: '],
         },
       },
     });
@@ -20,7 +20,7 @@ export default function Chart({time}) {
     chart.createTechnicalIndicator('VOL');
     
     var newlist=[]
-    MarketAPI.getGraphData({"TradePair":"BTCUSDT","Period":"240","Second":time}).then((response)=>{
+    MarketAPI.getGraphData({"TradePair":Type,"Period":"240","Second":time}).then((response)=>{
       console.log(time)
       console.log(response)
         for (let value of Object.values(response.data)) {
@@ -34,7 +34,7 @@ export default function Chart({time}) {
     return () => {
       dispose('simple_chart');
     }
-  }, [time]);
+  }, [time,Type]);
 
   return <div id="simple_chart" style={{ height: 400}}/>;
 }
