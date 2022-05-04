@@ -97,6 +97,26 @@ class UserAPI{
             withCredentials:true
         }
         );
+
+        
+    }
+    getAddress(data){
+        return axios.post(USER_API_BASE_URL+'/User/GetAddress.jsp',
+        JSON.stringify(data),
+        {
+            headers:{'Content-Type':'application/json'},
+            withCredentials:true
+        }
+        );
+    }
+    setManage(data){
+        return axios.post(USER_API_BASE_URL+'/User/Manage.jsp',
+        JSON.stringify(data),
+        {
+            headers:{'Content-Type':'application/json'},
+            withCredentials:true
+        }
+        );
     }
 
 }

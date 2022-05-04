@@ -15,38 +15,89 @@ const UserOrder = () => {
     const user = useSelector((state)=>state.user.value)
     const [active, setActive] = useState("Buy")
     const [renderlist,setrenderlist]=useState([])
+    const [Pendlist, setPendlist]= useState([])
+    const [Processlist, setProcesslist]= useState([])
+    const [TradePairlist, setTradepairlist] = useState(["BTC","ETH","USDT","BCH"])
+    const [pendflag,setpendflag]=useState(true)
+    const [Prceflag,setprceflag]=useState(false)
+    const [change,setChange]=useState(0)
     const dispatch = useDispatch();
 
     useEffect(() => {
-        c2cAPI.getPUOrder({"TradePair":"BTCUSD","UID":user.UID}).then((response) => {
-            var newList=[]
-            for (let value of Object.values(response.data)) {
-                var data= JSON.parse(value)
-                 newList.push(data)
-                
-              }
-               console.log(newList)
-               setrenderlist(newList)
-        }
-        )
-      }, []);
+        renderPend()
+        return setChange(0)
+      }, [change]);
 
-      useEffect(() => {
-        c2cAPI.getUserHistory({"TradePair":"BTCUSD","UID":user.UID}).then((response) => {
-            var newList=[]
-            for (let value of Object.values(response.data)) {
-                var data= JSON.parse(value)
-                 newList.push(data)
-                
-              }
-               console.log(newList)
-               setrenderlist(newList)
+
+
+    const renderPend=()=>{
+        console.log("Pending")
+        var PromisePending = [];
+        for (let value of TradePairlist) {
+            console.log(value)
+            var Tpair = value + "USD"
+            console.log(Tpair)
+            const order = c2cAPI.getPUOrder({"TradePair":Tpair,"UID":user.UID})
+            PromisePending.push(order)   
         }
-        )
-      }, []);
+        Promise.all(PromisePending).then((res) => {
+            console.log(res);
+            var newList = []
+            for (let i in res) {
+                for (let value of Object.values(res[i].data)) {
+                    var data = JSON.parse(value)
+                    newList.push(data)
+                }
+            }
+            console.log(newList)
+            var final = newList.filter(order=>(order.tradeState!==3))
+            setPendlist(final)
+            setrenderlist(final)
+            setpendflag(true)
+            setprceflag(false)
+        })
+
+
+
+    }
+
+const renderProcess=()=>{
+    console.log("processing ")
+    var PromisePending = [];
+    for (let value of TradePairlist) {
+        console.log(value)
+        var Tpair = value + "USD"
+        console.log(Tpair)
+        const order = c2cAPI.getUserHistory({"TradePair":Tpair,"UID":user.UID})
+        PromisePending.push(order)
+        
+    }
+   
+    Promise.all(PromisePending).then((res) => {
+        console.log(res);
+        var newList = []
+        for (let i in res) {
+            for (let value of Object.values(res[i].data)) {
+                var data = JSON.parse(value)
+                newList.push(data)
+            }
+        }
+
+        console.log(newList)
+        setProcesslist(newList)
+        setrenderlist(newList)
+        setpendflag(false)
+        setprceflag(true)
+    })
+
+       }
+
+
 
     const  handleCancel=(item)=>{
+        console.log(item)
         c2cAPI.CancelPendingOrder({"TradePair":item.tradePair,"TID":item.Tid})
+        setChange(1)
     }
     const  handleFinish=(item)=>{
         c2cAPI.FinishOrder({"TradePair":item.tradePair,"TID":item.Tid})
@@ -57,7 +108,18 @@ const UserOrder = () => {
     const  handleCancelAccepted=(item)=>{
         c2cAPI.CancelAcceptedOrder({"TradePair":item.tradePair,"TID":item.Tid})
     }
-
+    const  getColor=(type)=>{
+        if(type==1){return "red"}
+        else{
+            return "green"
+        }
+    }
+    const Side=(type)=>{
+        if(type==1){return "Sell"}
+        else{
+            return "Buy"
+        }
+    } 
 
 
     return (
@@ -66,8 +128,8 @@ const UserOrder = () => {
                     <div className={classes.buttonContainer}>
                         {/* <button className={classes.SelectButtonSetting}>BUY</button>
                         <button className={classes.UnselectButtonSetting} onClick={() => setActive("Sell")}>Sell</button> */}
-                        <button className={classes.bottonSetting}>Finished Order</button>
-                        <button className={classes.bottonSetting}>Processing Order</button>
+                        <button className={classes.bottonSetting} onClick={()=>renderPend()}>Pending Order</button>
+                        <button className={classes.bottonSetting} onClick={()=>renderProcess()}>Processing Order</button>
 
                     </div>
                     {/* <div>
@@ -106,6 +168,7 @@ const UserOrder = () => {
                         <div className={classes.subTitleSetting2}>Advertisers</div>
                         <div className={classes.subTitleSetting2}>Price</div>
                         <div className={classes.subTitleSetting2}>Limit/Available</div>
+                        <div className={classes.subTitleSetting2}>Side</div>
                         <div className={classes.subTitleSetting2}>Payment</div>
                         <div className={classes.subTitleSetting2}>Trade</div>
                     </div>
@@ -123,9 +186,11 @@ const UserOrder = () => {
                                         Available{item.amount-item.doneAmount}
                                     </div>
                                 </div>
-                                <div className={classes.infoTextSetting}>{item.Payment}</div>
-                                <div><button className={classes.SelectButtonSetting2} onClick={()=>{handleCancel(item)}}>Cancel</button></div>
-                                <div><button className={classes.SelectButtonSetting2} onClick={()=>{handleFinish(item)}}>Finish</button></div>
+                                <div className={classes.infoTextSetting} style={{color:getColor(item.tradeType)}}>{Side(item.tradeType)}</div>
+                                <div className={classes.infoTextSetting}>Card</div>
+                                
+                          {pendflag&&<div><button className={classes.SelectButtonSetting2} onClick={()=>{handleCancel(item)}}>Cancel</button></div>}
+                          {Prceflag &&<div><button className={classes.SelectButtonSetting2} onClick={()=>{handleFinish(item)}}>Finish</button></div>}
                             </div>
 
                         );

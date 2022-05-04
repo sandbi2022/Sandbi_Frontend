@@ -5,33 +5,67 @@ import { useHistory } from 'react-router-dom';
 import AuthContext from "../../context/AuthProvider"
 import c2cAPI from '../../api/c2c-api';
 import { useDispatch, useSelector } from 'react-redux';
+import UserServer from '../../api/user-api';
 
 
 const CreateOrder = params => {
         const user = useSelector((state) => state.user.value)
         const classes = useStyles();
         const history = useHistory();
-        const [Coin, setCoin] = useState("")
+        const [Coin, setCoin] = useState("BTC")
         const [amount, setAmount] = useState("Buy")
         const [maxAmount, setmaxAmount] = useState(0)
         const [minAmount, setminAmount] = useState(0)
+        const [C2CBalance, setC2CBal] = useState({})
         const [price, setprice] = useState(0)
         const [side,setSide]=useState()
         const TradeType = 1
         const setRefresh=params.Refresh;
 
+
+
+        useEffect(() => {
+                UserServer.getC2CBal({ "UID": user.UID }).then((response) => {
+                    console.log("c2c")
+                    console.log(response.data)
+                    setC2CBal(response.data)
+                }
+                )
+            }, []);
+
         const confirmCreation = () => {
-                c2cAPI.createOrder({
-                        "TradePair": Coin + "USD",
-                        "UID": user.UID,
-                        "Amount": amount,
-                        "MaxAmount": maxAmount,
-                        "MinAmount": minAmount,
-                        "Price": price,
-                        "TradeType": TradeType
-                })
-                setRefresh(1)
-                history.push('/C2C');
+                console.log(Coin)
+                if(C2CBalance[Coin]<amount&&TradeType==1){
+                        alert("Your balance is not enough")
+                }else{
+                   if(Number(maxAmount)>Number(amount)){
+                        alert("Error Max trade amount excueed total trade amount")
+                   }
+                   else{
+                        if(Number(minAmount)>Number(maxAmount)){
+                        alert("Error Max trade amount is smaller than Min trade amount")
+                        }
+                        else{
+                                c2cAPI.createOrder({
+                                                        "TradePair": Coin + "USD",
+                                                        "UID": user.UID,
+                                                        "Amount": amount,
+                                                        "MaxAmount": maxAmount,
+                                                        "MinAmount": minAmount,
+                                                        "Price": price,
+                                                        "TradeType": TradeType
+                                                })
+                                                setRefresh(1)
+                                                history.push('/C2C')
+                                                
+                        }
+                   }
+
+
+                }
+               
+                
+
         }
 
         const updateCoin = (event) => {

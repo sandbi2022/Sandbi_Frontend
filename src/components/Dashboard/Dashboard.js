@@ -15,17 +15,17 @@ import 'echarts/lib/component/legend'
 import 'echarts/lib/component/markPoint'
 import ReactEcharts from 'echarts-for-react'
 import { Button } from 'bootstrap';
-import{useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import WalletAPI from '../../api/wallet_api';
 import Manage from './manage';
 import Popup from 'reactjs-popup';
 const Dashboard = () => {
     const classes = useStyles()
     const history = useHistory();
-    const user = useSelector((state)=>state.user.value);
-    const [C2CBalance, setC2CBal]= useState({})
-    const [MBalance, setMBal]= useState({})
-    const [exBalance, setexBal]= useState({})
+    const user = useSelector((state) => state.user.value);
+    const [C2CBalance, setC2CBal] = useState({})
+    const [MBalance, setMBal] = useState({})
+    const [exBalance, setexBal] = useState({})
     const redirectTransferIn = () => {
         history.push('/Transfer In')
     }
@@ -34,9 +34,9 @@ const Dashboard = () => {
     }
     const [active, setActive] = useState("CurrentBalance")
 
-    const [BTC,setBTC]= useState();
-    const [BCH,setBCH]= useState();
-    const [ETH,setETH]= useState();
+    const [BTC, setBTC] = useState();
+    const [BCH, setBCH] = useState();
+    const [ETH, setETH] = useState();
     // const [Exchange,setExchange]=useState()
     // const [C2C,setC2C]=useState()
     // const [Margin,setMargin]=useState()
@@ -44,162 +44,159 @@ const Dashboard = () => {
 
 
     useEffect(() => {
-        WalletAPI.getPrice({"TradePair":"BTCUSDT"}).then((response)=>{
-           console.log(response.data)
-           setBTC(response.data["price"])
-
-           
-       }
-       ) 
-      }, []);
+        WalletAPI.getPrice({ "TradePair": "BTCUSDT" }).then((response) => {
+            console.log(response.data)
+            setBTC(response.data["price"])
 
 
-      useEffect(()=>{
-         WalletAPI.getPrice({"TradePair":"BCHUSDT"}).then((response)=>{
-        console.log(response.data)
-        setBCH(response.data["price"])
-    }
-    ) 
-       },[])
+        }
+        )
+    }, []);
 
-
-
-useEffect(()=>{
- WalletAPI.getPrice({"TradePair":"ETHUSDT"}).then((response)=>{
-        console.log(response.data)
-        setETH(response.data["price"]);
-        
-    }
-    ) 
-},[])
 
     useEffect(() => {
-        UserServer.getC2CBal({"UID":user.UID}).then((response)=>{
-           console.log("c2c")
-           console.log(response.data)
-           setC2CBal(response.data)
-        //    setC2C(((parseFloat(BTC*C2CBalance.BTC+0)+parseFloat(BCH*C2CBalance.BCH+0)+parseFloat(ETH*C2CBalance.ETH+0)+parseFloat(C2CBalance.USDT+0)+0)/BTC).toFixed(5))
-           
-       }
-       ) 
-      }, []);
+        WalletAPI.getPrice({ "TradePair": "BCHUSDT" }).then((response) => {
+            console.log(response.data)
+            setBCH(response.data["price"])
+        }
+        )
+    }, [])
 
-      useEffect(() => {
-        UserServer.getMarginBal({"UID":user.UID}).then((response)=>{
+
+
+    useEffect(() => {
+        WalletAPI.getPrice({ "TradePair": "ETHUSDT" }).then((response) => {
+            console.log(response.data)
+            setETH(response.data["price"]);
+
+        }
+        )
+    }, [])
+
+    useEffect(() => {
+        UserServer.getC2CBal({ "UID": user.UID }).then((response) => {
+            console.log("c2c")
+            console.log(response.data)
+            setC2CBal(response.data)
+            //    setC2C(((parseFloat(BTC*C2CBalance.BTC+0)+parseFloat(BCH*C2CBalance.BCH+0)+parseFloat(ETH*C2CBalance.ETH+0)+parseFloat(C2CBalance.USDT+0)+0)/BTC).toFixed(5))
+
+        }
+        )
+    }, []);
+
+    useEffect(() => {
+        UserServer.getMarginBal({ "UID": user.UID }).then((response) => {
             console.log("margin")
-           console.log(response.data)
-           setMBal(response.data)
-        //    setMargin(((parseFloat(BTC*MBalance.BTC+0)+parseFloat(BCH*MBalance.BCH+0)+parseFloat(ETH*MBalance.ETH+0)+parseFloat(MBalance.USDT+0)+0)/BTC).toFixed(5))
-        //    console("margin total"+Margin)
-       }
-       ) 
-      }, []);
+            console.log(response.data)
+            setMBal(response.data)
+            //    setMargin(((parseFloat(BTC*MBalance.BTC+0)+parseFloat(BCH*MBalance.BCH+0)+parseFloat(ETH*MBalance.ETH+0)+parseFloat(MBalance.USDT+0)+0)/BTC).toFixed(5))
+            //    console("margin total"+Margin)
+        }
+        )
+    }, []);
 
-      useEffect(()=>{
-        WalletAPI.getBalance({"UID":user.UID}).then((response) => {
+    useEffect(() => {
+        WalletAPI.getBalance({ "UID": user.UID }).then((response) => {
             console.log("exchange")
-           console.log(response.data)
-           setexBal(response.data)
-          // setExchange(((parseFloat(BTC*exBalance.BTC+0)+parseFloat(BCH*exBalance.BCH+0)+parseFloat(ETH*exBalance.ETH+0)+parseFloat(exBalance.USDT+0)+0)/BTC).toFixed(5))
-           
+            console.log(response.data)
+            setexBal(response.data)
+            // setExchange(((parseFloat(BTC*exBalance.BTC+0)+parseFloat(BCH*exBalance.BCH+0)+parseFloat(ETH*exBalance.ETH+0)+parseFloat(exBalance.USDT+0)+0)/BTC).toFixed(5))
+
         }
         )
 
-      },[])
+    }, [])
 
 
 
     const Announcement = [
         {
             comment: 'Thank you so much for registering to our website',
-            date: 'XX/XX/XX'
+            date: '5/4/2022'
         },
-        {
-            comment: 'XXXXXXXXXXXXX',
-            date: 'XX/XX/XX'
-        },
+
     ]
     const data = [
         {
             name: 'Exchange Account',
-            
+
         },
         {
             name: 'C2C Account',
-            
+
         },
         {
             name: 'Margin Account',
-            
-        },
-       
-    ]
-    const Exchange =((parseFloat(BTC*exBalance.BTC+0)+parseFloat(BCH*exBalance.BCH+0)+parseFloat(ETH*exBalance.ETH+0)+parseFloat(exBalance.USDT+0)+0)/BTC).toFixed(5);
-    const C2C=((parseFloat(BTC*C2CBalance.BTC+0)+parseFloat(BCH*C2CBalance.BCH+0)+parseFloat(ETH*C2CBalance.ETH+0)+parseFloat(C2CBalance.USDT+0)+0)/BTC).toFixed(5);
-    const Margin=((parseFloat(BTC*MBalance.BTC+0)+parseFloat(BCH*MBalance.BCH+0)+parseFloat(ETH*MBalance.ETH+0)+parseFloat(MBalance.USDT+0)+0)/BTC).toFixed(5);
-     const typeArray=data.map(d=>d.name);
 
-     const dataex = [
+        },
+
+    ]
+    const Exchange = ((parseFloat(BTC * exBalance.BTC + 0) + parseFloat(BCH * exBalance.BCH + 0) + parseFloat(ETH * exBalance.ETH + 0) + parseFloat(exBalance.USDT + 0) + 0) / BTC).toFixed(5);
+    const C2C = ((parseFloat(BTC * C2CBalance.BTC + 0) + parseFloat(BCH * C2CBalance.BCH + 0) + parseFloat(ETH * C2CBalance.ETH + 0) + parseFloat(C2CBalance.USDT + 0) + 0) / BTC).toFixed(5);
+    const Margin = ((parseFloat(BTC * MBalance.BTC + 0) + parseFloat(BCH * MBalance.BCH + 0) + parseFloat(ETH * MBalance.ETH + 0) + parseFloat(MBalance.USDT + 0) + 0) / BTC).toFixed(5);
+    const typeArray = data.map(d => d.name);
+
+    const dataex = [
         {
-            name: 'BTC: '+parseFloat(exBalance.BTC+0).toFixed(5),
-            
+            name: 'BTC: ' + parseFloat(exBalance.BTC).toFixed(5),
+
         },
         {
-            name: 'USDT: '+parseFloat(exBalance.USDT+0).toFixed(5),
-            
+            name: 'USDT: ' + parseFloat(exBalance.USDT).toFixed(5),
+
         },
         {
-            name: 'BCH: '+parseFloat(exBalance.BCH+0).toFixed(5),
-           
+            name: 'BCH: ' + parseFloat(exBalance.BCH).toFixed(5),
+
         },
         {
-            name: 'ETH: '+parseFloat(exBalance.ETH+0).toFixed(5),
-            
+            name: 'ETH: ' + parseFloat(exBalance.ETH).toFixed(5),
+
         }
     ]
-     const typeArrayex=dataex.map(d=>d.name);
+    const typeArrayex = dataex.map(d => d.name);
 
 
-     const datamar = [
+    const datamar = [
         {
-            name: 'BTC: '+MBalance.BTC,
-            
+            name: 'BTC: ' + MBalance.BTC,
+
         },
         {
-            name: 'USDT: '+MBalance.USDT,
-            
+            name: 'USDT: ' + MBalance.USDT,
+
         },
         {
-            name: 'BCH: '+MBalance.BCH,
-            
+            name: 'BCH: ' + MBalance.BCH,
+
         },
         {
-            name: 'ETH: '+MBalance.ETH,
-            
+            name: 'ETH: ' + MBalance.ETH,
+
         }
     ]
-     const typeArraymar=datamar.map(d=>d.name);
+    const typeArraymar = datamar.map(d => d.name);
 
     const datac2c = [
         {
-            name: 'BTC: '+C2CBalance.BTC,
-            
+            name: 'BTC: ' + C2CBalance.BTC,
+
         },
         {
-            name: 'USDT: '+C2CBalance.USDT,
-            
+            name: 'USDT: ' + C2CBalance.USDT,
+
         },
         {
-            name: 'BCH: '+C2CBalance.BCH,
-            
+            name: 'BCH: ' + C2CBalance.BCH,
+
         },
         {
-            name: 'ETH: '+C2CBalance.ETH,
-           
+            name: 'ETH: ' + C2CBalance.ETH,
+
         }
     ]
-     const typeArrayc2c=datac2c.map(x=>x.name);
-     console.log('array'+typeArrayc2c)
+    const typeArrayc2c = datac2c.map(x => x.name);
+    console.log('array' + typeArrayc2c)
     //  console.log('array'+typeArray)
     return (
         <div>
@@ -225,14 +222,15 @@ useEffect(()=>{
                                     <div className={classes.SubTitleContainer} onClick={() => setActive("ExchangeAccount")}>Exchange Account</div>
                                     <div className={classes.SubTitleContainer} onClick={() => setActive("C2CTrading")}>C2C Trading</div>
                                     <div className={classes.SubTitleContainer} onClick={() => setActive("MarginAccount")}>Margin Account</div>
-                                    <Popup contentStyle={{ 
-                                            width: "20%",height:'40%',backgroundColor:'#04011A'}} 
-                                            position="bottom right"
-                                            trigger={<button className={classes.buttonSetting} 
-                                            >Manage</button>}>
-                                            {close=>(
-                                            <Manage/>
-                                            )}
+                                    <Popup contentStyle={{
+                                        width: "20%", height: '40%', backgroundColor: '#04011A'
+                                    }}
+                                        position="bottom right"
+                                        trigger={<button className={classes.buttonSetting}
+                                        >Manage</button>}>
+                                        {close => (
+                                            <Manage />
+                                        )}
                                     </Popup>
                                 </div>
                                 <hr
@@ -245,11 +243,11 @@ useEffect(()=>{
                                     <div>
                                         <div className={classes.SubTitleContainer}>Account Balance</div>
                                         <div style={{ gridTemplateColumns: 'auto auto', display: 'grid', width: '40%' }}>
-                                            <div className={classes.AmountContainer}>{(parseFloat(C2C+0)+parseFloat(Exchange+0)+parseFloat(Margin+0)).toFixed(5)}</div>
+                                            <div className={classes.AmountContainer}>{(parseFloat(C2C + 0) + parseFloat(Exchange + 0) + parseFloat(Margin + 0)).toFixed(5)}</div>
                                             <div className={classes.SubTitleContainer}>BTC</div>
                                         </div>
                                         <div className={classes.SubTitleContainer}>total valuation</div>
-                                        <div className={classes.PriceContainer}>{((parseFloat(C2C+0)+parseFloat(Exchange+0)+parseFloat(Margin+0))*BTC).toFixed(5)}</div>
+                                        <div className={classes.PriceContainer}>{((parseFloat(C2C + 0) + parseFloat(Exchange + 0) + parseFloat(Margin + 0)) * BTC).toFixed(5)}</div>
                                     </div>
                                     <div>
                                         <ReactEcharts
@@ -260,11 +258,11 @@ useEffect(()=>{
                                                 },
                                                 legend: {
                                                     orient: 'vertical',
-                                                    top:'5%',
+                                                    top: '5%',
                                                     left: '0%',
                                                     data: typeArray,
-                                                    textStyle:{
-                                                        color:'fffdd0'
+                                                    textStyle: {
+                                                        color: 'fffdd0'
                                                     }
                                                 },
                                                 series: [
@@ -287,7 +285,7 @@ useEffect(()=>{
                                                         labelLine: {
                                                             show: false
                                                         },
-                                                        data: [{name:typeArray[0],value:Exchange},{name:typeArray[1],value:C2C},{name:typeArray[2],value:Margin}]
+                                                        data: [{ name: typeArray[0], value: Exchange }, { name: typeArray[1], value: C2C }, { name: typeArray[2], value: Margin }]
                                                     }
                                                 ]
                                             }}
@@ -313,14 +311,15 @@ useEffect(()=>{
                                     <div className={classes.SubTitleContainer2} >Exchange Account</div>
                                     <div className={classes.SubTitleContainer} onClick={() => setActive("C2CTrading")}>C2C Trading</div>
                                     <div className={classes.SubTitleContainer} onClick={() => setActive("MarginAccount")}>Margin Account</div>
-                                    <Popup contentStyle={{ 
-                                            width: "20%",height:'40%',backgroundColor:'#04011A'}} 
-                                            position="bottom right"
-                                            trigger={<button className={classes.buttonSetting} 
-                                            >Manage</button>}>
-                                            {close=>(
-                                            <Manage/>
-                                            )}
+                                    <Popup contentStyle={{
+                                        width: "20%", height: '40%', backgroundColor: '#04011A'
+                                    }}
+                                        position="bottom right"
+                                        trigger={<button className={classes.buttonSetting}
+                                        >Manage</button>}>
+                                        {close => (
+                                            <Manage />
+                                        )}
                                     </Popup>
                                 </div>
                                 <hr
@@ -339,7 +338,7 @@ useEffect(()=>{
                                             <div className={classes.SubTitleContainer}>BTC</div>
                                         </div>
                                         <div className={classes.SubTitleContainer}>total valuation</div>
-                                        <div className={classes.PriceContainer}>{parseFloat(BTC*exBalance.BTC+0)+parseFloat(BCH*exBalance.BCH+0)+parseFloat(ETH*exBalance.ETH+0)+parseFloat(exBalance.USDT+0)+0}</div>
+                                        <div className={classes.PriceContainer}>{parseFloat(BTC * exBalance.BTC + 0) + parseFloat(BCH * exBalance.BCH + 0) + parseFloat(ETH * exBalance.ETH + 0) + parseFloat(exBalance.USDT + 0) + 0}</div>
                                     </div>
                                     <div>
                                         <ReactEcharts
@@ -350,12 +349,12 @@ useEffect(()=>{
                                                 },
                                                 legend: {
                                                     orient: 'vertical',
-                                                    top:'5%',
+                                                    top: '5%',
                                                     left: '0%',
-                                                    fontSize:'5',
+                                                    fontSize: '5',
                                                     data: typeArrayex,
-                                                    textStyle:{
-                                                        color:'fffdd0'
+                                                    textStyle: {
+                                                        color: 'fffdd0'
                                                     }
                                                 },
                                                 series: [
@@ -366,7 +365,7 @@ useEffect(()=>{
                                                         avoidLabelOverlap: false,
                                                         label: {
                                                             show: false,
-                                                            
+
                                                             position: 'center'
                                                         },
                                                         emphasis: {
@@ -379,7 +378,7 @@ useEffect(()=>{
                                                         labelLine: {
                                                             show: false
                                                         },
-                                                        data: [{name:typeArrayex[0],value:exBalance.BTC},{name:typeArrayex[1],value:exBalance.USDT/BTC},{name:typeArrayex[2],value:parseFloat(BCH*exBalance.BCH+0)/BTC},{name:typeArrayex[3],value:parseFloat(ETH*exBalance.ETH+0)/BTC}]
+                                                        data: [{ name: typeArrayex[0], value: exBalance.BTC }, { name: typeArrayex[1], value: exBalance.USDT / BTC }, { name: typeArrayex[2], value: parseFloat(BCH * exBalance.BCH + 0) / BTC }, { name: typeArrayex[3], value: parseFloat(ETH * exBalance.ETH + 0) / BTC }]
                                                     }
                                                 ]
                                             }}
@@ -396,14 +395,15 @@ useEffect(()=>{
                                     <div className={classes.SubTitleContainer} onClick={() => setActive("ExchangeAccount")}>Exchange Account</div>
                                     <div className={classes.SubTitleContainer2}>C2C Trading</div>
                                     <div className={classes.SubTitleContainer} onClick={() => setActive("MarginAccount")}>Margin Account</div>
-                                    <Popup contentStyle={{ 
-                                            width: "20%",height:'40%',backgroundColor:'#04011A'}} 
-                                            position="bottom right"
-                                            trigger={<button className={classes.buttonSetting} 
-                                            >Manage</button>}>
-                                            {close=>(
-                                            <Manage/>
-                                            )}
+                                    <Popup contentStyle={{
+                                        width: "20%", height: '40%', backgroundColor: '#04011A'
+                                    }}
+                                        position="bottom right"
+                                        trigger={<button className={classes.buttonSetting}
+                                        >Manage</button>}>
+                                        {close => (
+                                            <Manage />
+                                        )}
                                     </Popup>
                                 </div>
                                 <hr
@@ -416,11 +416,11 @@ useEffect(()=>{
                                     <div>
                                         <div className={classes.SubTitleContainer}>Account Balance</div>
                                         <div style={{ gridTemplateColumns: 'auto auto', display: 'grid', width: '40%' }}>
-                                            <div className={classes.AmountContainer}>{((parseFloat(BTC*C2CBalance.BTC+0)+parseFloat(BCH*C2CBalance.BCH+0)+parseFloat(ETH*C2CBalance.ETH+0)+parseFloat(C2CBalance.USDT+0)+0)/BTC).toFixed(5)}</div>
+                                            <div className={classes.AmountContainer}>{((parseFloat(BTC * C2CBalance.BTC + 0) + parseFloat(BCH * C2CBalance.BCH + 0) + parseFloat(ETH * C2CBalance.ETH + 0) + parseFloat(C2CBalance.USDT + 0) + 0) / BTC).toFixed(5)}</div>
                                             <div className={classes.SubTitleContainer}>BTC</div>
                                         </div>
                                         <div className={classes.SubTitleContainer}>total valuation</div>
-                                        <div className={classes.PriceContainer}>{/*C2CBalance.BTC*BTC+C2CBalance.USDT+C2CBalance.BCH*BCH+C2CBalance.ETH*ETH*/parseFloat(BTC*C2CBalance.BTC+0)+parseFloat(BCH*C2CBalance.BCH+0)+parseFloat(ETH*C2CBalance.ETH+0)+parseFloat(C2CBalance.USDT+0)+0}</div>    
+                                        <div className={classes.PriceContainer}>{/*C2CBalance.BTC*BTC+C2CBalance.USDT+C2CBalance.BCH*BCH+C2CBalance.ETH*ETH*/parseFloat(BTC * C2CBalance.BTC + 0) + parseFloat(BCH * C2CBalance.BCH + 0) + parseFloat(ETH * C2CBalance.ETH + 0) + parseFloat(C2CBalance.USDT + 0) + 0}</div>
                                     </div>
                                     <div>
                                         <ReactEcharts
@@ -431,11 +431,11 @@ useEffect(()=>{
                                                 },
                                                 legend: {
                                                     orient: 'vertical',
-                                                    top:'5%',
+                                                    top: '5%',
                                                     left: '0%',
                                                     data: typeArrayc2c,
-                                                    textStyle:{
-                                                        color:'fffdd0'
+                                                    textStyle: {
+                                                        color: 'fffdd0'
                                                     }
                                                 },
                                                 series: [
@@ -446,7 +446,7 @@ useEffect(()=>{
                                                         avoidLabelOverlap: false,
                                                         label: {
                                                             show: false,
-                                                            fontSize:'10px',
+                                                            fontSize: '10px',
                                                             position: 'center'
                                                         },
                                                         emphasis: {
@@ -459,7 +459,7 @@ useEffect(()=>{
                                                         labelLine: {
                                                             show: false
                                                         },
-                                                        data: [{name:typeArrayc2c[0],value:C2CBalance.BTC},{name:typeArrayc2c[1],value:C2CBalance.USDT/BTC},{name:typeArrayc2c[2],value:parseFloat(BCH*C2CBalance.BCH+0)/BTC},{name:typeArrayc2c[3],value:parseFloat(ETH*C2CBalance.ETH+0)/BTC}]
+                                                        data: [{ name: typeArrayc2c[0], value: C2CBalance.BTC }, { name: typeArrayc2c[1], value: C2CBalance.USDT / BTC }, { name: typeArrayc2c[2], value: parseFloat(BCH * C2CBalance.BCH + 0) / BTC }, { name: typeArrayc2c[3], value: parseFloat(ETH * C2CBalance.ETH + 0) / BTC }]
                                                     }
                                                 ]
                                             }}
@@ -475,14 +475,15 @@ useEffect(()=>{
                                     <div className={classes.SubTitleContainer} onClick={() => setActive("ExchangeAccount")}>Exchange Account</div>
                                     <div className={classes.SubTitleContainer} onClick={() => setActive("C2CTrading")}>C2C Trading</div>
                                     <div className={classes.SubTitleContainer2}>Margin Account</div>
-                                    <Popup contentStyle={{ 
-                                            width: "20%",height:'40%',backgroundColor:'#04011A'}} 
-                                            position="bottom right"
-                                            trigger={<button className={classes.buttonSetting} 
-                                            >Manage</button>}>
-                                            {close=>(
-                                            <Manage/>
-                                            )}
+                                    <Popup contentStyle={{
+                                        width: "20%", height: '40%', backgroundColor: '#04011A'
+                                    }}
+                                        position="bottom right"
+                                        trigger={<button className={classes.buttonSetting}
+                                        >Manage</button>}>
+                                        {close => (
+                                            <Manage />
+                                        )}
                                     </Popup>
                                 </div>
                                 <hr
@@ -497,11 +498,11 @@ useEffect(()=>{
                                     <div>
                                         <div className={classes.SubTitleContainer}>Account Balance</div>
                                         <div style={{ gridTemplateColumns: 'auto auto', display: 'grid', width: '40%' }}>
-                                            <div className={classes.AmountContainer}>{((parseFloat(BTC*MBalance.BTC+0)+parseFloat(BCH*MBalance.BCH+0)+parseFloat(ETH*MBalance.ETH+0)+parseFloat(MBalance.USDT+0)+0)/BTC).toFixed(5)}</div>
+                                            <div className={classes.AmountContainer}>{((parseFloat(BTC * MBalance.BTC + 0) + parseFloat(BCH * MBalance.BCH + 0) + parseFloat(ETH * MBalance.ETH + 0) + parseFloat(MBalance.USDT + 0) + 0) / BTC).toFixed(5)}</div>
                                             <div className={classes.SubTitleContainer}>BTC</div>
                                         </div>
                                         <div className={classes.SubTitleContainer}>total valuation</div>
-                                        <div className={classes.PriceContainer}>{parseFloat(BTC*MBalance.BTC+0)+parseFloat(BCH*MBalance.BCH+0)+parseFloat(ETH*MBalance.ETH+0)+parseFloat(MBalance.USDT+0)+0}</div>
+                                        <div className={classes.PriceContainer}>{parseFloat(BTC * MBalance.BTC + 0) + parseFloat(BCH * MBalance.BCH + 0) + parseFloat(ETH * MBalance.ETH + 0) + parseFloat(MBalance.USDT + 0) + 0}</div>
                                     </div>
                                     <div>
                                         <ReactEcharts
@@ -512,11 +513,11 @@ useEffect(()=>{
                                                 },
                                                 legend: {
                                                     orient: 'vertical',
-                                                    top:'5%',
+                                                    top: '5%',
                                                     left: '0%',
                                                     data: typeArraymar,
-                                                    textStyle:{
-                                                        color:'fffdd0'
+                                                    textStyle: {
+                                                        color: 'fffdd0'
                                                     }
                                                 },
                                                 series: [
@@ -539,14 +540,14 @@ useEffect(()=>{
                                                         labelLine: {
                                                             show: false
                                                         },
-                                                        data: [{name:typeArraymar[0],value:MBalance.BTC},{name:typeArraymar[1],value:MBalance.USDT/BTC},{name:typeArraymar[2],value:parseFloat(BCH*MBalance.BCH+0)/BTC},{name:typeArraymar[3],value:parseFloat(ETH*MBalance.ETH+0)/BTC}]
+                                                        data: [{ name: typeArraymar[0], value: MBalance.BTC }, { name: typeArraymar[1], value: MBalance.USDT / BTC }, { name: typeArraymar[2], value: parseFloat(BCH * MBalance.BCH + 0) / BTC }, { name: typeArraymar[3], value: parseFloat(ETH * MBalance.ETH + 0) / BTC }]
                                                     }
                                                 ]
                                             }}
                                         />
                                     </div>
                                 </div>
-                            </div>          
+                            </div>
                         }
                     </div>
                 </div>

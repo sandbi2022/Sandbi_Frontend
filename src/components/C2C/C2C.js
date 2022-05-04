@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import AuthContext from "../../context/AuthProvider"
 import c2cAPI from '../../api/c2c-api';
-import { useDispatch } from 'react-redux';
+
+import{useDispatch, useSelector} from 'react-redux';
 import { Pend } from '../../features/trade';
 import CreateOrder from './CreateOrder';
 import UserOrder from '../UserOrder/UserOrder'
@@ -12,11 +13,13 @@ import Popup from 'reactjs-popup';
 import InfoAPI from '../../api/Info-api';
 import 'reactjs-popup/dist/index.css';
 import BuyOrder from './BuyOrder';
+import user from '../../features/user';
 //import C2Cinfo from  "../C2C/BuyOrder";
 const C2C = () => {
 
     const classes = useStyles();
     const history = useHistory();
+    const user = useSelector((state)=>state.user.value)
     const [formErrors, setFormErrors] = useState({})
     const [active, setActive] = useState("Buy")
     const [buyplist, setbuyplist] = useState([])
@@ -26,7 +29,7 @@ const C2C = () => {
     const [historylist, sethlist] = useState([])
     const [PairInfo, setInfo] = useState({})
     const dispatch = useDispatch();
-    const [TradePairlist, setTradepairlist] = useState([])
+    const [TradePairlist, setTradepairlist] = useState(["BTC","ETH","USDT","BCH"])
     const [min, setMin] = useState();
     const [max, setMax] = useState();
     const [Refresh,setRefresh]= useState(0);
@@ -47,7 +50,7 @@ const C2C = () => {
                 tmpPairlist.push(key)
             }
             setInfo(newlist)
-            setTradepairlist(tmpPairlist)
+            //setTradepairlist(tmpPairlist)
         })
     }, [])
 
@@ -56,8 +59,9 @@ const C2C = () => {
         var pairlist = []
         var PromiseBUYlist = [];
         var PromiseSelllist = [];
-        for (let [key, value] of Object.entries(PairInfo)) {
-            var Tpair = value["Coin1"] + "USD"
+        for (let value of TradePairlist) {
+            console.log(value)
+            var Tpair = value + "USD"
             console.log(Tpair)
             pairlist.push(Tpair)
             const buyres = c2cAPI.getPOrder({ "TradePair": Tpair, "TradeType": 0 })
@@ -79,10 +83,11 @@ const C2C = () => {
             console.log(newList)
             var final = newList.filter(order => (order.amount - order.doneAmount) > 0);
             console.log("final")
+            var other=final.filter(order=>(order.seller!==(user.UID).toString()))
 
-            console.log(final)
-            setsellplist(final)
-            setsellplistINIT(final)
+            console.log(other)
+            setsellplist(other)
+            setsellplistINIT(other)
         })
 
 
@@ -99,8 +104,9 @@ const C2C = () => {
 
             console.log(newList)
             var final = newList.filter(order => (order.amount - order.doneAmount) > 0);
-            setbuyplist(final)
-            setbuyplistINIT(final)
+            var other=final.filter(order=>(order.seller!==(user.UID).toString()))
+            setbuyplist(other)
+            setbuyplistINIT(other)
         })
         return setRefresh(0)
     }, [PairInfo,Refresh])
@@ -224,6 +230,8 @@ const C2C = () => {
         setbuyplist(temp2)
 
     }
+
+    
     useEffect(()=>{
         var header=document.getElementById("button");
         var btns=header.getElementsByClassName("btn");
@@ -293,8 +301,8 @@ const C2C = () => {
                             <div >
                                 <select className={classes.inputSetting2}>
                                     <option >all payment</option>
-                                    <option >check</option>
-                                    <option >card</option>
+                                    <option >Check</option>
+                                    <option >Card</option>
                                 </select>
                             </div>
                         </div>
@@ -325,7 +333,8 @@ const C2C = () => {
                                         Available:{item.amount - item.doneAmount}
                                     </div>
                                 </div>
-                                <div className={classes.infoTextSetting}>{item.Payment}</div>
+                                <div className={classes.infoTextSetting}>Card</div>
+                                {/* <div className={classes.infoTextSetting}>{item.Payment}</div> */}
                                 <div><Popup contentStyle={{
                                     width: "20%", height: '20%', backgroundColor: '#04011A'
                                 }} position="bottom right" trigger={<button className={classes.SelectButtonSetting3} >Buy</button>} onOpen={() => { handleBuy(item) }}>
@@ -366,7 +375,7 @@ const C2C = () => {
                             }} position="bottom right" trigger={<button className={classes.bottonSetting2} onClick={() => { history.push('/CreateOrder') }}>Create</button>}>
                                 {close => (
 
-                                    <CreateOrder />
+                                    <CreateOrder  Refresh= {setRefresh}/>
 
                                 )}
                             </Popup>
@@ -432,7 +441,8 @@ const C2C = () => {
                                         Available: {item.amount - item.doneAmount}
                                     </div>
                                 </div>
-                                <div className={classes.infoTextSetting}>{item.Payment}</div>
+                                <div className={classes.infoTextSetting}>Card</div>
+                                {/* <div className={classes.infoTextSetting}>{item.Payment}</div> */}
                                 <div>
                                     <Popup contentStyle={{
                                         width: "20%", height: '20%', backgroundColor: '#04011A'

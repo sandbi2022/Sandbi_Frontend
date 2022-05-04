@@ -2,6 +2,7 @@ import { useRef, useState, useEffect, useContext } from 'react';
 import { useStyles } from "./style";
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
+import { green } from '@mui/material/colors';
 
 const CoinBar=({CoinName,CoinPrice,CoinChange,CoinVolume,CoinRound,Sign})=>{
     const classes = useStyles()
@@ -11,6 +12,15 @@ const CoinBar=({CoinName,CoinPrice,CoinChange,CoinVolume,CoinRound,Sign})=>{
     const Round=CoinRound
     const Volumn= CoinVolume
 
+    const getColor=(change)=>{
+        if(change===1){
+            return "red";
+        } else if(change === -1){
+            return "green";
+        } else {
+            return "#DBDBDB";
+        }
+    }
     
 
     return(
@@ -20,12 +30,12 @@ const CoinBar=({CoinName,CoinPrice,CoinChange,CoinVolume,CoinRound,Sign})=>{
             </div>
             <div className={classes.columContainers}>
                 <div className={classes.Price}>
-                    {Price}
+                    ${Price}
                 </div>
 
             </div>
             <div className={classes.columContainers} >
-                <div className={classes.change} style={{color: Sign === -1 ? "green" : "red",fontSize:'14px'}}>
+                <div className={classes.change} style={{color:  getColor(Sign),fontSize:'14px'}}>
                     {Change}
                 </div>
                 <div className={classes.usdPrice}>

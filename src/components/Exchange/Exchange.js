@@ -10,7 +10,7 @@ import { useStyles } from "./style";
 import Chart from "../Chart/Kline";
 import AssetTable from '../TradeData/Asset/AssetTable';
 import { useLocation } from "react-router-dom";
-
+import OrderBook from "../OrderBook/OrderBook"
 
 const Exchange = () => {
     const classes = useStyles()
@@ -46,14 +46,13 @@ const Exchange = () => {
         const UID = user.UID;
         WalletAPI.getBalance({ UID }).then((response) => {
             const data = response.data;
-            setUBTC(data["BTC"] - data["FreezeBTC"])
-            setUusdt(data["USDT"] - data["FreezeUSDT"])
+            setUBTC(data[coin1] - data["Freeze" + coin1])
+            setUusdt(data[coin2] - data["Freeze" + coin2])
         });
-    }, [change])
+    }, [change,Tradepair])
 
     useEffect(() => {
         InfoAPI.getTradePair().then((response) => {
-            // console.log(response.data)
             var newlist = {}
             for (let [key, value] of Object.entries(response.data)) {
                 var data = JSON.parse(value)
@@ -61,8 +60,8 @@ const Exchange = () => {
             }
             setInfo(newlist)
         })
-
     }, [])
+
     useEffect(()=>{
         if(typeof location.state !== 'undefined'){
             console.log(location.state.detail)
@@ -71,6 +70,7 @@ const Exchange = () => {
                 console.log(PairInfo)
                 setcoin1(PairInfo[location.state.detail]["Coin1"])
                  setcoin2(PairInfo[location.state.detail]["Coin2"])
+
             }
             
         }
@@ -91,7 +91,7 @@ const Exchange = () => {
             setTPINFO(newlist)
         })
 
-    }, [])
+    }, [PairInfo])
 
     useEffect(() => {
         MarketAPI.getOrder({ "TradePair": Tradepair, "TradeType": 1 }).then((response) => {
@@ -171,10 +171,8 @@ const Exchange = () => {
                     time: data["time"].slice(11,),
                     timestamp: new Date(Date.parse(data["time"])).getTime()
                 })
-
             }
             newlist.sort(function (a, b) { return -a.timestamp + b.timestamp })
-            //    console.log(newlist)
             setmarket(newlist)
         })
     }, [PairInfo, Tradepair, change]);
@@ -226,6 +224,14 @@ const Exchange = () => {
         setbuyamount(event.target.value)
 
     }
+    const handleSellBuy = (i) => {
+        if(i==0){
+            return "Buy"
+        }else{
+            return "Sell"
+        }
+
+    }
 
     useEffect(() => {
         if (sellamount === undefined | sellamount === "" | sellprice === undefined | sellprice === "") {
@@ -250,11 +256,13 @@ const Exchange = () => {
 
 
     const handleSell = () => {
+
         if (UserBTC > sellamount) {
             MarketAPI.submitTrade({ "TradePair": Tradepair, "UID": user.UID, "Amount": sellamount, "Price": sellprice, "TradeType": 1 })
+            window.location.reload();
         }
         else {
-            alert("not enought BTC")
+            alert("not enough "+ coin1)
         }
         if (change == 1) {
             setChange(2)
@@ -268,9 +276,10 @@ const Exchange = () => {
     const handlebuy = () => {
         if (USDT > buyamount * buyprice) {
             MarketAPI.submitTrade({ "TradePair": Tradepair, "UID": user.UID, "Amount": buyamount, "Price": buyprice, "TradeType": 0 })
+            window.location.reload();
         }
         else {
-            alert("not enought USDT")
+            alert("not enough "+ coin2)
         }
         if (change == 1) {
             setChange(2)
@@ -471,47 +480,7 @@ const Exchange = () => {
                             </div>
                         </div>
                     </div>
-                    <div className={classes.columPartContainers}>
-                        <div className={classes.TitleText}>OrderBook</div>
-                        <div style={{ height: '45%' }}>
-                            <div className={classes.leftSideContainer}>
-                                <div className={classes.smallText2}>Price</div>
-                                <div className={classes.smallText2}>Amount</div>
-                                <div className={classes.smallText2}>sum</div>
-                            </div>
-                            {buyorder.map((item, index) => {
-                                return (
-                                    <div className={classes.leftSideContainer}>
-                                        <div className={classes.smallTextRed}>{item.price}</div>
-                                        <div className={classes.smallText}>{item.amount}</div>
-                                        <div className={classes.smallText}>{item.sum}</div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                        <div>
-                            <hr
-                                style={{
-                                    color: '#707070',
-                                    height: 3,
-                                    width: '100%'
-                                }} />
-                        </div>
-                        <div className={classes.leftSideContainer}>
-                            <div className={classes.smallText2}>Price</div>
-                            <div className={classes.smallText2}>Amount</div>
-                            <div className={classes.smallText2}>sum</div>
-                        </div>
-                        {sellorder.map((item, index) => {
-                            return (
-                                <div className={classes.leftSideContainer}>
-                                    <div className={classes.smallTextGreen}>{item.price}</div>
-                                    <div className={classes.smallText}>{item.amount}</div>
-                                    <div className={classes.smallText}>{item.sum}</div>
-                                </div>
-                            );
-                        })}
-                    </div>
+                   <OrderBook TradePair={Tradepair}/>
                     <div className={classes.columPartContainers}>
                         <div className={classes.TitleText}>MarketTrade</div>
                         <div className={classes.leftSideContainer}>
@@ -555,11 +524,12 @@ const Exchange = () => {
                     </div>
                     {bottom.map((item, index) => {
                         return (
-                            <div className={classes.openOrderContainer}>
+                            <div className={classes.orderHistoryContainer}>
                                 <div className={classes.smallText}>{item.tradePair}</div>
-                                <div className={classes.smallText}>{item.tradeType}</div>
+                                <div className={classes.smallText}>{handleSellBuy(item.tradeType    )}</div>
                                 <div className={classes.smallText}>{item.price}</div>
                                 <div className={classes.smallText}>{item.amount}</div>
+                                <div className={classes.smallText}>{item.doneAmount}</div>
                             </div>
                         );
                     })}
@@ -578,7 +548,7 @@ const Exchange = () => {
                             <div className={classes.orderHistoryContainer}>
                                 <div className={classes.smallText}>{item.time}</div>
                                 <div className={classes.smallText}>{item.tradePair}</div>
-                                <div className={classes.smallText}>{item.tradeType}</div>
+                                <div className={classes.smallText}>{handleSellBuy(item.tradeType    )}</div>
                                 <div className={classes.smallText}>{item.price}</div>
                                 <div className={classes.smallText}>{item.amount}</div>
                             </div>

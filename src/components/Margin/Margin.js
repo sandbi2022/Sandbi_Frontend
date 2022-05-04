@@ -12,7 +12,8 @@ import ReactSpeedometer from 'react-d3-speedometer';
 import AssetTable from '../TradeData/Asset/AssetTable';
 import UserServer from '../../api/user-api';
 import Popup from 'reactjs-popup';
-
+import Mode from './Mode';
+import OrderBook from '../OrderBook/OrderBook';
 const Margin = () => {
     const classes = useStyles()
     const history = useHistory();
@@ -280,22 +281,7 @@ const Margin = () => {
     }, [Tradepair]);
 
 
-    const sellpricechange = (event) => {
-        setsellPrice(event.target.value)
 
-    }
-    const sellamountchange = (event) => {
-        setsellamount(event.target.value)
-
-    }
-    const buypricechange = (event) => {
-        setbuyPrice(event.target.value)
-
-    }
-    const buyamountchange = (event) => {
-        setbuyamount(event.target.value)
-
-    }
 
     useEffect(() => {
         console.log(sellamount)
@@ -321,24 +307,8 @@ const Margin = () => {
     }, [buyamount, buyprice])
 
 
-    const handleSell = () => {
-        if (UserBTC > sellamount) {
-            MarketAPI.submitTrade({ "TradePair": Tradepair, "UID": user.UID, "Amount": sellamount, "Price": sellprice, "TradeType": 1 })
-        }
-        else {
-            alert("not enought BTC")
-        }
-    }
 
-    const handlebuy = () => {
-        if (USDT > buyamount * parseFloat(BTC)) {
-            MarketAPI.submitTrade({ "TradePair": Tradepair, "UID": user.UID, "Amount": buyamount, "Price": buyprice, "TradeType": 0 })
-        }
-        else {
-            alert("not enought USDT")
-        }
-    }
-
+    
 
 
     return (
@@ -418,259 +388,10 @@ const Margin = () => {
                             <Chart time={Time} Type={Tradepair}
                             />
                         </div>
-                        <div style={{ position: 'relative', bottom: '-0.6%' }}>
-
-
-
-                            {Modeactive=="AutomaticLoan" &&
-                            <div>
-                                <div className={classes.SwitchButtonContainer}>
-                                    <div style={{
-                                        color: '#515B6E', fontWeight: 'bold', fontSize: '20px', textAlign: 'center', backgroundColor: '#141126',
-                                        border: 'solid', borderWidth: "3px 0px 0px 0px",
-                                        borderColor: "#37C24A", width: '100%', padding: '3px 9px 3px 9px'
-                                    }}>Automatic Mode</div>
-                                    <div style={{ color: '#515B6E', fontWeight: 'bold', fontSize: '20px', textAlign: 'center', width: '100%', padding: '3px 9px 3px 9px' }}
-                                        onClick={() => setModeactive("NormalMode")}>Normal Mode</div>
-                                </div>
-                                <div className={classes.ExchangeContainer}>
-                                    <div className={classes.Left}>
-                                        <div className={classes.ExchangeButton}>
-                                            <button className={classes.ExchangeButtonSetting} onClick={() => { setSellactive("Limit"); }}>Limit</button>
-                                            <button className={classes.ExchangeButtonSetting} onClick={() => { setSellactive("Market"); }}>Market</button>
-                                        </div>
-                                        {Sellactive == "Limit" &&
-                                            <div>
-                                                <div><input type="number" onChange={sellpricechange} min="0" className={classes.inputSetting} placeholder="Price"></input></div>
-                                                <div><input type="number" onChange={sellamountchange} min="0" className={classes.inputSetting} placeholder="Amount"></input></div>
-                                            </div>}
-                                        {Sellactive == "Market" &&
-                                            <div>
-                                                <div><input type="number" onChange={sellamountchange} min="0" className={classes.inputSetting} placeholder="Amount"></input></div>
-                                            </div>}
-
-                                        <div style={{ display: 'grid', gridTemplateColumns: 'auto auto', width: '100%', }}>
-                                            <div style={{ color: 'white', fontSize: '10px', textAlign: 'left' }}>This loan</div>
-                                            <div style={{ color: 'white', fontSize: '10px', textAlign: 'right' }}>0000</div>
-                                        </div>
-                                        <div style={{ display: 'grid', gridTemplateColumns: 'auto auto', width: '100%', }}>
-                                            <div style={{ color: 'white', fontSize: '10px', textAlign: 'left' }}>total</div>
-                                            <div style={{ color: 'white', fontSize: '10px', textAlign: 'right' }}>{stotal}</div>
-                                        </div>
-                                        <div><button onClick={handleSell} className={classes.buttonSettingRed}>Sell</button></div>
-                                    </div>
-                                    <div>
-                                        <div className={classes.verticleLine} />
-                                    </div>
-                                    <div className={classes.Right}>
-                                        <div className={classes.ExchangeButton}>
-                                            <button className={classes.ExchangeButtonSetting} onClick={() => { setBuyactive("Limit") }}>Limit</button>
-                                            <button className={classes.ExchangeButtonSetting} onClick={() => { setBuyactive("Market") }}>Market</button>
-                                        </div>
-                                        {Buyactive == "Limit" &&
-                                            <div>
-                                                <div><input type="number" onChange={buypricechange} min="0" className={classes.inputSetting} placeholder="Price" ></input></div>
-                                                <div><input type="number" onChange={buyamountchange} min="0" className={classes.inputSetting} placeholder="Amount" ></input></div>
-                                            </div>}
-                                        {Buyactive == "Market" &&
-                                            <div>
-
-                                                <div><input type="number" onChange={buyamountchange} min="0" className={classes.inputSetting} placeholder="Amount" ></input></div>
-                                            </div>}
-                                        <div style={{ display: 'grid', gridTemplateColumns: 'auto auto', width: '100%', }}>
-                                            <div style={{ color: 'white', fontSize: '10px', textAlign: 'left' }}>This loan</div>
-                                            <div style={{ color: 'white', fontSize: '10px', textAlign: 'right' }}>0000</div>
-                                        </div>
-                                        <div style={{ display: 'grid', gridTemplateColumns: 'auto auto', width: '100%', }}>
-                                            <div style={{ color: 'white', fontSize: '10px', textAlign: 'left' }}>total</div>
-                                            <div style={{ color: 'white', fontSize: '10px', textAlign: 'right' }}>{btotal}</div>
-                                        </div>
-                                        <div><button onClick={handlebuy} className={classes.buttonSettingGreen}>Buy</button></div>
-                                    </div>
-                                </div>
-                            </div>}
-
-
-
-
-
-                            {Modeactive=="NormalMode" &&
-                            <div>
-                                <div className={classes.SwitchButtonContainer2}>
-                                    <div style={{ color: '#515B6E', fontWeight: 'bold', fontSize: '20px', textAlign: 'center', width: '100%', padding: '3px 9px 3px 9px' }}
-                                    onClick={() => setModeactive("AutomaticLoan")}>Automatic Mode</div>
-                                    <div style={{
-                                        color: '#515B6E', fontWeight: 'bold', fontSize: '20px', textAlign: 'center', backgroundColor: '#141126',
-                                        border: 'solid', borderWidth: "3px 0px 0px 0px",
-                                        borderColor: "#37C24A", width: '100%', padding: '3px 9px 3px 9px'
-                                    }}
-                                        >Normal Mode</div>
-                                    <Popup contentStyle={{width:'10%', backgroundColor:'#04011A'}}trigger={<button style={{color:'white',backgroundColor:'#141126',width:'90%',height:'80%',marginLeft:'5%'}}>loan</button>} position="center">
-                                    <div  style={{textAlign:'center',color:'white',fontWeight:'bold'}}>Coin</div>
-                                    <div  style={{textAlign:'center'}}>
-                                        <select className={classes.inputSetting3}>
-                                        <option >BTC</option>
-                                        <option >ETH</option>
-                                        <option >BCH</option>
-                                        <option >USDT</option>
-                                        </select>
-                                        </div>
-                                        <div  style={{textAlign:'center',color:'white',fontWeight:'bold'}}>Coin</div>
-
-                                        <div  style={{textAlign:'center'}}>
-                                        <select className={classes.inputSetting3}>
-                                        <option >BTC</option>
-                                        <option >ETH</option>
-                                        <option >BCH</option>
-                                        <option >USDT</option>
-                                        </select>
-                                        </div>
-                                        <div style={{textAlign:'center',color:'white',fontWeight:'bold'}}>Enter Amount</div>
-                                        <div  style={{textAlign:'center'}}>
-                                        <input/>
-                                        </div>
-                                        <div  style={{textAlign:'center',marginTop:'5%'}}>
-                                        <button>Confirm</button>
-                                        </div>
-                                    </Popup>
-                                    <Popup contentStyle={{width:'10%', backgroundColor:'#04011A'}}trigger={<button style={{color:'white',backgroundColor:'#141126',width:'90%',height:'80%',marginLeft:'5%'}}>refund</button>} position="center">
-                                    <div  style={{textAlign:'center',color:'white',fontWeight:'bold'}}>Coin</div>
-                                    <div  style={{textAlign:'center'}}>
-                                <select className={classes.inputSetting3}>
-                                <option >BTC</option>
-                                <option >ETH</option>
-                                <option >BCH</option>
-                                <option >USDT</option>
-                                </select>
-                                </div>
-                                <div  style={{textAlign:'center',color:'white',fontWeight:'bold'}}>Coin</div>
-                                <div  style={{textAlign:'center'}}>
-                                <select className={classes.inputSetting3}>
-                                <option >BTC</option>
-                                <option >ETH</option>
-                                <option >BCH</option>
-                                <option >USDT</option>
-                                </select>
-                                </div>
-                                        <div style={{textAlign:'center',color:'white',fontWeight:'bold'}}>Enter Amount</div>
-                                        <div  style={{textAlign:'center'}}>
-                                        <input/>
-                                        </div>
-                                        <div  style={{textAlign:'center',marginTop:'5%'}}>
-                                        <button>Confirm</button>
-                                        </div>
-                                    </Popup>
-                                    
-
-                                </div>
-                                <div className={classes.ExchangeContainer}>
-                                    <div className={classes.Left}>
-                                        <div className={classes.ExchangeButton}>
-                                            <button className={classes.ExchangeButtonSetting} onClick={() => { setSellactive("Limit"); }}>Limit</button>
-                                            <button className={classes.ExchangeButtonSetting} onClick={() => { setSellactive("Market"); }}>Market</button>
-                                            
-                                        </div>
-                                        {Sellactive == "Limit" &&
-                                            <div>
-                                                <div><input type="number" onChange={sellpricechange} min="0" className={classes.inputSetting} placeholder="Price"></input></div>
-                                                <div><input type="number" onChange={sellamountchange} min="0" className={classes.inputSetting} placeholder="Amount"></input></div>
-                                            </div>}
-                                        {Sellactive == "Market" &&
-                                            <div>
-                                                <div><input type="number" onChange={sellamountchange} min="0" className={classes.inputSetting} placeholder="Amount"></input></div>
-                                            </div>}
-
-                                        <div style={{ display: 'grid', gridTemplateColumns: 'auto auto', width: '100%', }}>
-                                            <div style={{ color: 'white', fontSize: '10px', textAlign: 'left' }}>This loan</div>
-                                            <div style={{ color: 'white', fontSize: '10px', textAlign: 'right' }}>0000</div>
-                                        </div>
-                                        <div style={{ display: 'grid', gridTemplateColumns: 'auto auto', width: '100%', }}>
-                                            <div style={{ color: 'white', fontSize: '10px', textAlign: 'left' }}>total</div>
-                                            <div style={{ color: 'white', fontSize: '10px', textAlign: 'right' }}>{stotal}</div>
-                                        </div>
-                                        <div><button onClick={handleSell} className={classes.buttonSettingRed}>Sell</button></div>
-                                    </div>
-                                    <div>
-                                        <div className={classes.verticleLine} />
-                                    </div>
-                                    <div className={classes.Right}>
-                                        <div className={classes.ExchangeButton}>
-                                            <button className={classes.ExchangeButtonSetting} onClick={() => { setBuyactive("Limit") }}>Limit</button>
-                                            <button className={classes.ExchangeButtonSetting} onClick={() => { setBuyactive("Market") }}>Market</button>
-                                        </div>
-                                        {Buyactive == "Limit" &&
-                                            <div>
-                                                <div><input type="number" onChange={buypricechange} min="0" className={classes.inputSetting} placeholder="Price" ></input></div>
-                                                <div><input type="number" onChange={buyamountchange} min="0" className={classes.inputSetting} placeholder="Amount" ></input></div>
-                                            </div>}
-                                        {Buyactive == "Market" &&
-                                            <div>
-
-                                                <div><input type="number" onChange={buyamountchange} min="0" className={classes.inputSetting} placeholder="Amount" ></input></div>
-                                            </div>}
-                                        <div style={{ display: 'grid', gridTemplateColumns: 'auto auto', width: '100%', }}>
-                                            <div style={{ color: 'white', fontSize: '10px', textAlign: 'left' }}>This loan</div>
-                                            <div style={{ color: 'white', fontSize: '10px', textAlign: 'right' }}>0000</div>
-                                        </div>
-                                        <div style={{ display: 'grid', gridTemplateColumns: 'auto auto', width: '100%', }}>
-                                            <div style={{ color: 'white', fontSize: '10px', textAlign: 'left' }}>total</div>
-                                            <div style={{ color: 'white', fontSize: '10px', textAlign: 'right' }}>{btotal}</div>
-                                        </div>
-                                        <div><button onClick={handlebuy} className={classes.buttonSettingGreen}>Buy</button></div>
-                                    </div>
-                                </div>
-                            </div>}
-
-
-
-
-
-
-
-
-                        </div>
+                        <Mode/>
                     </div>
-                    <div className={classes.columPartContainers}>
-                        <div className={classes.TitleText}>OrderBook</div>
-                        <div style={{ height: '45%' }}>
-                            <div className={classes.leftSideContainer}>
-                                <div className={classes.smallText2}>Price</div>
-                                <div className={classes.smallText2}>Amount</div>
-                                <div className={classes.smallText2}>sum</div>
-                            </div>
-                            {buyorder.map((item, index) => {
-                                return (
-                                    <div className={classes.leftSideContainer}>
-                                        <div className={classes.smallTextRed}>{item.price}</div>
-                                        <div className={classes.smallText}>{item.amount}</div>
-                                        <div className={classes.smallText}>{item.sum.toFixed(2)}</div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                        <div>
-                            <hr
-                                style={{
-                                    color: '#707070',
-                                    height: 3,
-                                    width: '100%'
-                                }} />
-                        </div>
-                        <div className={classes.leftSideContainer}>
-                            <div className={classes.smallText2}>Price</div>
-                            <div className={classes.smallText2}>Amount</div>
-                            <div className={classes.smallText2}>sum</div>
-                        </div>
-                        {sellorder.map((item, index) => {
-                            return (
-                                <div className={classes.leftSideContainer}>
-                                    <div className={classes.smallTextGreen}>{item.price}</div>
-                                    <div className={classes.smallText}>{item.amount}</div>
-                                    <div className={classes.smallText}>{item.sum.toFixed(2)}</div>
-                                </div>
-                            );
-                        })}
-                    </div>
+
+                    <OrderBook TradePair={Tradepair}/>
                     <div className={classes.columPartContainers}>
                         <div className={classes.TitleText}>MarketTrade</div>
                         <div className={classes.leftSideContainer}>

@@ -42,7 +42,7 @@ const CoinBarContainer = () => {
         var PricePromise = [];
         var vlistPromise = []
         var changelist = []
-        var signlist=[]
+        var signlist = []
         for (let obj in TradePair) {
             const price = WalletAPI.getPrice({ "TradePair": TradePair[obj] })
             const vol = MarketAPI.getGraphData({ "TradePair": TradePair[obj], "Period": "1", "Second": 86400 });
@@ -62,8 +62,8 @@ const CoinBarContainer = () => {
                     if (key !== "time") {
                         var data = JSON.parse(res[obj].data[key])
                         vlist.push(data["volume"])
-                        changelist.push(perenatage(data["close"],data["open"]))
-                        signlist.push(Math.sign(data["open"]-data["close"]))
+                        changelist.push(perenatage(data["close"], data["open"]))
+                        signlist.push(Math.sign(data["close"] - data["open"]))
                     }
                 }
             }
@@ -74,16 +74,19 @@ const CoinBarContainer = () => {
     }, [PairInfo])
 
 
-    const perenatage=(close,open)=>{
+    const perenatage = (close, open) => {
         //  console.log(number)
-          if(open==0){return 0+"%"}
-          if (open-close>0){
-           return "+"+((open-close)/open).toFixed(2)+"%"
-          }
-          else{
-              return "-"+((open-close)/open).toFixed(2)+"%"
-          }
-      }
+        if (open == 0 || close == 0) { return "0.00%" }
+        if (open < close) {
+            return "+" + ((close - open) / open *100).toFixed(2) + "%"
+        }
+        else if (open > close) {
+            return ((close - open) / open *100).toFixed(2) + "%"
+        }
+        else {
+            return "0.00%"
+        }
+    }
 
     return (
         <div className={classes.coinContainers}>

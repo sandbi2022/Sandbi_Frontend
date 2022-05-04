@@ -6,6 +6,7 @@ import AuthContext from "../../context/AuthProvider"
 import UserServer from '../../api/user-api';
 import axios from 'axios';
 import { useStyles } from "./style";
+
 import SideBar from '../Sidebar/SideBar';
 import { render } from '@testing-library/react';
 import QR_CODE from '../../images/QR_code.png';
@@ -16,7 +17,16 @@ const TransferIn = () => {
     const user = useSelector((state) => state.user.value);
     const history = useHistory();
     const [coin, setCoin] = React.useState('Select a Coin')
+    const [address,setAddress]=useState()
 
+
+
+    useEffect(() => {
+        UserServer.getAddress({ "UID": user.UID }).then((response) => {
+            console.log(response.data)
+            setAddress(response.data["Address"])
+        })
+    }, [])
     const handleCoinChange = (event) => {
         setCoin(event.target.value);
     };
@@ -132,7 +142,7 @@ const TransferIn = () => {
                         );
                     })}
                     <div className={classes.textSetting} >Address:</div>
-                    <div className={classes.textSetting} >XXXXXXXXXXXXXXXXXXXXX</div>
+                    <div className={classes.textSetting} >{address}</div>
 
                 </div>
 
