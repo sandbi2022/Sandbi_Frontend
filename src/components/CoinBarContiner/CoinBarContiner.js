@@ -13,6 +13,7 @@ const CoinBarContainer = () => {
     const [Vollist, setVollist] = useState([]);
     const [Precionlist, setPrecionlist] = useState([])
     const [Clist, setClist] = useState([])
+    const [Slist, setSlist] = useState([])
     const [PairInfo, setInfo] = useState({})
     const TradePair = ["BTCUSDT", "BCHUSDT", "ETHUSDT", "ETHBTC"]
 
@@ -41,6 +42,7 @@ const CoinBarContainer = () => {
         var PricePromise = [];
         var vlistPromise = []
         var changelist = []
+        var signlist=[]
         for (let obj in TradePair) {
             const price = WalletAPI.getPrice({ "TradePair": TradePair[obj] })
             const vol = MarketAPI.getGraphData({ "TradePair": TradePair[obj], "Period": "1", "Second": 86400 });
@@ -60,34 +62,33 @@ const CoinBarContainer = () => {
                     if (key !== "time") {
                         var data = JSON.parse(res[obj].data[key])
                         vlist.push(data["volume"])
-                        changelist.push(((data["close"] - data["open"]) / data["open"]) * 100)
+                        changelist.push(perenatage(data["close"],data["open"]))
+                        signlist.push(Math.sign(data["open"]-data["close"]))
                     }
                 }
             }
             setVollist(vlist)
             setClist(changelist)
+            setSlist(signlist)
         })
     }, [PairInfo])
 
-    const perenatage = (number) => {
-        console.log(number)
-        if(number == undefined){
-            return "0%";
-        }
-        if (number > 0) {
-            return "+" + number.toFixed(5) + "%"
-        }
-        else {
-            return "-" + number.toFixed(5) + "%"
-        }
 
-
-    }
+    const perenatage=(close,open)=>{
+        //  console.log(number)
+          if(open==0){return 0+"%"}
+          if (open-close>0){
+           return "+"+((open-close)/open).toFixed(2)+"%"
+          }
+          else{
+              return "-"+((open-close)/open).toFixed(2)+"%"
+          }
+      }
 
     return (
         <div className={classes.coinContainers}>
             {TradePair.map((item, index) => {
-                return <CoinBar CoinName={item} CoinPrice={Pricelist[index]} CoinChange={perenatage(Clist[index])} CoinVolume={Vollist[index]} Round={Precionlist[index]} />
+                return <CoinBar CoinName={item} CoinPrice={Pricelist[index]} CoinChange={Clist[index]} Sign={Slist[index]} CoinVolume={Vollist[index]} Round={Precionlist[index]} />
             })
             }
         </div>

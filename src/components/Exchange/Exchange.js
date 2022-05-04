@@ -293,10 +293,10 @@ const Exchange = () => {
 
     }
     const marketpricebuyTrade = () => {
-        //console.log(sellorder);
+        console.log(sellorder[0]);
         console.log(sellorder[0]["price"]);
         if (sellorder.length > 0) {
-            setbuyPrice(sellorder[0]["price"])
+            setsellPrice(sellorder[0]["price"])
         }
         else {
             alert("There is no available sell order")
@@ -311,6 +311,7 @@ const Exchange = () => {
     const Switchistory = () => {
         setswitch(1);
     }
+
     useEffect(() => {
         if (Switch == 0) {
             setbottom(openorder)
@@ -320,15 +321,18 @@ const Exchange = () => {
 
     }, [Switch, openorder, orderH])
 
-    const perenatage=(number)=>{
-        console.log(number)
-        if (number>0){
-         return "+"+number+"%"
+    
+    const perenatage=(close,open)=>{
+      //  console.log(number)
+        if(open==0){return 0+"%"}
+        if (open-close>0){
+         return "+"+((open-close)/open).toFixed(2)+"%"
         }
         else{
-            return "-"+number+"%"
+            return "-"+((open-close)/open).toFixed(2)+"%"
         }
     }
+
     function mergeArr(arr) {
         let arrWarp = []
         let result = []
@@ -369,9 +373,9 @@ const Exchange = () => {
                                     {coin1}/{coin2}
                                 </div>
                                 <div className={classes.ChartTitleInfoContainer}>
-                                <div style={{ color: 'green', fontSize: '10px' }}>{Tpinfo.close}</div>
-                                    <div style={{ color: 'grey', fontSize: '10px' }}>=1 {coin2}</div>
-                                    <div style={{ color: 'red', fontSize: '10px' }}>{perenatage(Tpinfo.close-Tpinfo.open)}</div>
+                                <div style={{ color: 'green', fontSize: '10px' }}>={Tpinfo.close}</div>
+                                    <div style={{ color: 'grey', fontSize: '10px' }}>{coin2}</div>
+                                    <div style={{color: Math.sign(Tpinfo.open,Tpinfo.close) === -1 ? "red" : "green",fontSize:'10px'}}>{perenatage(Tpinfo.close,Tpinfo.open)}</div>
                                 </div>
                             </div>
                             <div>
@@ -428,7 +432,7 @@ const Exchange = () => {
                                     </div>}
                                     {Sellactive == "Market" &&
                                         <div>
-                                    
+                                    <div style={{ color: 'white', fontSize: '10px', textAlign: 'left' }}>{sellprice}</div>
                                     <div><input type="number" onChange={sellamountchange} min="0" className={classes.inputSetting} placeholder="Amount"></input></div>
                                     </div>}
 
@@ -454,6 +458,7 @@ const Exchange = () => {
                                     </div>}
                                     {Buyactive=="Market" &&
                                         <div>
+                                    <div style={{ color: 'white', fontSize: '10px', textAlign: 'left' }}>{buyprice}</div>
                                     <div><input type="number" onChange={buyamountchange} min="0" className={classes.inputSetting} placeholder="Amount" ></input></div>
                                     </div>}
                                     
@@ -512,12 +517,14 @@ const Exchange = () => {
                         <div className={classes.leftSideContainer}>
                             <div className={classes.smallText2}>Time</div>
                             <div className={classes.smallText2}>Price</div>
+                            <div className={classes.smallText2}>Amount</div>
                         </div>
                         {market.map((item, index) => {
                             return (
                                 <div className={classes.leftSideContainer}>
                                     <div className={classes.smallText}>{item.time}</div>
                                     <div className={classes.smallText}>{item.price}</div>
+                                    <div className={classes.smallText}>{item.amount}</div>
                                 </div>
                             );
                         })}

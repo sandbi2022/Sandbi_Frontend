@@ -77,12 +77,19 @@ const jumpExhange=(TradePair)=>{
     history.push({pathname: '/Exchange',
                   state: { detail: TradePair }})
     
-
-
 }
 
 
-
+const perenatage=(close,open)=>{
+    //  console.log(number)
+      if(open==0){return 0+"%"}
+      if (open-close>0){
+       return "+"+((open-close)/open).toFixed(2)+"%"
+      }
+      else{
+          return "-"+((open-close)/open).toFixed(2)+"%"
+      }
+  }
 
 
     return(
@@ -110,9 +117,9 @@ const jumpExhange=(TradePair)=>{
                                 <div  className={classes.infoTextSetting} onClick={()=>jumpExhange(item.Pair)}>{item.Pair}</div>
                                 <div  className={classes.infoTextSetting}>{item.close}</div>
                     
-                                <div  style={{color: Math.sign(item.close-item.open) === -1 ? "green" : "red",fontSize:'14px',textAlign:'Left',
+                                <div  style={{color: Math.sign(item.open-item.close) === -1 ? "green" : "red",fontSize:'14px',textAlign:'Left',
                                 marginLeft:'10%',}}>
-                                    {((item.close-item.open)/item.open)*100}%
+                                    {perenatage(item.close,item.open)}
                                 </div>
                                 <div  className={classes.infoTextSetting}>{item.high}</div>
                                     

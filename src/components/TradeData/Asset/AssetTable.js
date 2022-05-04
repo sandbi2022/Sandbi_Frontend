@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import WalletAPI from '../../../api/wallet_api';
 import InfoAPI from '../../../api/Info-api';
 import MarketAPI from '../../../api/market-api';
+import { getSvgIconUtilityClass } from '@mui/material';
 
 const AssetTable= params =>{
     const [PairInfo,setInfo]= useState({})
@@ -49,18 +50,22 @@ const changetradetype=(type)=>{
        }
      
      Promise.all(Promiselist).then((res)=>{
+        
          var newCoindata=[]
      for(let i =0;i<pairlist.length;i++){
+         console.log()
          var price=res[2*i].data["price"]
          var openprice =res[2*i+1].data["price"]
          var digit =PairInfo[pairlist[i]]["LimitPrice"]
          newCoindata.push({
              Type:pairlist[i],
              lastPrice:price.toFixed(digit),
-             change:(parseFloat((openprice-price)/price)*100).toFixed(2)
+             change: perenatage(price,openprice),
+             sign: Math.sign(openprice-price)
  
          })
       }
+      console.log(newCoindata)
       setCoindata(newCoindata)
       setCoinRender(newCoindata)
        })
@@ -91,14 +96,17 @@ const changetradetype=(type)=>{
         }
      }
 
-     const perenatage=(number)=>{
-        if (number>0){
-         return "+"+number+"%"
-        }
-        else{
-            return "-"+number+"%"
-        }
-    }
+     const perenatage=(close,open)=>{
+        //  console.log(number)
+          if(open==0){return 0+"%"}
+          if (open-close>0){
+           return "+"+((open-close)/open).toFixed(2)+"%"
+          }
+          else{
+              return "-"+((open-close)/open).toFixed(2)+"%"
+          }
+      }
+
     return(
         <div className={classes.columPartContainers}>
         <div className={classes.leftSideCoinContainer}>
@@ -118,7 +126,7 @@ const changetradetype=(type)=>{
                 <div className={classes.leftSideContainer}>
                     <div className={classes.smallText} onClick={()=>changetradetype(item.Type)}>{item.Type}</div>
                     <div  className={classes.smallText}>{item.lastPrice}</div>
-                    <div  style={{color: Math.sign(item.Change) === -1 ? "red" : "green",fontSize:'14px'}}>{perenatage(item.change)}</div>
+                    <div  style={{color: item.sign === -1 ? "red" : "green",fontSize:'14px'}}>{item.change}</div>
                 </div>
             );
         })}

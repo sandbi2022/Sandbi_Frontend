@@ -3,26 +3,16 @@ import { useStyles } from "./style";
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 
-const CoinBar=({CoinName,CoinPrice,CoinChange,CoinVolume,CoinRound})=>{
+const CoinBar=({CoinName,CoinPrice,CoinChange,CoinVolume,CoinRound,Sign})=>{
     const classes = useStyles()
     const Name=CoinName
     const Price=CoinPrice
     const Change = CoinChange
     const Round=CoinRound
     const Volumn= CoinVolume
+
     
 
-    const perenatage = (number) => {
-        console.log(number)
-        if (number > 0) {
-            return "+" + number + "%"
-        }
-        else {
-            return "-" + number + "%"
-        }
-
-
-    }
     return(
         <div className={classes.coinBarContainer}>
             <div className={classes.Title}>
@@ -34,8 +24,8 @@ const CoinBar=({CoinName,CoinPrice,CoinChange,CoinVolume,CoinRound})=>{
                 </div>
 
             </div>
-            <div className={classes.columContainers}>
-                <div className={classes.change}>
+            <div className={classes.columContainers} >
+                <div className={classes.change} style={{color: Sign === -1 ? "green" : "red",fontSize:'14px'}}>
                     {Change}
                 </div>
                 <div className={classes.usdPrice}>
