@@ -13,7 +13,6 @@ import IdentityVerificationPage from './pages/IdentityVerificationPage/IdentityV
 import NavBar from './components/NavBar';
 import MarketPage from './pages/MarketPage/MarketPage';
 import MarginPage from './pages/MarginPage/MarginPage';
-import FuturePage from './pages/FuturePage/FuturePage';
 import DashboardPage from './pages/DashboardPage/DashboardPage';
 import TransferInPage from './pages/TransferInPage/TransferInPage';
 import WithdrawPage from './pages/WithDrawPage/WithDrawPage';
@@ -42,7 +41,6 @@ function App() {
           <Route path='/IdentityVerification' component={IdentityVerificationPage}/>
           <Route path='/Market' component={MarketPage}/>
           <Route path='/Margin' component={MarginPage}/>
-          <Route path='/Future' component={FuturePage}/>
           <Route path='/Dashboard' component={DashboardPage}/>
           <Route path='/Transfer In' component={TransferInPage}/>
           <Route path='/Withdraw' component={WithdrawPage}/>

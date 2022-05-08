@@ -20,7 +20,7 @@ const Market = () => {
     const [TradePairlist, setTradepairlist] = useState([])
 
     useEffect(() => {
-        InfoAPI.getTradePair().then((response) => {
+        InfoAPI.getTradePairs().then((response) => {
             console.log(response.data)
             var newlist = {}
             var tmpPairlist = []

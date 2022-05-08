@@ -104,7 +104,7 @@ const CreateOrder = params => {
                                         <option >BTC</option>
                                         <option >ETH</option>
                                         <option >BCH</option>
-                                        <option >USDT</option>
+                                        <option >USDC</option>
                                         </select>
                                 
                         </div>

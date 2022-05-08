@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect, useContext, Component } from 'react
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import AuthContext from "../../context/AuthProvider"
+import InfoAPI from '../../api/Info-api';
 import UserServer from '../../api/user-api';
 import axios from 'axios';
 import { useStyles } from "./style";
@@ -26,6 +27,7 @@ const Dashboard = () => {
     const [C2CBalance, setC2CBal] = useState({})
     const [MBalance, setMBal] = useState({})
     const [exBalance, setexBal] = useState({})
+    const [Coins, setCoins] = useState({})
     const redirectTransferIn = () => {
         history.push('/Transfer In')
     }
@@ -41,7 +43,15 @@ const Dashboard = () => {
     // const [C2C,setC2C]=useState()
     // const [Margin,setMargin]=useState()
 
+    useEffect(() => {
+        InfoAPI.getCoins().then((response) => {
+            console.log(response.data)
+            setCoins(response.data)
 
+
+        }
+        )
+    }, []);
 
     useEffect(() => {
         WalletAPI.getPrice({ "TradePair": "BTCUSDC" }).then((response) => {
@@ -137,64 +147,75 @@ const Dashboard = () => {
     const typeArray = data.map(d => d.name);
 
     const dataex = [
-        {
-            name: 'BTC: ' + parseFloat(exBalance.BTC).toFixed(5),
+        // {
+        //     name: 'BTC: ' + parseFloat(exBalance.BTC).toFixed(5),
 
-        },
-        {
-            name: 'USDC: ' + parseFloat(exBalance.USDC).toFixed(5),
+        // },
+        // {
+        //     name: 'USDC: ' + parseFloat(exBalance.USDC).toFixed(5),
 
-        },
-        {
-            name: 'BCH: ' + parseFloat(exBalance.BCH).toFixed(5),
+        // },
+        // {
+        //     name: 'BCH: ' + parseFloat(exBalance.BCH).toFixed(5),
 
-        },
-        {
-            name: 'ETH: ' + parseFloat(exBalance.ETH).toFixed(5),
+        // },
+        // {
+        //     name: 'ETH: ' + parseFloat(exBalance.ETH).toFixed(5),
 
-        }
+        // }
     ]
+    for(let coin of Object.values(Coins)){
+        dataex.push({name: coin +': ' + exBalance[coin]});
+    }
     const typeArrayex = dataex.map(d => d.name);
 
-
+    console.log(Object.values(Coins));
+    
     const datamar = [
-        {
-            name: 'BTC: ' + MBalance.BTC,
+        // {
+        //     name: 'BTC: ' + MBalance.BTC,
 
-        },
-        {
-            name: 'USDC: ' + MBalance.USDC,
+        // },
+        // {
+        //     name: 'USDC: ' + MBalance.USDC,
 
-        },
-        {
-            name: 'BCH: ' + MBalance.BCH,
+        // },
+        // {
+        //     name: 'BCH: ' + MBalance.BCH,
 
-        },
-        {
-            name: 'ETH: ' + MBalance.ETH,
+        // },
+        // {
+        //     name: 'ETH: ' + MBalance.ETH,
 
-        }
+        // }
     ]
+    for(let coin of Object.values(Coins)){
+        datamar.push({name: coin +': ' + MBalance[coin]});
+    }
+    console.log(datamar);
     const typeArraymar = datamar.map(d => d.name);
 
     const datac2c = [
-        {
-            name: 'BTC: ' + C2CBalance.BTC,
+        // {
+        //     name: 'BTC: ' + C2CBalance.BTC,
 
-        },
-        {
-            name: 'USDC: ' + C2CBalance.USDC,
+        // },
+        // {
+        //     name: 'USDC: ' + C2CBalance.USDC,
 
-        },
-        {
-            name: 'BCH: ' + C2CBalance.BCH,
+        // },
+        // {
+        //     name: 'BCH: ' + C2CBalance.BCH,
 
-        },
-        {
-            name: 'ETH: ' + C2CBalance.ETH,
+        // },
+        // {
+        //     name: 'ETH: ' + C2CBalance.ETH,
 
-        }
+        // }
     ]
+    for(let coin of Object.values(Coins)){
+        datac2c.push({name: coin +': ' + C2CBalance[coin]});
+    }
     const typeArrayc2c = datac2c.map(x => x.name);
     console.log('array' + typeArrayc2c)
     //  console.log('array'+typeArray)

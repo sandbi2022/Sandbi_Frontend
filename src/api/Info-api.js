@@ -5,7 +5,7 @@ import App from '../App';
 const Info_API_BASE_URL="https://sandbi.us:8443/SandBi";
 
 class InfoAPI{
-    getTradePair(Currency){
+    getTradePairs(Currency){
         return axios.post(Info_API_BASE_URL+'/Info/TradePairs.jsp',
             JSON.stringify(Currency),
             {
@@ -29,6 +29,24 @@ class InfoAPI{
         //   return newlist
         // })
 
+    }
+    getTradePair(TradePair){
+        return axios.post(Info_API_BASE_URL+'/Info/TradePair.jsp',
+            JSON.stringify(TradePair),
+            {
+                headers:{'Content-Type':'application/json'},
+                withCredentials:true
+            }
+        );
+    }
+    getCoins(){
+        return axios.post(Info_API_BASE_URL+'/Info/Coins.jsp',
+            JSON.stringify(),
+            {
+                headers:{'Content-Type':'application/json'},
+                withCredentials:true
+            }
+        );
     }
 
 }

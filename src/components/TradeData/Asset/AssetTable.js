@@ -20,7 +20,7 @@ const AssetTable = params => {
 
 
     useEffect(() => {
-        InfoAPI.getTradePair().then((response) => {
+        InfoAPI.getTradePairs().then((response) => {
             var newlist = {}
             for (let [key, value] of Object.entries(response.data)) {
                 var data = JSON.parse(value)

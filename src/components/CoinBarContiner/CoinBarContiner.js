@@ -15,10 +15,10 @@ const CoinBarContainer = () => {
     const [Clist, setClist] = useState([])
     const [Slist, setSlist] = useState([])
     const [PairInfo, setInfo] = useState({})
-    const TradePair = ["BTCUSDT", "BCHUSDT", "ETHUSDT", "ETHBTC"]
+    const TradePair = ["BTCUSDC", "BCHUSDC", "ETHUSDC", "ETHBTC"]
 
     useEffect(() => {
-        InfoAPI.getTradePair().then((response) => {
+        InfoAPI.getTradePairs().then((response) => {
             var newlist = {}
             for (let [key, value] of Object.entries(response.data)) {
                 var data = JSON.parse(value)
