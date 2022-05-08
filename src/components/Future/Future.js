@@ -19,7 +19,7 @@ const Future =()=>{
     const [btotal,setbtotal] = useState(0)
     const [BTC,setBTC]= useState();
     const [UserBTC,setUBTC]= useState();
-    const [USDT,setUusdt]= useState();
+    const [USDC,setUUSDC]= useState();
     const [BCH,setBCH]= useState();
     const [ETH,setETH]= useState();
     const [OPBTC,setOPBTC]= useState();
@@ -33,7 +33,7 @@ const Future =()=>{
     const [sellamount,setsellamount]= useState()
     const [buyprice,setbuyPrice]= useState()
     const [buyamount,setbuyamount]= useState()
-    const [Tradepair,setTradepair]= useState("BTCUSDT")
+    const [Tradepair,setTradepair]= useState("BTCUSDC")
     const coin1='XXX'
     const coin2='YYY'
 
@@ -46,7 +46,7 @@ const Future =()=>{
         WalletAPI.getBalance({UID}).then((response) => {
         const data = response.data;
         setUBTC(data["BTC"]-data["FreezeBTC"])
-        setUusdt(data["USDT"]-data["FreezeUSDT"] )
+        setUUSDC(data["USDC"]-data["FreezeUSDC"] )
         });
        },[])
 
@@ -54,23 +54,23 @@ const Future =()=>{
 
 
 useEffect(() => {
-        MarketAPI.getPrice({"TradePair":"BTCUSDT"}).then((response)=>{
+        MarketAPI.getPrice({"TradePair":"BTCUSDC"}).then((response)=>{
         setBTC(response.data["price"])       
        }) 
-        MarketAPI.getPrice({"TradePair":"BCHUSDT"}).then((response)=>{
+        MarketAPI.getPrice({"TradePair":"BCHUSDC"}).then((response)=>{
                 setBCH(response.data["price"])
         }) 
-        MarketAPI.getPrice({"TradePair":"ETHUSDT"}).then((response)=>{    
+        MarketAPI.getPrice({"TradePair":"ETHUSDC"}).then((response)=>{    
         setETH(parseFloat(response.data["price"]));    
          }) 
 
-        MarketAPI.getOpenPrice({"TradePair":"BTCUSDT"}).then((response)=>{
+        MarketAPI.getOpenPrice({"TradePair":"BTCUSDC"}).then((response)=>{
             setOPBTC(parseFloat(response.data["price"]))       
            }) 
-        MarketAPI.getOpenPrice({"TradePair":"BCHUSDT"}).then((response)=>{
+        MarketAPI.getOpenPrice({"TradePair":"BCHUSDC"}).then((response)=>{
                     setOPBCH(parseFloat(response.data["price"]));
             }) 
-        MarketAPI.getOpenPrice({"TradePair":"ETHUSDT"}).then((response)=>{
+        MarketAPI.getOpenPrice({"TradePair":"ETHUSDC"}).then((response)=>{
             setOPETH(parseFloat(response.data["price"]));    
              }) 
              
@@ -171,7 +171,7 @@ useEffect(() => {
 
     const changetradetype=(type)=>{ 
         console.log(type);        
-        setTradepair(type+"USDT")
+        setTradepair(type+"USDC")
     }
 
 useEffect(() => {
@@ -245,11 +245,11 @@ const handleSell=()=>{
 }
 
 const handlebuy=()=>{
-    if(USDT>buyamount*parseFloat(BTC)){
+    if(USDC>buyamount*parseFloat(BTC)){
         MarketAPI.submitTrade({"TradePair":Tradepair,"UID":user.UID,"Amount":buyamount,"Price":buyprice,"TradeType":0})
     }
     else{
-        alert("not enought USDT")
+        alert("not enought USDC")
     }
 }
 
@@ -304,7 +304,7 @@ const handlebuy=()=>{
                     <div className={classes.columPartContainers}>
                         <div className={classes.leftSideCoinContainer}>
                             <div style={{color:'white', fontSize:'14px'}}>Coins:</div>
-                            <button className={classes.CoinSetting}>usdt</button>
+                            <button className={classes.CoinSetting}>USDC</button>
                             <button className={classes.CoinSetting}>btc</button>
                             <div></div>
                         </div>

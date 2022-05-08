@@ -29,7 +29,7 @@ const C2C = () => {
     const [historylist, sethlist] = useState([])
     const [PairInfo, setInfo] = useState({})
     const dispatch = useDispatch();
-    const [TradePairlist, setTradepairlist] = useState(["BTC","ETH","USDT","BCH"])
+    const [TradePairlist, setTradepairlist] = useState(["BTC","ETH","USDC","BCH"])
     const [min, setMin] = useState();
     const [max, setMax] = useState();
     const [Refresh,setRefresh]= useState(0);
@@ -156,7 +156,7 @@ const C2C = () => {
         setbuyplist(temp2)
 
     }
-    /*const showUSDT = () =>{
+    /*const showUSDC = () =>{
         var temp=[]
         for(let i in sellplist){
             console.log("btc")
@@ -258,7 +258,7 @@ const C2C = () => {
                             <button class="btn" className={classes.bottonSetting} onClick={showBTC}>BTC</button>
                             <button class="btn" className={classes.bottonSetting} onClick={showBCH}>BCH</button>
                             <button class="btn" className={classes.bottonSetting} onClick={showETH}>ETH</button>
-                            <button class="btn" className={classes.bottonSetting} onClick={showall}>USDT</button>
+                            <button class="btn" className={classes.bottonSetting} onClick={showall}>USDC</button>
                         </div>
                         <div className={classes.buttonContainer}>
                             <Popup contentStyle={{
@@ -367,7 +367,7 @@ const C2C = () => {
                             <button className={classes.bottonSetting} onClick={showBTC}>BTC</button>
                             <button className={classes.bottonSetting} onClick={showBCH}>BCH</button>
                             <button className={classes.bottonSetting} onClick={showETH}>ETH</button>
-                            <button className={classes.bottonSetting} onClick={showall}>USDT</button>
+                            <button className={classes.bottonSetting} onClick={showall}>USDC</button>
                         </div>
                         <div className={classes.buttonContainer}>
                             <Popup contentStyle={{

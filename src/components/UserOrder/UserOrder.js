@@ -17,7 +17,7 @@ const UserOrder = () => {
     const [renderlist,setrenderlist]=useState([])
     const [Pendlist, setPendlist]= useState([])
     const [Processlist, setProcesslist]= useState([])
-    const [TradePairlist, setTradepairlist] = useState(["BTC","ETH","USDT","BCH"])
+    const [TradePairlist, setTradepairlist] = useState(["BTC","ETH","USDC","BCH"])
     const [pendflag,setpendflag]=useState(true)
     const [Prceflag,setprceflag]=useState(false)
     const [change,setChange]=useState(0)

@@ -18,7 +18,7 @@ const Exchange = () => {
     const [stotal, setstotal] = useState(0)
     const [btotal, setbtotal] = useState(0)
     const [UserBTC, setUBTC] = useState();
-    const [USDT, setUusdt] = useState();
+    const [USDC, setUUSDC] = useState();
     const [buyorder, setbuyorder] = useState([])
     const [sellorder, setsellorder] = useState([])
     const [market, setmarket] = useState([])
@@ -26,10 +26,10 @@ const Exchange = () => {
     const [sellamount, setsellamount] = useState()
     const [buyprice, setbuyPrice] = useState()
     const [buyamount, setbuyamount] = useState()
-    const [Tradepair, setTradepair] = useState("BTCUSDT")
+    const [Tradepair, setTradepair] = useState("BTCUSDC")
     const [change, setChange] = useState()
     const [coin1, setcoin1] = useState("BTC")
-    const [coin2, setcoin2] = useState("USDT")
+    const [coin2, setcoin2] = useState("USDC")
     const [openorder, setopenorder] = useState([])
     const [orderH, setorderH] = useState([])
     const [bottom, setbottom] = useState([])
@@ -47,7 +47,7 @@ const Exchange = () => {
         WalletAPI.getBalance({ UID }).then((response) => {
             const data = response.data;
             setUBTC(data[coin1] - data["Freeze" + coin1])
-            setUusdt(data[coin2] - data["Freeze" + coin2])
+            setUUSDC(data[coin2] - data["Freeze" + coin2])
         });
     }, [change,Tradepair])
 
@@ -274,7 +274,7 @@ const Exchange = () => {
     }
 
     const handlebuy = () => {
-        if (USDT > buyamount * buyprice) {
+        if (USDC > buyamount * buyprice) {
             MarketAPI.submitTrade({ "TradePair": Tradepair, "UID": user.UID, "Amount": buyamount, "Price": buyprice, "TradeType": 0 })
             window.location.reload();
         }

@@ -91,12 +91,12 @@ const TransferIn = () => {
                     <div style={{ height: '40px' }}></div>
                     <div className={classes.infoContainer}>
                         <div className={classes.textSetting} >Available</div>
-                        <div className={classes.textSetting2} >100.00000 USDT</div>
+                        <div className={classes.textSetting2} >100.00000 USDC</div>
                     </div>
 
                     <div className={classes.infoContainer}>
                         <div className={classes.textSetting} >Available amount</div>
-                        <div className={classes.textSetting2} >100.00000 USDT</div>
+                        <div className={classes.textSetting2} >100.00000 USDC</div>
                     </div>
                     <Popup
                         contentStyle={{ width: '40%', height: '300px', backgroundColor: '#04011A', }}

@@ -44,7 +44,7 @@ const Dashboard = () => {
 
 
     useEffect(() => {
-        WalletAPI.getPrice({ "TradePair": "BTCUSDT" }).then((response) => {
+        WalletAPI.getPrice({ "TradePair": "BTCUSDC" }).then((response) => {
             console.log(response.data)
             setBTC(response.data["price"])
 
@@ -55,7 +55,7 @@ const Dashboard = () => {
 
 
     useEffect(() => {
-        WalletAPI.getPrice({ "TradePair": "BCHUSDT" }).then((response) => {
+        WalletAPI.getPrice({ "TradePair": "BCHUSDC" }).then((response) => {
             console.log(response.data)
             setBCH(response.data["price"])
         }
@@ -65,7 +65,7 @@ const Dashboard = () => {
 
 
     useEffect(() => {
-        WalletAPI.getPrice({ "TradePair": "ETHUSDT" }).then((response) => {
+        WalletAPI.getPrice({ "TradePair": "ETHUSDC" }).then((response) => {
             console.log(response.data)
             setETH(response.data["price"]);
 
@@ -78,7 +78,7 @@ const Dashboard = () => {
             console.log("c2c")
             console.log(response.data)
             setC2CBal(response.data)
-            //    setC2C(((parseFloat(BTC*C2CBalance.BTC+0)+parseFloat(BCH*C2CBalance.BCH+0)+parseFloat(ETH*C2CBalance.ETH+0)+parseFloat(C2CBalance.USDT+0)+0)/BTC).toFixed(5))
+            //    setC2C(((parseFloat(BTC*C2CBalance.BTC+0)+parseFloat(BCH*C2CBalance.BCH+0)+parseFloat(ETH*C2CBalance.ETH+0)+parseFloat(C2CBalance.USDC+0)+0)/BTC).toFixed(5))
 
         }
         )
@@ -89,7 +89,7 @@ const Dashboard = () => {
             console.log("margin")
             console.log(response.data)
             setMBal(response.data)
-            //    setMargin(((parseFloat(BTC*MBalance.BTC+0)+parseFloat(BCH*MBalance.BCH+0)+parseFloat(ETH*MBalance.ETH+0)+parseFloat(MBalance.USDT+0)+0)/BTC).toFixed(5))
+            //    setMargin(((parseFloat(BTC*MBalance.BTC+0)+parseFloat(BCH*MBalance.BCH+0)+parseFloat(ETH*MBalance.ETH+0)+parseFloat(MBalance.USDC+0)+0)/BTC).toFixed(5))
             //    console("margin total"+Margin)
         }
         )
@@ -100,7 +100,7 @@ const Dashboard = () => {
             console.log("exchange")
             console.log(response.data)
             setexBal(response.data)
-            // setExchange(((parseFloat(BTC*exBalance.BTC+0)+parseFloat(BCH*exBalance.BCH+0)+parseFloat(ETH*exBalance.ETH+0)+parseFloat(exBalance.USDT+0)+0)/BTC).toFixed(5))
+            // setExchange(((parseFloat(BTC*exBalance.BTC+0)+parseFloat(BCH*exBalance.BCH+0)+parseFloat(ETH*exBalance.ETH+0)+parseFloat(exBalance.USDC+0)+0)/BTC).toFixed(5))
 
         }
         )
@@ -131,9 +131,9 @@ const Dashboard = () => {
         },
 
     ]
-    const Exchange = ((parseFloat(BTC * exBalance.BTC + 0) + parseFloat(BCH * exBalance.BCH + 0) + parseFloat(ETH * exBalance.ETH + 0) + parseFloat(exBalance.USDT + 0) + 0) / BTC).toFixed(5);
-    const C2C = ((parseFloat(BTC * C2CBalance.BTC + 0) + parseFloat(BCH * C2CBalance.BCH + 0) + parseFloat(ETH * C2CBalance.ETH + 0) + parseFloat(C2CBalance.USDT + 0) + 0) / BTC).toFixed(5);
-    const Margin = ((parseFloat(BTC * MBalance.BTC + 0) + parseFloat(BCH * MBalance.BCH + 0) + parseFloat(ETH * MBalance.ETH + 0) + parseFloat(MBalance.USDT + 0) + 0) / BTC).toFixed(5);
+    const Exchange = ((parseFloat(BTC * exBalance.BTC + 0) + parseFloat(BCH * exBalance.BCH + 0) + parseFloat(ETH * exBalance.ETH + 0) + parseFloat(exBalance.USDC + 0) + 0) / BTC).toFixed(5);
+    const C2C = ((parseFloat(BTC * C2CBalance.BTC + 0) + parseFloat(BCH * C2CBalance.BCH + 0) + parseFloat(ETH * C2CBalance.ETH + 0) + parseFloat(C2CBalance.USDC + 0) + 0) / BTC).toFixed(5);
+    const Margin = ((parseFloat(BTC * MBalance.BTC + 0) + parseFloat(BCH * MBalance.BCH + 0) + parseFloat(ETH * MBalance.ETH + 0) + parseFloat(MBalance.USDC + 0) + 0) / BTC).toFixed(5);
     const typeArray = data.map(d => d.name);
 
     const dataex = [
@@ -142,7 +142,7 @@ const Dashboard = () => {
 
         },
         {
-            name: 'USDT: ' + parseFloat(exBalance.USDT).toFixed(5),
+            name: 'USDC: ' + parseFloat(exBalance.USDC).toFixed(5),
 
         },
         {
@@ -163,7 +163,7 @@ const Dashboard = () => {
 
         },
         {
-            name: 'USDT: ' + MBalance.USDT,
+            name: 'USDC: ' + MBalance.USDC,
 
         },
         {
@@ -183,7 +183,7 @@ const Dashboard = () => {
 
         },
         {
-            name: 'USDT: ' + C2CBalance.USDT,
+            name: 'USDC: ' + C2CBalance.USDC,
 
         },
         {
@@ -338,7 +338,7 @@ const Dashboard = () => {
                                             <div className={classes.SubTitleContainer}>BTC</div>
                                         </div>
                                         <div className={classes.SubTitleContainer}>total valuation</div>
-                                        <div className={classes.PriceContainer}>{parseFloat(BTC * exBalance.BTC + 0) + parseFloat(BCH * exBalance.BCH + 0) + parseFloat(ETH * exBalance.ETH + 0) + parseFloat(exBalance.USDT + 0) + 0}</div>
+                                        <div className={classes.PriceContainer}>{parseFloat(BTC * exBalance.BTC + 0) + parseFloat(BCH * exBalance.BCH + 0) + parseFloat(ETH * exBalance.ETH + 0) + parseFloat(exBalance.USDC + 0) + 0}</div>
                                     </div>
                                     <div>
                                         <ReactEcharts
@@ -378,7 +378,7 @@ const Dashboard = () => {
                                                         labelLine: {
                                                             show: false
                                                         },
-                                                        data: [{ name: typeArrayex[0], value: exBalance.BTC }, { name: typeArrayex[1], value: exBalance.USDT / BTC }, { name: typeArrayex[2], value: parseFloat(BCH * exBalance.BCH + 0) / BTC }, { name: typeArrayex[3], value: parseFloat(ETH * exBalance.ETH + 0) / BTC }]
+                                                        data: [{ name: typeArrayex[0], value: exBalance.BTC }, { name: typeArrayex[1], value: exBalance.USDC / BTC }, { name: typeArrayex[2], value: parseFloat(BCH * exBalance.BCH + 0) / BTC }, { name: typeArrayex[3], value: parseFloat(ETH * exBalance.ETH + 0) / BTC }]
                                                     }
                                                 ]
                                             }}
@@ -416,11 +416,11 @@ const Dashboard = () => {
                                     <div>
                                         <div className={classes.SubTitleContainer}>Account Balance</div>
                                         <div style={{ gridTemplateColumns: 'auto auto', display: 'grid', width: '40%' }}>
-                                            <div className={classes.AmountContainer}>{((parseFloat(BTC * C2CBalance.BTC + 0) + parseFloat(BCH * C2CBalance.BCH + 0) + parseFloat(ETH * C2CBalance.ETH + 0) + parseFloat(C2CBalance.USDT + 0) + 0) / BTC).toFixed(5)}</div>
+                                            <div className={classes.AmountContainer}>{((parseFloat(BTC * C2CBalance.BTC + 0) + parseFloat(BCH * C2CBalance.BCH + 0) + parseFloat(ETH * C2CBalance.ETH + 0) + parseFloat(C2CBalance.USDC + 0) + 0) / BTC).toFixed(5)}</div>
                                             <div className={classes.SubTitleContainer}>BTC</div>
                                         </div>
                                         <div className={classes.SubTitleContainer}>total valuation</div>
-                                        <div className={classes.PriceContainer}>{/*C2CBalance.BTC*BTC+C2CBalance.USDT+C2CBalance.BCH*BCH+C2CBalance.ETH*ETH*/parseFloat(BTC * C2CBalance.BTC + 0) + parseFloat(BCH * C2CBalance.BCH + 0) + parseFloat(ETH * C2CBalance.ETH + 0) + parseFloat(C2CBalance.USDT + 0) + 0}</div>
+                                        <div className={classes.PriceContainer}>{/*C2CBalance.BTC*BTC+C2CBalance.USDC+C2CBalance.BCH*BCH+C2CBalance.ETH*ETH*/parseFloat(BTC * C2CBalance.BTC + 0) + parseFloat(BCH * C2CBalance.BCH + 0) + parseFloat(ETH * C2CBalance.ETH + 0) + parseFloat(C2CBalance.USDC + 0) + 0}</div>
                                     </div>
                                     <div>
                                         <ReactEcharts
@@ -459,7 +459,7 @@ const Dashboard = () => {
                                                         labelLine: {
                                                             show: false
                                                         },
-                                                        data: [{ name: typeArrayc2c[0], value: C2CBalance.BTC }, { name: typeArrayc2c[1], value: C2CBalance.USDT / BTC }, { name: typeArrayc2c[2], value: parseFloat(BCH * C2CBalance.BCH + 0) / BTC }, { name: typeArrayc2c[3], value: parseFloat(ETH * C2CBalance.ETH + 0) / BTC }]
+                                                        data: [{ name: typeArrayc2c[0], value: C2CBalance.BTC }, { name: typeArrayc2c[1], value: C2CBalance.C / BTC }, { name: typeArrayc2c[2], value: parseFloat(BCH * C2CBalance.BCH + 0) / BTC }, { name: typeArrayc2c[3], value: parseFloat(ETH * C2CBalance.ETH + 0) / BTC }]
                                                     }
                                                 ]
                                             }}
@@ -498,11 +498,11 @@ const Dashboard = () => {
                                     <div>
                                         <div className={classes.SubTitleContainer}>Account Balance</div>
                                         <div style={{ gridTemplateColumns: 'auto auto', display: 'grid', width: '40%' }}>
-                                            <div className={classes.AmountContainer}>{((parseFloat(BTC * MBalance.BTC + 0) + parseFloat(BCH * MBalance.BCH + 0) + parseFloat(ETH * MBalance.ETH + 0) + parseFloat(MBalance.USDT + 0) + 0) / BTC).toFixed(5)}</div>
+                                            <div className={classes.AmountContainer}>{((parseFloat(BTC * MBalance.BTC + 0) + parseFloat(BCH * MBalance.BCH + 0) + parseFloat(ETH * MBalance.ETH + 0) + parseFloat(MBalance.USDC + 0) + 0) / BTC).toFixed(5)}</div>
                                             <div className={classes.SubTitleContainer}>BTC</div>
                                         </div>
                                         <div className={classes.SubTitleContainer}>total valuation</div>
-                                        <div className={classes.PriceContainer}>{parseFloat(BTC * MBalance.BTC + 0) + parseFloat(BCH * MBalance.BCH + 0) + parseFloat(ETH * MBalance.ETH + 0) + parseFloat(MBalance.USDT + 0) + 0}</div>
+                                        <div className={classes.PriceContainer}>{parseFloat(BTC * MBalance.BTC + 0) + parseFloat(BCH * MBalance.BCH + 0) + parseFloat(ETH * MBalance.ETH + 0) + parseFloat(MBalance.USDC + 0) + 0}</div>
                                     </div>
                                     <div>
                                         <ReactEcharts
@@ -540,7 +540,7 @@ const Dashboard = () => {
                                                         labelLine: {
                                                             show: false
                                                         },
-                                                        data: [{ name: typeArraymar[0], value: MBalance.BTC }, { name: typeArraymar[1], value: MBalance.USDT / BTC }, { name: typeArraymar[2], value: parseFloat(BCH * MBalance.BCH + 0) / BTC }, { name: typeArraymar[3], value: parseFloat(ETH * MBalance.ETH + 0) / BTC }]
+                                                        data: [{ name: typeArraymar[0], value: MBalance.BTC }, { name: typeArraymar[1], value: MBalance.USDC / BTC }, { name: typeArraymar[2], value: parseFloat(BCH * MBalance.BCH + 0) / BTC }, { name: typeArraymar[3], value: parseFloat(ETH * MBalance.ETH + 0) / BTC }]
                                                     }
                                                 ]
                                             }}

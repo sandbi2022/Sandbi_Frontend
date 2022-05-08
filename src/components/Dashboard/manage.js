@@ -10,7 +10,7 @@ import UserServer from '../../api/user-api';
 const Manage = () => {
     const [ManageFrom,setManageFrom]=useState(0)
     const [ManageTo,setManageTo]=useState(0)
-    const [currency,setCurrency]=useState("USDT")
+    const [currency,setCurrency]=useState("USDC")
     const [amount,setAmount]=useState()
     const history = useHistory();
     const classes = useStyles();
@@ -78,7 +78,7 @@ const Manage = () => {
                 </div>
                 <select className={classes.inputSetting2}  onChange={setCoin}>
 
-                    <option >USDT</option>
+                    <option >USDC</option>
                     <option >BTC</option>
                     <option >ETH</option>
                     <option >BCH</option>

@@ -24,18 +24,9 @@ const Margin = () => {
     const [UserBTC, setUBTC] = useState();
 
     const [BTC, setBTC] = useState();
-    const [USDT, setUusdt] = useState();
+    const [USDC, setUUSDC] = useState();
     const [BCH, setBCH] = useState();
     const [ETH, setETH] = useState();
-
-    const [DebtBTC, setDebtBTC] = useState();
-    const [DebtUSDT, setDebtUusdt] = useState();
-    const [DebtBCH, setDebtBCH] = useState();
-    const [DebtETH, setDebtETH] = useState();
-
-    const [BTCPrice, setBTCPrice] = useState();
-    const [BCHPrice, setBCHPrice] = useState();
-    const [ETHPrice, setETHPrice] = useState();
 
     const [OPBTC, setOPBTC] = useState();
     const [OPBCH, setOPBCH] = useState();
@@ -48,9 +39,9 @@ const Margin = () => {
     const [sellamount, setsellamount] = useState()
     const [buyprice, setbuyPrice] = useState()
     const [buyamount, setbuyamount] = useState()
-    const [Tradepair, setTradepair] = useState("BTCUSDT")
+    const [Tradepair, setTradepair] = useState("BTCUSDC")
     const [coin1, setcoin1] = useState("BTC")
-    const [coin2, setcoin2] = useState("USDT")
+    const [coin2, setcoin2] = useState("USDC")
     const [Time, setTime] = useState(1800)
 
     const [totalAsset, setTotalAsset] = useState()
@@ -59,9 +50,7 @@ const Margin = () => {
     const [riskRate, setRiskRate] = useState()
     const [change, setChange] = useState()
     const [active, setActive] = useState("openOrder")
-    const [Sellactive, setSellactive] = useState("Limit")
-    const [Buyactive, setBuyactive] = useState("Limit")
-    const [Modeactive, setModeactive] = useState("AutomaticLoan")
+
     const [Switch, setswitch] = useState(0)
 
     const [openorder, setopenorder] = useState([])
@@ -140,23 +129,23 @@ const Margin = () => {
 
     }, [Switch, openorder, orderH])
     useEffect(() => {
-        MarketAPI.getPrice({ "TradePair": "BTCUSDT" }).then((response) => {
+        MarketAPI.getPrice({ "TradePair": "BTCUSDC" }).then((response) => {
             setBTC(response.data["price"])
         })
-        MarketAPI.getPrice({ "TradePair": "BCHUSDT" }).then((response) => {
+        MarketAPI.getPrice({ "TradePair": "BCHUSDC" }).then((response) => {
             setBCH(response.data["price"])
         })
-        MarketAPI.getPrice({ "TradePair": "ETHUSDT" }).then((response) => {
+        MarketAPI.getPrice({ "TradePair": "ETHUSDC" }).then((response) => {
             setETH(parseFloat(response.data["price"]));
         })
 
-        MarketAPI.getOpenPrice({ "TradePair": "BTCUSDT" }).then((response) => {
+        MarketAPI.getOpenPrice({ "TradePair": "BTCUSDC" }).then((response) => {
             setOPBTC(parseFloat(response.data["price"]))
         })
-        MarketAPI.getOpenPrice({ "TradePair": "BCHUSDT" }).then((response) => {
+        MarketAPI.getOpenPrice({ "TradePair": "BCHUSDC" }).then((response) => {
             setOPBCH(parseFloat(response.data["price"]));
         })
-        MarketAPI.getOpenPrice({ "TradePair": "ETHUSDT" }).then((response) => {
+        MarketAPI.getOpenPrice({ "TradePair": "ETHUSDC" }).then((response) => {
             setOPETH(parseFloat(response.data["price"]));
         })
 
@@ -257,7 +246,7 @@ const Margin = () => {
 
     const changetradetype = (type) => {
         console.log(type);
-        setTradepair(type + "USDT")
+        setTradepair(type + "USDC")
     }
 
     useEffect(() => {
@@ -324,10 +313,11 @@ const Margin = () => {
                             <div style={{ color: 'white', fontSize: '14px', textAlign: 'left', marginLeft: '10px' }}>{totalAsset}</div>
                             <div style={{ color: 'grey', fontSize: '14px', textAlign: 'left', marginLeft: '10px' }}>Total liability</div>
                             <div style={{ color: 'white', fontSize: '14px', textAlign: 'left', marginLeft: '10px' }}>{totalLiability}</div>
-                            <div>
+                            <div >
                                 <ReactSpeedometer
                                     ringWidth={20}
                                     width={150}
+                                    height={100}
                                     maxValue={3}
                                     value={riskRate}
                                     needleColor="red"

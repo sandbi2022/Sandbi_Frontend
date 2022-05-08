@@ -75,7 +75,7 @@ const AssetTable = params => {
     }, [PairInfo, params.Refresh])
 
     const showCoin2 = (unitchange) => {
-        if (unitchange == "BTC" || unitchange == "USDT") {
+        if (unitchange == "BTC" || unitchange == "USDC") {
             var newlist = []
             for (let pair in Coindata) {
                 var type = Coindata[pair].Type
@@ -128,7 +128,7 @@ const AssetTable = params => {
             <div className={classes.leftSideCoinContainer}>
                 <div style={{ color: 'white', fontSize: '14px' }}>Coins:</div>
                 <button className={classes.CoinSetting} onClick={() => showCoin2("ALL")}>ALL</button>
-                <button className={classes.CoinSetting} onClick={() => showCoin2("USDT")}>USDT</button>
+                <button className={classes.CoinSetting} onClick={() => showCoin2("USDC")}>USDC</button>
                 <button className={classes.CoinSetting} onClick={() => showCoin2("BTC")}>BTC</button>
                 <div></div>
             </div>

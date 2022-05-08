@@ -5,9 +5,11 @@ import AuthContext from "../../context/AuthProvider"
 import WalletAPI from '../../api/wallet_api';
 import MarketAPI from '../../api/market-api';
 import MarginAPI from '../../api/margin-api';
+import InfoAPI from '../../api/Info-api';
 import { useDispatch, useSelector } from 'react-redux';
 import { useStyles } from "./style";
 import Chart from "../Chart/Kline";
+import { useLocation } from "react-router-dom";
 import ReactSpeedometer from 'react-d3-speedometer';
 import AssetTable from '../TradeData/Asset/AssetTable';
 import UserServer from '../../api/user-api';
@@ -23,21 +25,23 @@ const Mode=()=>{
     const [UserBTC, setUBTC] = useState();
 
     const [BTC, setBTC] = useState();
-    const [USDT, setUusdt] = useState();
+    const [USDC, setUUSDC] = useState();
     const [BCH, setBCH] = useState();
     const [ETH, setETH] = useState();
 
     const [currency,setcurrency]=useState("BTC")
     const [amount,setAmount]=useState(0)
+    const [buyorder, setbuyorder] = useState([])
+    const [sellorder, setsellorder] = useState([])
 
-
+    const location = useLocation();
     const [sellprice, setsellPrice] = useState()
     const [sellamount, setsellamount] = useState()
     const [buyprice, setbuyPrice] = useState()
     const [buyamount, setbuyamount] = useState()
-    const [Tradepair, setTradepair] = useState("BTCUSDT")
+    const [Tradepair, setTradepair] = useState("BTCUSDC")
     const [coin1, setcoin1] = useState("BTC")
-    const [coin2, setcoin2] = useState("USDT")
+    const [coin2, setcoin2] = useState("USDC")
     const [Time, setTime] = useState(1800)
 
     const [change, setChange] = useState()
@@ -53,9 +57,94 @@ const Mode=()=>{
     const [PairInfo, setInfo] = useState({})
     const [Tpinfo, setTPINFO] = useState({ close: 0, high: 0, low: 0 })
 
+    useEffect(() => {
+        InfoAPI.getTradePair().then((response) => {
+            var newlist = {}
+            for (let [key, value] of Object.entries(response.data)) {
+                var data = JSON.parse(value)
+                newlist[key] = data
+            }
+            setInfo(newlist)
+        })
+    }, [])
 
+    useEffect(()=>{
+        if(typeof location.state !== 'undefined'){
+            console.log(location.state.detail)
+            setTradepair(location.state.detail)
+            if(Object.keys(PairInfo).length !== 0){
+                console.log(PairInfo)
+                setcoin1(PairInfo[location.state.detail]["Coin1"])
+                 setcoin2(PairInfo[location.state.detail]["Coin2"])
 
+            }
+            
+        }
+    },[PairInfo])
 
+    useEffect(() => {
+        MarketAPI.getOrder({ "TradePair": Tradepair, "TradeType": 1 }).then((response) => {
+            // console.log(response.data)
+            var newlist = []
+            console.log(PairInfo)
+            for (let value of Object.values(response.data)) {
+                var data = JSON.parse(value)
+                newlist.push({
+                    price: data["price"].toFixed(PairInfo[Tradepair]["LimitPrice"]),
+                    amount: (data["amount"] - data["doneAmount"]).toFixed(PairInfo[Tradepair]["LimitCount"]),
+                    sum: 0
+                })
+                // console.log(newlist)
+            }
+            
+           // newlist.sort(function (a, b) { return -a.price + b.price })
+            fillsum(newlist)
+            newlist = mergeArr(newlist)
+            setbuyorder(newlist)
+
+             
+        })
+    }, [PairInfo, Tradepair, change]);
+
+    useEffect(() => {
+        MarketAPI.getOrder({ "TradePair": Tradepair, "TradeType": 0 }).then((response) => {
+            // console.log(response.data)
+            var newlist = []
+            for (let value of Object.values(response.data)) {
+                var data = JSON.parse(value)
+                newlist.push({
+                    price: data["price"].toFixed(PairInfo[Tradepair]["LimitPrice"]),
+                    amount: (data["amount"] - data["doneAmount"]).toFixed(PairInfo[Tradepair]["LimitCount"]),
+                    sum: 0
+                })
+                //console.log(newlist)
+            }
+            console.log(newlist)
+            newlist.sort(function (a, b) { return -Number(a.price) + Number(b.price) })
+            console.log(newlist)
+            fillbuysum(newlist)
+            newlist = mergeArr(newlist)
+            setsellorder(newlist)
+
+        })
+    }, [PairInfo, Tradepair, change]);
+
+    const fillsum = (list) => {
+        var sum = 0;
+        for (let i = list.length - 1; i >= 0; i--) {
+            sum += Number(list[i]["amount"]);
+            list[i]["sum"] = sum;
+
+        }
+    }
+    const fillbuysum = (list) => {
+        var sum = 0;
+        for (let i = 0; i < list.length; i++) {
+            sum += Number(list[i]["amount"]);
+            list[i]["sum"] = sum;
+
+        }
+    }
     const sellpricechange = (event) => {
         setsellPrice(event.target.value)
 
@@ -82,11 +171,11 @@ const Mode=()=>{
     }
 
     const handlebuy = () => {
-        if (USDT > buyamount * parseFloat(BTC)) {
+        if (USDC > buyamount * parseFloat(BTC)) {
             MarketAPI.submitTrade({ "TradePair": Tradepair, "UID": user.UID, "Amount": buyamount, "Price": buyprice, "TradeType": 2 })
         }
         else {
-            alert("not enought USDT")
+            alert("not enought USDC")
         }
     }
     const NormalhandleSell = () => {
@@ -106,10 +195,33 @@ const Mode=()=>{
         }
 
     }
+    function mergeArr(arr) {
+        let arrWarp = []
+        let result = []
+        console.log("test");
+        console.log(arr);
+        for (let item of arr) {
+            if (arrWarp.includes(item.price) == false) {
+                let obj = {
+                    price: item.price,
+                    amount: Number(item.amount),
+                    sum: (item.sum).toFixed(PairInfo[Tradepair]["LimitCount"])
+                }
+                result.push(obj)
+                arrWarp.push(item.price)
 
+            } else {
+                let index = arrWarp.indexOf(item.price)
+                result[index].amount += Number(item.amount)
+                result[index].sum =(Number(result[index].sum)+ Number(item.amount)).toFixed(PairInfo[Tradepair]["LimitCount"])
+            }
+        }
+        console.log(result);
+        return result
+    }
 
     const Normalhandlebuy = () => {
-        if (USDT > buyamount * buyprice) {
+        if (USDC > buyamount * buyprice) {
             MarketAPI.submitTrade({ "TradePair": Tradepair, "UID": user.UID, "Amount": buyamount, "Price": buyprice, "TradeType": 2 })
             window.location.reload();
         }
@@ -123,6 +235,31 @@ const Mode=()=>{
             setChange(1)
         }
     }
+
+    const marketpricesellTrade = () => {
+        console.log(buyorder[0]);
+        if (buyorder.length > 0) {
+            setbuyPrice(buyorder[0]["price"])
+        }
+        else {
+            alert("There is no available buy order")
+        }
+
+
+
+    }
+    const marketpricebuyTrade = () => {
+        console.log(sellorder[0]);
+        console.log(sellorder[0]["price"]);
+        if (sellorder.length > 0) {
+            setsellPrice(sellorder[0]["price"])
+        }
+        else {
+            alert("There is no available sell order")
+        }
+
+    }
+
 
     const handleLoan=()=>{
         MarginAPI.getLend({"UID":user.UID,"Currency":currency,"Amount":amount}).then((response) => {
@@ -165,7 +302,7 @@ return(
                             <option >BTC</option>
                             <option >ETH</option>
                             <option >BCH</option>
-                            <option >USDT</option>
+                            <option >USDC</option>
                         </select>
                     </div>
                     <div style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }} onChange={setAmount}>Enter Amount</div>
@@ -183,7 +320,7 @@ return(
                             <option >BTC</option>
                             <option >ETH</option>
                             <option >BCH</option>
-                            <option >USDT</option>
+                            <option >USDC</option>
                         </select>
                     </div>
                     <div style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Enter Amount</div>
@@ -200,7 +337,7 @@ return(
                 <div className={classes.Left}>
                     <div className={classes.ExchangeButton}>
                         <button className={classes.ExchangeButtonSetting} onClick={() => { setSellactive("Limit"); }}>Limit</button>
-                        <button className={classes.ExchangeButtonSetting} onClick={() => { setSellactive("Market"); }}>Market</button>
+                        <button className={classes.ExchangeButtonSetting} onClick={() => { marketpricesellTrade(); setSellactive("Market"); }}>Market</button>
                     </div>
                     {Sellactive == "Limit" &&
                         <div>
@@ -228,7 +365,7 @@ return(
                 <div className={classes.Right}>
                     <div className={classes.ExchangeButton}>
                         <button className={classes.ExchangeButtonSetting} onClick={() => { setBuyactive("Limit") }}>Limit</button>
-                        <button className={classes.ExchangeButtonSetting} onClick={() => { setBuyactive("Market") }}>Market</button>
+                        <button className={classes.ExchangeButtonSetting} onClick={() => {marketpricebuyTrade(); setBuyactive("Market") }}>Market</button>
                     </div>
                     {Buyactive == "Limit" &&
                         <div>
@@ -277,7 +414,7 @@ return(
                             <option >BTC</option>
                             <option >ETH</option>
                             <option >BCH</option>
-                            <option >USDT</option>
+                            <option >USDC</option>
                         </select>
                     </div>
                     <div style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Enter Amount</div>
@@ -295,7 +432,7 @@ return(
                             <option >BTC</option>
                             <option >ETH</option>
                             <option >BCH</option>
-                            <option >USDT</option>
+                            <option >USDC</option>
                         </select>
                     </div>
                     <div style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Enter Amount</div>
