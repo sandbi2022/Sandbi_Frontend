@@ -21,10 +21,10 @@ const CoinBar=({CoinName,CoinPrice,CoinChange,CoinVolume,CoinRound,Sign})=>{
             return "#DBDBDB";
         }
     }
-    
+
 
     return(
-        <div className={classes.coinBarContainer}>
+        <div className={classes.coinBarContainer} >
             <div className={classes.Title}>
                 {Name}
             </div>

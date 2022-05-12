@@ -49,7 +49,7 @@ export const useStyles = createUseStyles({
         color:'white',
         fontSize:'14px',
         textAlign:'left',
-        marginLeft:'10%'
+        marginLeft:'5%'
     },
     smallTextRed:{
         color:'red',
@@ -83,7 +83,7 @@ export const useStyles = createUseStyles({
     openOrderContainer:{
         display:'grid',
         gridTemplateColumns:'17% 17% 17% 17% 17% 15%',
-        width: '80%',
+        width: '100%',
     },
     buttonContainer:{
         textAlign:'left'

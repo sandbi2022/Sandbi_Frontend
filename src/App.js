@@ -17,6 +17,7 @@ import DashboardPage from './pages/DashboardPage/DashboardPage';
 import TransferInPage from './pages/TransferInPage/TransferInPage';
 import WithdrawPage from './pages/WithDrawPage/WithDrawPage';
 import CreateOrder from './components/C2C/CreateOrder';
+import AlgoWalletPage from './pages/AlgoWalletPage/AlgoWalletPage';
 import { Switch, Route, Router } from 'react-router-dom';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import BuyOrder from './components/C2C/BuyOrder';
@@ -47,6 +48,7 @@ function App() {
           <Route path='/CreateOrder' component={CreateOrder}/>
           <Route path='/BuyOrder' component={BuyOrder}/>
           <Route path='/UserOrder' component={UserOrder}/>
+          <Route path='/AlgoWallet' component={AlgoWalletPage}/>
       </Switch>
       </div>
     </div>

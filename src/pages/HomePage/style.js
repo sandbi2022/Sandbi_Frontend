@@ -9,6 +9,7 @@ export const useStyles = createUseStyles({
         width: '100%',
         height: '100%',
         backgroundColor: '#04011A',
+        overflow:'auto'
         
     },
     loginContainer: {
@@ -17,5 +18,6 @@ export const useStyles = createUseStyles({
         left: '50%',
         marginTop:'-400px',
         marginLeft:'-450px',
+        
     },
 })

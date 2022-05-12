@@ -56,13 +56,14 @@ const C2C = () => {
 
     useEffect(() => {
         console.log("test")
+        console.log(Refresh)
         var pairlist = []
         var PromiseBUYlist = [];
         var PromiseSelllist = [];
         for (let value of TradePairlist) {
-            console.log(value)
+           // console.log(value)
             var Tpair = value + "USD"
-            console.log(Tpair)
+          //  console.log(Tpair)
             pairlist.push(Tpair)
             const buyres = c2cAPI.getPOrder({ "TradePair": Tpair, "TradeType": 0 })
             PromiseBUYlist.push(buyres)
@@ -108,6 +109,7 @@ const C2C = () => {
             setbuyplist(other)
             setbuyplistINIT(other)
         })
+    
         return setRefresh(0)
     }, [PairInfo,Refresh])
 
@@ -148,20 +150,18 @@ const C2C = () => {
         for (let i in buyplistINIT) {
 
             if (buyplistINIT[i].tradePair == "BTCUSD") {
-
-
                 temp2.push(buyplistINIT[i])
             }
         }
         setbuyplist(temp2)
 
     }
-    /*const showUSDC = () =>{
+    const showUSDC = () =>{
         var temp=[]
         for(let i in sellplist){
             console.log("btc")
             console.log(i)
-            if(sellplist[i].tradePair=="BTCUSD"){
+            if(sellplist[i].tradePair=="USDCUSD"){
                 console.log("btc")
                 console.log(sellplist[i])
                 temp.push(sellplist[i])
@@ -172,15 +172,15 @@ const C2C = () => {
         for(let i in buyplist){
             console.log("btc")
             console.log(i)
-            if(buyplist[i].tradePair=="BTCUSD"){
+            if(buyplist[i].tradePair=="USDCUSD"){
                 console.log("btc")
                 
                 temp2.push(buyplist[i])
             }
         }
-        setsellplist(temp2)
+        setbuyplist(temp2)
+    }
 
-    }*/
     const showBCH = () => {
         var temp = []
         for (let i in sellplistINIT) {
@@ -205,6 +205,7 @@ const C2C = () => {
         }
         setbuyplist(temp2)
     }
+
     const showETH = () => {
         var temp = []
         for (let i in sellplistINIT) {
@@ -244,6 +245,9 @@ const C2C = () => {
         }
     },[])
 
+    const RefreshPage=()=>{
+        setRefresh(1)
+    }
 
     return (
         <div >
@@ -254,11 +258,10 @@ const C2C = () => {
                         <div id="button" className={ classes.buttonContainer}>
                             <button className={classes.SelectButtonSetting}>BUY</button>
                             <button className={classes.UnselectButtonSetting} onClick={() => setActive("Sell")}>Sell</button>
-                            <button class="btn active" className={classes.bottonSetting} onClick={showall}>ALL</button>
                             <button class="btn" className={classes.bottonSetting} onClick={showBTC}>BTC</button>
                             <button class="btn" className={classes.bottonSetting} onClick={showBCH}>BCH</button>
                             <button class="btn" className={classes.bottonSetting} onClick={showETH}>ETH</button>
-                            <button class="btn" className={classes.bottonSetting} onClick={showall}>USDC</button>
+                            <button class="btn" className={classes.bottonSetting} onClick={showUSDC}>USDC</button>
                         </div>
                         <div className={classes.buttonContainer}>
                             <Popup contentStyle={{
@@ -307,7 +310,7 @@ const C2C = () => {
                             </div>
                         </div>
                         <div className={classes.subTitleContainer2}>
-                            <button className={classes.inputSetting2}>Refresh </button>
+                            <button className={classes.inputSetting2} onClick={()=>RefreshPage()}>Refresh </button>
                         </div>
                     </div>
 
@@ -338,7 +341,7 @@ const C2C = () => {
                                 <div><Popup contentStyle={{
                                     width: "20%", height: '20%', backgroundColor: '#04011A'
                                 }} position="bottom right" trigger={<button className={classes.SelectButtonSetting3} >Buy</button>} onOpen={() => { handleBuy(item) }}>
-                                    <BuyOrder />
+                                    <BuyOrder sendInfo={item} Refresh= {setRefresh}/>
                                 </Popup></div>
                             </div>
 
@@ -363,11 +366,11 @@ const C2C = () => {
                         <div className={classes.buttonContainer}>
                             <button className={classes.UnselectButtonSetting} onClick={() => setActive("Buy")}>BUY</button>
                             <button className={classes.SelectButtonSetting}>Sell</button>
-                            <button className={classes.bottonSetting} onClick={showall}>ALL</button>
+                           
                             <button className={classes.bottonSetting} onClick={showBTC}>BTC</button>
                             <button className={classes.bottonSetting} onClick={showBCH}>BCH</button>
                             <button className={classes.bottonSetting} onClick={showETH}>ETH</button>
-                            <button className={classes.bottonSetting} onClick={showall}>USDC</button>
+                            <button className={classes.bottonSetting} onClick={showUSDC}>USDC</button>
                         </div>
                         <div className={classes.buttonContainer}>
                             <Popup contentStyle={{
@@ -416,7 +419,7 @@ const C2C = () => {
                             </div>
                         </div>
                         <div className={classes.subTitleContainer2}>
-                            <button className={classes.inputSetting2}>Refresh </button>
+                            <button className={classes.inputSetting2} onClick={()=>RefreshPage()}>Refresh </button>
                         </div>
                     </div>
 
@@ -442,12 +445,11 @@ const C2C = () => {
                                     </div>
                                 </div>
                                 <div className={classes.infoTextSetting}>Card</div>
-                                {/* <div className={classes.infoTextSetting}>{item.Payment}</div> */}
                                 <div>
                                     <Popup contentStyle={{
                                         width: "20%", height: '20%', backgroundColor: '#04011A'
                                     }} position="bottom right" trigger={<button className={classes.SelectButtonSetting2} >Sell</button>} onOpen={() => { handleBuy(item) }}>
-                                        <BuyOrder sendInfo={item} />
+                                        <BuyOrder sendInfo={item} Refresh= {setRefresh}/>
                                     </Popup>
 
                                 </div>
@@ -455,27 +457,6 @@ const C2C = () => {
 
                         );
                     })}
-                    {/*
-                     const handleBuy =(item)=>{
-        console.log(item)
-        dispatch(Pend({
-            TID:item.Tid,
-            TradePair:item.tradePair,
-            Seller:item.seller,  
-        }))
-        history.push('/BuyOrder')
-    }*/}
-                    {/*<li key={index} className={item.cName}>
-                            {item.Asset} 
-                            <span>  {item.Advertiser}  </span>
-                            <span>  {item.Price}</span>
-                            <span>  {item.Limit}</span>
-                            <span>  {item.Availabke}</span>
-                            <span>  {item.Payment}</span>
-                            <button>bUY xxx</button>
-                        </li>
-                        */}
-
                 </div>
             }
         </div>

@@ -26,7 +26,7 @@ const OrderBook= param =>{
     const [buyprice, setbuyPrice] = useState()
     const [buyamount, setbuyamount] = useState()
     const Tradepair=param.TradePair
-    const [change, setChange] = useState()
+    const change = param.Refresh
     const [coin1, setcoin1] = useState("BTC")
     const [coin2, setcoin2] = useState("USDC")
     const [openorder, setopenorder] = useState([])
@@ -115,11 +115,10 @@ const OrderBook= param =>{
                 })
                 //console.log(newlist)
             }
-            console.log(newlist)
-            newlist.sort(function (a, b) { return -Number(a.price) + Number(b.price) })
-            console.log(newlist)
+            
+            newlist.sort(function (a, b) { return -Number(a.price) + Number(b.price) })         
             fillbuysum(newlist)
-            newlist = mergeArr(newlist)
+            newlist = mergeArr(newlist)      
             setsellorder(newlist)
 
         })
@@ -193,22 +192,6 @@ const OrderBook= param =>{
     }, [Tradepair, change]);
 
 
-    const sellpricechange = (event) => {
-        setsellPrice(event.target.value)
-
-    }
-    const sellamountchange = (event) => {
-        setsellamount(event.target.value)
-
-    }
-    const buypricechange = (event) => {
-        setbuyPrice(event.target.value)
-
-    }
-    const buyamountchange = (event) => {
-        setbuyamount(event.target.value)
-
-    }
 
     useEffect(() => {
         if (sellamount === undefined | sellamount === "" | sellprice === undefined | sellprice === "") {
@@ -232,70 +215,8 @@ const OrderBook= param =>{
     }, [buyamount, buyprice])
 
 
-    const handleSell = () => {
 
-        if (UserBTC > sellamount) {
-            MarketAPI.submitTrade({ "TradePair": Tradepair, "UID": user.UID, "Amount": sellamount, "Price": sellprice, "TradeType": 1 })
-        }
-        else {
-            alert("not enough "+ coin1)
-        }
-        if (change == 1) {
-            setChange(2)
-        }
-        else {
-            setChange(1)
-        }
-
-    }
-
-    const handlebuy = () => {
-        if (USDC > buyamount * buyprice) {
-            MarketAPI.submitTrade({ "TradePair": Tradepair, "UID": user.UID, "Amount": buyamount, "Price": buyprice, "TradeType": 0 })
-        }
-        else {
-            alert("not enough "+ coin2)
-        }
-        if (change == 1) {
-            setChange(2)
-        }
-        else {
-            setChange(1)
-        }
-    }
-
-    const marketpricesellTrade = () => {
-        console.log(buyorder[0]);
-        if (buyorder.length > 0) {
-            setbuyPrice(buyorder[0]["price"])
-        }
-        else {
-            alert("There is no available buy order")
-        }
-
-
-
-    }
-    const marketpricebuyTrade = () => {
-        console.log(sellorder[0]);
-        console.log(sellorder[0]["price"]);
-        if (sellorder.length > 0) {
-            setsellPrice(sellorder[0]["price"])
-        }
-        else {
-            alert("There is no available sell order")
-        }
-
-    }
-
-
-    const SwitchOpenOrder = () => {
-        setswitch(0);
-    }
-    const Switchistory = () => {
-        setswitch(1);
-    }
-
+   
     useEffect(() => {
         if (Switch == 0) {
             setbottom(openorder)
@@ -323,10 +244,11 @@ const OrderBook= param =>{
         console.log("test");
         console.log(arr);
         for (let item of arr) {
+            console.log(item);
             if (arrWarp.includes(item.price) == false) {
                 let obj = {
                     price: item.price,
-                    amount: Number(item.amount),
+                    amount:(Number(item.amount)).toFixed(PairInfo[Tradepair]["LimitCount"]),
                     sum: (item.sum).toFixed(PairInfo[Tradepair]["LimitCount"])
                 }
                 result.push(obj)
@@ -334,7 +256,7 @@ const OrderBook= param =>{
 
             } else {
                 let index = arrWarp.indexOf(item.price)
-                result[index].amount += Number(item.amount)
+                result[index].amount=(Number(result[index].amount)+ Number(item.amount)).toFixed(PairInfo[Tradepair]["LimitCount"])
                 result[index].sum =(Number(result[index].sum)+ Number(item.amount)).toFixed(PairInfo[Tradepair]["LimitCount"])
             }
         }
@@ -344,8 +266,9 @@ const OrderBook= param =>{
     return(
         <div className={classes.columPartContainers}>
         <div className={classes.TitleText}>OrderBook</div>
-        <div style={{ height: '45%',position:'relative' }}>
-            
+        <div style={{ height: '45%',position:'relative',bottom:'0px' }}>
+            <div style={{position:'absolute',
+                bottom:'0px',width:'100%',display:'flex',flexDirection:'column-reverse'}}>
             {buyorder.map((item, index) => {
                 return (
                    
@@ -357,6 +280,7 @@ const OrderBook= param =>{
                     
                 );
             })}
+            </div>
         </div>
         <div className={classes.leftSideContainer}>
             <div className={classes.smallText2}>Price</div>

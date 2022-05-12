@@ -30,7 +30,7 @@ const Mode=()=>{
     const [ETH, setETH] = useState();
 
     const [currency,setcurrency]=useState("BTC")
-    const [amount,setAmount]=useState(0)
+    const [amount,setamount]=useState(0)
     const [buyorder, setbuyorder] = useState([])
     const [sellorder, setsellorder] = useState([])
 
@@ -57,6 +57,24 @@ const Mode=()=>{
     const [PairInfo, setInfo] = useState({})
     const [Tpinfo, setTPINFO] = useState({ close: 0, high: 0, low: 0 })
 
+    const [liability,setLiability]=useState()
+
+    useEffect(()=>{
+        MarginAPI.getTotalLiability({"UID": user.UID}).then((response)=>{
+            console.log(response.data)
+            setLiability(response.data["TotalLiability"])
+        })
+    },[])
+
+    useEffect(() => {
+        const UID = user.UID;
+        WalletAPI.getBalance({ UID }).then((response) => {
+            const data = response.data;
+            setUBTC(data[coin1] - data["Freeze" + coin1])
+            setUUSDC(data[coin2] - data["Freeze" + coin2])
+        });
+    }, [change, Tradepair])
+    
     useEffect(() => {
         InfoAPI.getTradePairs().then((response) => {
             var newlist = {}
@@ -161,31 +179,30 @@ const Mode=()=>{
         setbuyamount(event.target.value)
 
     }
-    const handleSell = () => {
-        if (UserBTC > sellamount) {
-            MarketAPI.submitTrade({ "TradePair": Tradepair, "UID": user.UID, "Amount": sellamount, "Price": sellprice, "TradeType": 3 })
-        }
-        else {
-            alert("not enought BTC")
-        }
+    const AutoRefund = (amount)=>{
+        MarginAPI.getReturnBack({"UID":user.UID,"Currency":coin2,"Amount":amount}).then((response) => {
+            console.log(response.data)
+        })
+
     }
 
-    const handlebuy = () => {
-        if (USDC > buyamount * parseFloat(BTC)) {
-            MarketAPI.submitTrade({ "TradePair": Tradepair, "UID": user.UID, "Amount": buyamount, "Price": buyprice, "TradeType": 2 })
-        }
-        else {
-            alert("not enought USDC")
-        }
-    }
-    const NormalhandleSell = () => {
-
+    const handleAutoSell = () => {
         if (UserBTC > sellamount) {
             MarketAPI.submitTrade({ "TradePair": Tradepair, "UID": user.UID, "Amount": sellamount, "Price": sellprice, "TradeType": 3 })
-            window.location.reload();
+            // check if liability.if has, help to return as much as possible
+            //else nothing happen
+            var amountLeft=(UserBTC-sellamount)*sellprice;
+            if(liability>0&&liability>=amountLeft){
+                AutoRefund(amountLeft)
+
+            }else if(liability>0&&liability<amountLeft){
+                AutoRefund(liability)
+            }
+            
         }
         else {
-            alert("not enough "+ coin1)
+            alert("not enough " + coin1)
+            
         }
         if (change == 1) {
             setChange(2)
@@ -193,7 +210,55 @@ const Mode=()=>{
         else {
             setChange(1)
         }
+    }
 
+    const handleAutobuy = () => {
+        if (USDC > buyamount * buyprice) {
+            MarketAPI.submitTrade({ "TradePair": Tradepair, "UID": user.UID, "Amount": buyamount, "Price": buyprice, "TradeType": 2 })
+        }
+        else {
+            //not enough, auto lend
+            var amount=buyamount* buyprice-USDC;
+            MarginAPI.getLend({"UID":user.UID,"Currency":coin2,"Amount":amount})
+            MarketAPI.submitTrade({ "TradePair": Tradepair, "UID": user.UID, "Amount": USDC, "Price": sellprice, "TradeType": 3 })
+            
+        }
+        if (change == 1) {
+            setChange(2)
+        }
+        else {
+            setChange(1)
+        }
+    }
+    
+    const handleNormalSell = () => {
+        if (UserBTC > sellamount) {
+            MarketAPI.submitTrade({ "TradePair": Tradepair, "UID": user.UID, "Amount": sellamount, "Price": sellprice, "TradeType": 3 })
+        }
+        else {
+            alert("not enough " + coin1)
+        }
+        if (change == 1) {
+            setChange(2)
+        }
+        else {
+            setChange(1)
+        }
+    }
+
+    const handleNormalbuy = () => {
+        if (USDC > buyamount * buyprice) {
+            MarketAPI.submitTrade({ "TradePair": Tradepair, "UID": user.UID, "Amount": buyamount, "Price": buyprice, "TradeType": 2 })
+        }
+        else {
+            alert("not enough " + coin2)
+        }
+        if (change == 1) {
+            setChange(2)
+        }
+        else {
+            setChange(1)
+        }
     }
     function mergeArr(arr) {
         let arrWarp = []
@@ -220,21 +285,7 @@ const Mode=()=>{
         return result
     }
 
-    const Normalhandlebuy = () => {
-        if (USDC > buyamount * buyprice) {
-            MarketAPI.submitTrade({ "TradePair": Tradepair, "UID": user.UID, "Amount": buyamount, "Price": buyprice, "TradeType": 2 })
-            window.location.reload();
-        }
-        else {
-            alert("not enough "+ coin2)
-        }
-        if (change == 1) {
-            setChange(2)
-        }
-        else {
-            setChange(1)
-        }
-    }
+
 
     const marketpricesellTrade = () => {
         console.log(buyorder[0]);
@@ -265,18 +316,21 @@ const Mode=()=>{
         MarginAPI.getLend({"UID":user.UID,"Currency":currency,"Amount":amount}).then((response) => {
             console.log(response.data)
         })
-        window.location.reload();
+        
 
     }
     const handleRefund=()=>{
         MarginAPI.getReturnBack({"UID":user.UID,"Currency":currency,"Amount":amount}).then((response) => {
             console.log(response.data)
         })
-        window.location.reload();
+        
 
     }
     const setCurrency=(event)=>{
         setcurrency(event.target.value)
+    }
+    const setAmount =(event)=>{
+        setamount(event.target.value)
     }
     
 return(
@@ -298,25 +352,7 @@ return(
                     <div style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Coin</div>
 
                     <div style={{ textAlign: 'center' }}>
-                        <select className={classes.inputSetting3} onChange={setcurrency}>
-                            <option >BTC</option>
-                            <option >ETH</option>
-                            <option >BCH</option>
-                            <option >USDC</option>
-                        </select>
-                    </div>
-                    <div style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }} onChange={setAmount}>Enter Amount</div>
-                    <div style={{ textAlign: 'center' }}>
-                        <input />
-                    </div>
-                    <div style={{ textAlign: 'center', marginTop: '5%' }}>
-                        <button onClick={handleLoan}>Confirm</button>
-                    </div>
-                </Popup>
-                <Popup contentStyle={{ width: '20%', backgroundColor: '#04011A' }} trigger={<button style={{ color: 'white', backgroundColor: '#141126', width: '90%', height: '80%', marginLeft: '5%' }}>refund</button>} position="center">
-                    <div style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }} onChange={setAmount}>Coin</div>
-                    <div style={{ textAlign: 'center' }}>
-                        <select className={classes.inputSetting3} onChange={setcurrency}>
+                        <select className={classes.inputSetting3} onChange={setCurrency}>
                             <option >BTC</option>
                             <option >ETH</option>
                             <option >BCH</option>
@@ -324,7 +360,25 @@ return(
                         </select>
                     </div>
                     <div style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Enter Amount</div>
+                    <div style={{ textAlign: 'center' }} onChange={setAmount}>
+                        <input />
+                    </div>
+                    <div style={{ textAlign: 'center', marginTop: '5%' }}>
+                        <button onClick={handleLoan}>Confirm</button>
+                    </div>
+                </Popup>
+                <Popup contentStyle={{ width: '20%', backgroundColor: '#04011A' }} trigger={<button style={{ color: 'white', backgroundColor: '#141126', width: '90%', height: '80%', marginLeft: '5%' }}>refund</button>} position="center">
+                    <div style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Coin</div>
                     <div style={{ textAlign: 'center' }}>
+                        <select className={classes.inputSetting3} onChange={setCurrency}>
+                            <option >BTC</option>
+                            <option >ETH</option>
+                            <option >BCH</option>
+                            <option >USDC</option>
+                        </select>
+                    </div>
+                    <div style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }} >Enter Amount</div>
+                    <div style={{ textAlign: 'center' }} onChange={setAmount}>
                         <input />
                     </div>
                     <div style={{ textAlign: 'center', marginTop: '5%' }}>
@@ -357,7 +411,7 @@ return(
                         <div style={{ color: 'white', fontSize: '10px', textAlign: 'left' }}>total</div>
                         <div style={{ color: 'white', fontSize: '10px', textAlign: 'right' }}>{stotal}</div>
                     </div>
-                    <div><button onClick={handleSell} className={classes.buttonSettingRed}>Sell</button></div>
+                    <div><button onClick={handleAutoSell} className={classes.buttonSettingRed}>Sell</button></div>
                 </div>
                 <div>
                     <div className={classes.verticleLine} />
@@ -385,7 +439,7 @@ return(
                         <div style={{ color: 'white', fontSize: '10px', textAlign: 'left' }}>total</div>
                         <div style={{ color: 'white', fontSize: '10px', textAlign: 'right' }}>{btotal}</div>
                     </div>
-                    <div><button onClick={handlebuy} className={classes.buttonSettingGreen}>Buy</button></div>
+                    <div><button onClick={handleAutobuy} className={classes.buttonSettingGreen}>Buy</button></div>
                 </div>
             </div>
         </div>}
@@ -410,7 +464,7 @@ return(
                     <div style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Coin</div>
 
                     <div style={{ textAlign: 'center' }}>
-                        <select className={classes.inputSetting3} onChange={setcurrency}>
+                        <select className={classes.inputSetting3} onChange={setCurrency}>
                             <option >BTC</option>
                             <option >ETH</option>
                             <option >BCH</option>
@@ -418,17 +472,17 @@ return(
                         </select>
                     </div>
                     <div style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Enter Amount</div>
-                    <div style={{ textAlign: 'center' }}>
+                    <div style={{ textAlign: 'center' }} onChange={setAmount}>
                         <input />
                     </div>
                     <div style={{ textAlign: 'center', marginTop: '5%' }}>
-                        <button>Confirm</button>
+                        <button  onClick={handleLoan}>Confirm</button>
                     </div>
                 </Popup>
                 <Popup contentStyle={{ width: '20%', backgroundColor: '#04011A' }} trigger={<button style={{ color: 'white', backgroundColor: '#141126', width: '90%', height: '80%', marginLeft: '5%' }}>refund</button>} position="center">
                     <div style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Coin</div>
                     <div style={{ textAlign: 'center' }}>
-                        <select className={classes.inputSetting3} onChange={setcurrency}>
+                        <select className={classes.inputSetting3} onChange={setCurrency}>
                             <option >BTC</option>
                             <option >ETH</option>
                             <option >BCH</option>
@@ -436,11 +490,11 @@ return(
                         </select>
                     </div>
                     <div style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Enter Amount</div>
-                    <div style={{ textAlign: 'center' }}>
+                    <div style={{ textAlign: 'center' }} onChange={setAmount}>
                         <input />
                     </div>
                     <div style={{ textAlign: 'center', marginTop: '5%' }}>
-                        <button>Confirm</button>
+                        <button onClick={handleRefund} >Confirm</button>
                     </div>
                 </Popup>
 
@@ -471,7 +525,7 @@ return(
                         <div style={{ color: 'white', fontSize: '10px', textAlign: 'left' }}>total</div>
                         <div style={{ color: 'white', fontSize: '10px', textAlign: 'right' }}>{stotal}</div>
                     </div>
-                    <div><button onClick={NormalhandleSell} className={classes.buttonSettingRed}>Sell</button></div>
+                    <div><button onClick={handleNormalSell} className={classes.buttonSettingRed}>Sell</button></div>
                 </div>
                 <div>
                     <div className={classes.verticleLine} />
@@ -499,7 +553,7 @@ return(
                         <div style={{ color: 'white', fontSize: '10px', textAlign: 'left' }}>total</div>
                         <div style={{ color: 'white', fontSize: '10px', textAlign: 'right' }}>{btotal}</div>
                     </div>
-                    <div><button onClick={Normalhandlebuy} className={classes.buttonSettingGreen}>Buy</button></div>
+                    <div><button onClick={handleNormalbuy} className={classes.buttonSettingGreen}>Buy</button></div>
                 </div>
             </div>
         </div>}

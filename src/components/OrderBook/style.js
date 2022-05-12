@@ -29,8 +29,6 @@ leftSideContainer1:{
     textAlign:'bottom',
     justifyContent:"flex-end",
     height:'8%',
-    position:'absolute',
-    bottom:'0px'
     
 },
 smallText:{

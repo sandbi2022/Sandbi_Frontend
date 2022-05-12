@@ -8,13 +8,14 @@ import { useDispatch, useSelector } from 'react-redux';
 // import C2Cinfo from  "../C2C/C2C";
 
 
-export default function BuyOrder({ sendInfo }) {
+export default function BuyOrder({ sendInfo,Refresh }) {
     const trade = useSelector((state) => state.trade.value)
     const user = useSelector((state) => state.user.value)
     const classes = useStyles();
     const history = useHistory();
     const [amount, setAmount] = useState("Buy")
     const TradeType = 0
+    const setRefresh=Refresh;
 
     useEffect(() => {
         console.log(sendInfo)
@@ -22,7 +23,7 @@ export default function BuyOrder({ sendInfo }) {
 
 
     const confirmCreation = () => {
-        //console.log("min max"+sendInfo.maxAmoun)
+        console.log("min max"+sendInfo.maxAmoun)
         console.log(trade.TID)
         var available = sendInfo.amount - sendInfo.doneAmount
         if (amount <= sendInfo.maxAmount && amount >= sendInfo.minAmount) {
@@ -42,7 +43,9 @@ export default function BuyOrder({ sendInfo }) {
         } else {
             alert("sorry, Seller set the amount range in " + sendInfo.minAmount + " - " + sendInfo.maxAmount)
         }
+        setRefresh(1)
     }
+
 
 
     const updateAmount = (event) => {

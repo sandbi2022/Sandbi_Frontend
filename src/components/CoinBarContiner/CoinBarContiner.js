@@ -8,6 +8,7 @@ import InfoAPI from '../../api/Info-api';
 import MarketAPI from '../../api/market-api';
 
 const CoinBarContainer = () => {
+    const history = useHistory();
     const classes = useStyles()
     const [Pricelist, setPricelist] = useState([]);
     const [Vollist, setVollist] = useState([]);
@@ -16,6 +17,15 @@ const CoinBarContainer = () => {
     const [Slist, setSlist] = useState([])
     const [PairInfo, setInfo] = useState({})
     const TradePair = ["BTCUSDC", "BCHUSDC", "ETHUSDC", "ETHBTC"]
+
+    const jumpExhange = (TradePair) => {
+        console.log(TradePair)
+        history.push({
+            pathname: '/Exchange',
+            state: { detail: TradePair }
+        })
+
+    }
 
     useEffect(() => {
         InfoAPI.getTradePairs().then((response) => {
@@ -89,9 +99,11 @@ const CoinBarContainer = () => {
     }
 
     return (
-        <div className={classes.coinContainers}>
+        <div className={classes.coinContainers} >
             {TradePair.map((item, index) => {
-                return <CoinBar CoinName={item} CoinPrice={Pricelist[index]} CoinChange={Clist[index]} Sign={Slist[index]} CoinVolume={Vollist[index]} Round={Precionlist[index]} />
+                
+                return <div onClick={() => jumpExhange(item)}><CoinBar CoinName={item} CoinPrice={Pricelist[index]} CoinChange={Clist[index]} Sign={Slist[index]} CoinVolume={Vollist[index]} Round={Precionlist[index]} />
+                </div>
             })
             }
         </div>

@@ -33,6 +33,7 @@ class MarginAPI{
     }
 
     getTotalLiability(data){
+        console.log(data);
         return axios.post(MARGIM_API_BASE_URL+'/Margin/GetTotalLiability.jsp',
         JSON.stringify(data),
         {
@@ -43,6 +44,7 @@ class MarginAPI{
     }
 
     getLend(data){
+        console.log(data);
         return axios.post(MARGIM_API_BASE_URL+'/Margin/Lend.jsp',
         JSON.stringify(data),
         {
@@ -52,6 +54,7 @@ class MarginAPI{
         );
     }
     getReturnBack(data){
+        console.log(data);
         return axios.post(MARGIM_API_BASE_URL+'/Margin/ReturnBack.jsp',
         JSON.stringify(data),
         {

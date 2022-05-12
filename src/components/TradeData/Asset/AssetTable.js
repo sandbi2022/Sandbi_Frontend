@@ -63,7 +63,7 @@ const AssetTable = params => {
                     Type: pairlist[i],
                     lastPrice: price.toFixed(digit),
                     change: perenatage(price, openprice),
-                    sign: Math.sign(price - openprice)
+                    sign: getSign(price, openprice)
 
                 })
             }
@@ -122,6 +122,13 @@ const AssetTable = params => {
         }
     }
     
+
+    const getSign=(close, open)=>{
+        if(open == 0|| close==0 ){return 0;}
+        else{
+            return Math.sign(close-open)
+        }
+    }
 
     return (
         <div className={classes.columPartContainers}>

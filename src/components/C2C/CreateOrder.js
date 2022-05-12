@@ -18,8 +18,7 @@ const CreateOrder = params => {
         const [minAmount, setminAmount] = useState(0)
         const [C2CBalance, setC2CBal] = useState({})
         const [price, setprice] = useState(0)
-        const [side,setSide]=useState()
-        const TradeType = 1
+        const [side,setSide]=useState(0)
         const setRefresh=params.Refresh;
 
 
@@ -35,7 +34,8 @@ const CreateOrder = params => {
 
         const confirmCreation = () => {
                 console.log(Coin)
-                if(C2CBalance[Coin]<amount&&TradeType==1){
+                console.log(side)
+                if(C2CBalance[Coin]<amount&&side==1){
                         alert("Your balance is not enough")
                 }else{
                    if(Number(maxAmount)>Number(amount)){
@@ -53,17 +53,18 @@ const CreateOrder = params => {
                                                         "MaxAmount": maxAmount,
                                                         "MinAmount": minAmount,
                                                         "Price": price,
-                                                        "TradeType": TradeType
+                                                        "TradeType": side
                                                 })
                                                 setRefresh(1)
-                                                history.push('/C2C')
                                                 
                         }
+                        alert("Successfuly created a order")
+                        window.location.reload();
                    }
 
 
                 }
-               
+                setRefresh(1)
                 
 
         }
@@ -86,7 +87,11 @@ const CreateOrder = params => {
                 setprice(event.target.value);
         }
         const updateSide = (event) => {
-                setSide(event.target.value);
+               if(event.target.value==="Buy"){
+                       setSide(0)
+               }else{
+                       setSide(1)
+               }
         }
 
         return (
@@ -154,7 +159,7 @@ const CreateOrder = params => {
                                 </div>
                         </div>
                         <div style={{textAlign:'center'}}>
-                        <button type="submit" style={{position:'center',color:'white',backgroundColor:'#4ABCBB',borderRadius: '5px',margin:'5%',fontSize:'20px',width:'30%'}}onClick={confirmCreation}>
+                        <button type="submit" style={{position:'center',color:'white',backgroundColor:'#4ABCBB',borderRadius: '5px',margin:'5%',fontSize:'20px',width:'30%'}}onClick={confirmCreation  }>
                                 Create
                         </button>
                         </div>

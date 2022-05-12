@@ -50,7 +50,16 @@ const UserOrder = () => {
                 }
             }
             console.log(newList)
-            var final = newList.filter(order=>(order.tradeState!==3))
+            var final = newList.filter(order=>((order.tradeState!==3&&order.tradeState!==2)))
+            final=final.map(item => {
+                if ((item.amount-item.doneAmount)<item.minAmount) {
+                    console.log("yes")
+                  return {...item, minAmount:0};
+                } else {
+                  return item;
+                }
+            })
+            console.log(final)
             setPendlist(final)
             setrenderlist(final)
             setpendflag(true)
@@ -84,8 +93,9 @@ const renderProcess=()=>{
         }
 
         console.log(newList)
-        setProcesslist(newList)
-        setrenderlist(newList)
+        var final = newList.filter(order=>((order.tradeState!==3&&order.tradeState!==2)))
+        setProcesslist(final)
+        setrenderlist(final)
         setpendflag(false)
         setprceflag(true)
     })
@@ -130,8 +140,12 @@ const renderProcess=()=>{
                         <button className={classes.UnselectButtonSetting} onClick={() => setActive("Sell")}>Sell</button> */}
                         <button className={classes.bottonSetting} onClick={()=>renderPend()}>Pending Order</button>
                         <button className={classes.bottonSetting} onClick={()=>renderProcess()}>Processing Order</button>
-
+                            {/* <button class="btn" className={classes.bottonSetting} onClick={showBTC}>BTC</button>
+                            <button class="btn" className={classes.bottonSetting} onClick={showBCH}>BCH</button>
+                            <button class="btn" className={classes.bottonSetting} onClick={showETH}>ETH</button>
+                            <button class="btn" className={classes.bottonSetting} onClick={showUSDC}>USDC</button> */}
                     </div>
+                    
                     {/* <div>
                         <button className={classes.bottonSetting} onClick={()=>{history.push('/CreateOrder')}}>Create</button>
                     </div> */}
@@ -167,7 +181,10 @@ const renderProcess=()=>{
                     <div className={classes.infoContainers}>
                         <div className={classes.subTitleSetting2}>Advertisers</div>
                         <div className={classes.subTitleSetting2}>Price</div>
-                        <div className={classes.subTitleSetting2}>Limit/Available</div>
+                        {/* <div className={classes.subTitleSetting2}>Limit/Available</div> */}
+                       {!Prceflag&&<div className={classes.subTitleSetting2}>Limit/Available</div>} 
+                       {Prceflag&&<div className={classes.subTitleSetting2}>Amount</div>} 
+                       {Prceflag&&<div className={classes.subTitleSetting2}>Total</div>} 
                         <div className={classes.subTitleSetting2}>Side</div>
                         <div className={classes.subTitleSetting2}>Payment</div>
                         <div className={classes.subTitleSetting2}>Trade</div>
@@ -178,19 +195,26 @@ const renderProcess=()=>{
                                 <div className={classes.infoTextSetting}>{item.tradePair}</div>
                                 <div className={classes.infoTextSetting}>{item.price}</div>
                                 <div>
-                                    <div className={classes.infoTextSetting}>
+                                    {!Prceflag&&<div className={classes.infoTextSetting}>
                                         Limit:{item.maxAmount}
-
+                                    </div>}
+                                    {Prceflag&&<div className={classes.infoTextSetting}>
+                                        {item.amount}
                                     </div>
-                                    <div className={classes.infoTextSetting}>
+                                    }
+                                    
+                                    {!Prceflag&&<div className={classes.infoTextSetting}>
                                         Available{item.amount-item.doneAmount}
-                                    </div>
+                                    </div>}
                                 </div>
+                                {Prceflag&&<div className={classes.infoTextSetting}>
+                                        {item.amount*item.price}
+                                    </div>}
                                 <div className={classes.infoTextSetting} style={{color:getColor(item.tradeType)}}>{Side(item.tradeType)}</div>
                                 <div className={classes.infoTextSetting}>Card</div>
                                 
-                          {pendflag&&<div><button className={classes.SelectButtonSetting2} onClick={()=>{handleCancel(item)}}>Cancel</button></div>}
-                          {Prceflag &&<div><button className={classes.SelectButtonSetting2} onClick={()=>{handleFinish(item)}}>Finish</button></div>}
+                          {(item.tradeState===0|item.tradeState===1)&&item.tradeType===1&&<div><button className={classes.SelectButtonSetting2} onClick={()=>{handleCancel(item)}}>Cancel</button></div>}
+                          {Prceflag&& item.tradeState===1 &&<div><button className={classes.SelectButtonSetting2} onClick={()=>{handleFinish(item)}}>Finish</button></div>}
                             </div>
 
                         );

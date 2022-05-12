@@ -14,6 +14,8 @@ import UserServer from '../../api/user-api';
 import Popup from 'reactjs-popup';
 import Mode from './Mode';
 import OrderBook from '../OrderBook/OrderBook';
+import SelectedTP from '../SelectedTP/SelectedTP';
+
 const Margin = () => {
     const classes = useStyles()
     const history = useHistory();
@@ -185,7 +187,7 @@ const Margin = () => {
 
     }
     useEffect(() => {
-        MarketAPI.getOrder({ "TradePair": Tradepair, "TradeType": 1 }).then((response) => {
+        MarketAPI.getOrder({ "TradePair": Tradepair, "TradeType": 3 }).then((response) => {
             console.log(response.data)
             var newlist = []
             for (let value of Object.values(response.data)) {
@@ -205,7 +207,7 @@ const Margin = () => {
     }, [Tradepair]);
 
     useEffect(() => {
-        MarketAPI.getOrder({ "TradePair": Tradepair, "TradeType": 0 }).then((response) => {
+        MarketAPI.getOrder({ "TradePair": Tradepair, "TradeType": 2 }).then((response) => {
             console.log(response.data)
             var newlist = []
             for (let value of Object.values(response.data)) {
@@ -296,7 +298,14 @@ const Margin = () => {
     }, [buyamount, buyprice])
 
 
+    const handleSellBuy = (i) => {
+        if (i == 0) {
+            return "Buy"
+        } else {
+            return "Sell"
+        }
 
+    }
     
 
 
@@ -331,35 +340,7 @@ const Margin = () => {
                         </div>
                     </div>
                     <div className={classes.columPartContainers}>
-                        <div className={classes.ChartTitleContainer}>
-                            <div>
-                                <div style={{ color: 'white', fontSize: '20px', fontWeight: 'bold', textAlign: 'left' }}>
-                                    {coin1}/{coin2}
-                                </div>
-                                <div className={classes.ChartTitleInfoContainer}>
-                                    <div style={{ color: 'green', fontSize: '10px' }}>{Tpinfo.close}</div>
-                                    <div style={{ color: 'grey', fontSize: '10px' }}>=1 {coin2}</div>
-                                    <div style={{ color: 'red', fontSize: '10px' }}>{perenatage(Tpinfo.close - Tpinfo.open)}</div>
-                                </div>
-                            </div>
-                            <div>
-                                <div style={{ color: '#546071', fontSize: '14px' }}>
-                                    24H High
-                                </div>
-                                <div style={{ color: '#BFBFBF', fontSize: '14px' }}>
-                                    {Tpinfo.high}
-                                </div>
-                            </div>
-                            <div>
-                                <div style={{ color: '#546071', fontSize: '14px' }}>
-                                    24H Low
-                                </div>
-                                <div style={{ color: '#BFBFBF', fontSize: '14px' }}>
-                                    {Tpinfo.low}
-                                </div>
-                            </div>
-
-                        </div>
+                          <SelectedTP  TradePair={Tradepair} Refresh={change} Coin1={coin1} Coin2={coin2}/>
                         <div style={{
                             display: 'grid',
                             gridTemplateColumns: '5% 5% 5% 5% 5% 5% 5% 5% 5% 65%',
@@ -417,9 +398,8 @@ const Margin = () => {
             </div>
             {active == "openOrder" &&
                 <div style={{ height: '1000px' }}>
-                    <div className={classes.openOrderContainer}>
+                    <div className={classes.orderHistoryContainer}>
                         <div className={classes.smallText2}>Pair</div>
-                        <div className={classes.smallText2}>Type</div>
                         <div className={classes.smallText2}>Side</div>
                         <div className={classes.smallText2}>Price</div>
                         <div className={classes.smallText2}>Amount</div>
@@ -428,32 +408,36 @@ const Margin = () => {
                     </div>
                     {bottom.map((item, index) => {
                         return (
-                            <div className={classes.openOrderContainer}>
+                            <div className={classes.orderHistoryContainer}>
                                 <div className={classes.smallText}>{item.tradePair}</div>
-                                <div className={classes.smallText}>{item.tradeType}</div>
+                                <div className={classes.smallText}>{handleSellBuy(item.tradeType)}</div>
                                 <div className={classes.smallText}>{item.price}</div>
                                 <div className={classes.smallText}>{item.amount}</div>
+                                <div className={classes.smallText}>{item.doneAmount}</div>
+                                
                             </div>
                         );
                     })}
                 </div>}
             {active == "orderHistory" &&
                 <div style={{ height: '1000px' }}>
-                    <div className={classes.orderHistoryContainer}>
+                    <div className={classes.openOrderContainer}>
                         <div className={classes.smallText2}>Time</div>
                         <div className={classes.smallText2}>Pair</div>
                         <div className={classes.smallText2}>Side</div>
                         <div className={classes.smallText2}>Price</div>
                         <div className={classes.smallText2}>Amount</div>
+                        <div className={classes.smallText2}>total</div>
                     </div>
                     {bottom.map((item, index) => {
                         return (
-                            <div className={classes.orderHistoryContainer}>
+                            <div className={classes.openOrderContainer}>
                                 <div className={classes.smallText}>{item.time}</div>
                                 <div className={classes.smallText}>{item.tradePair}</div>
-                                <div className={classes.smallText}>{item.tradeType}</div>
+                                <div className={classes.smallText}>{handleSellBuy(item.tradeType)}</div>
                                 <div className={classes.smallText}>{item.price}</div>
                                 <div className={classes.smallText}>{item.amount}</div>
+                                <div className={classes.smallText}>{item.amount*item.price}</div>
                             </div>
                         );
                     })}

@@ -49,7 +49,7 @@ export const useStyles = createUseStyles({
         color:'white',
         fontSize:'14px',
         textAlign:'left',
-        marginLeft:'10%'
+        marginLeft:'5%'
     },
     smallTextRed:{
         color:'red',
