@@ -5,6 +5,7 @@ import App from '../App';
 const C2C_API_BASE_URL="https://sandbi.us:8443/SandBi";
 class C2CAPI{
     getPUOrder(data){
+        console.log(data);
         return axios.post(C2C_API_BASE_URL+'/C2CTrade/PendingUserOrder.jsp',
             JSON.stringify(data),
             {
@@ -32,6 +33,7 @@ class C2CAPI{
         );
     }
     getUserHistory(data){
+        console.log(data);
         return axios.post(C2C_API_BASE_URL+'/C2CTrade/HistoryUserOrder.jsp',
             JSON.stringify(data),
             {

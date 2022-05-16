@@ -30,8 +30,8 @@ export const useStyles = createUseStyles({
     columContainers:{
         display:'grid',
         marginLeft:'30px',
-        gridTemplateColumns:'auto auto',
-        width: '40%',
+        gridTemplateColumns:'30% 70%',
+        width: '90%',
         
     },
     

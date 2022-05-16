@@ -30,7 +30,7 @@ export const useStyles = createUseStyles({
 
     },
     UserInfoContainer:{
-
+        marginLeft: "15vw",
         backgroundColor:'#141126',
         height:'80px',
         marginBottom:'20px',

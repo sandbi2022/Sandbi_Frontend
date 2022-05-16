@@ -4,7 +4,9 @@
 /node_modules
 /.pnp
 .pnp.js
-screenlog.0
+/screenlog.0
+/cert1.pem
+/key1.pem
 
 # testing
 /coverage

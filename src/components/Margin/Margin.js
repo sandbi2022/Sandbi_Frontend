@@ -11,6 +11,10 @@ import Chart from "../Chart/Kline";
 import ReactSpeedometer from 'react-d3-speedometer';
 import AssetTable from '../TradeData/Asset/AssetTable';
 import UserServer from '../../api/user-api';
+import Popup from 'reactjs-popup';
+import Mode from './Mode';
+import OrderBook from '../OrderBook/OrderBook';
+import SelectedTP from '../SelectedTP/SelectedTP';
 
 const Margin = () => {
     const classes = useStyles()
@@ -19,11 +23,13 @@ const Margin = () => {
     const [formErrors, setFormErrors] = useState({})
     const [stotal, setstotal] = useState(0)
     const [btotal, setbtotal] = useState(0)
-    const [BTC, setBTC] = useState();
     const [UserBTC, setUBTC] = useState();
-    const [USDT, setUusdt] = useState();
+
+    const [BTC, setBTC] = useState();
+    const [USDC, setUUSDC] = useState();
     const [BCH, setBCH] = useState();
     const [ETH, setETH] = useState();
+
     const [OPBTC, setOPBTC] = useState();
     const [OPBCH, setOPBCH] = useState();
     const [OPETH, setOPETH] = useState();
@@ -35,48 +41,53 @@ const Margin = () => {
     const [sellamount, setsellamount] = useState()
     const [buyprice, setbuyPrice] = useState()
     const [buyamount, setbuyamount] = useState()
-    const [Tradepair, setTradepair] = useState("BTCUSDT")
+    const [Tradepair, setTradepair] = useState("BTCUSDC")
     const [coin1, setcoin1] = useState("BTC")
-    const [coin2, setcoin2] = useState("USDT")
+    const [coin2, setcoin2] = useState("USDC")
     const [Time, setTime] = useState(1800)
-    const [totalAsset,setTotalAsset]=useState(5)
-    const [totalLiability,setTotalLiability]=useState(2)
-    const [riskRate,setRiskRate]=useState()
+
+    const [totalAsset, setTotalAsset] = useState()
+    const [totalLiability, setTotalLiability] = useState()
+
+    const [riskRate, setRiskRate] = useState()
     const [change, setChange] = useState()
     const [active, setActive] = useState("openOrder")
-    const [Sellactive,setSellactive]=useState("Limit")
-    const [Buyactive,setBuyactive]=useState("Limit")
-    const [MBalance, setMBal]= useState({})
+
     const [Switch, setswitch] = useState(0)
+
     const [openorder, setopenorder] = useState([])
     const [orderH, setorderH] = useState([])
     const [bottom, setbottom] = useState([])
+    const [PairInfo, setInfo] = useState({})
+    const [Tpinfo, setTPINFO] = useState({ close: 0, high: 0, low: 0 })
+
+
+
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////
+
+
     useEffect(() => {
-        const UID = user.UID;
-        console.log(UID);
-        WalletAPI.getBalance({ UID }).then((response) => {
-            const data = response.data;
-            setUBTC(data["BTC"] - data["FreezeBTC"])
-            setUusdt(data["USDT"] - data["FreezeUSDT"])
-        });
+        MarginAPI.getRiskRate({ "UID": user.UID }).then((response) => {
+            console.log(response.data)
+            setRiskRate(response.data["RiskRate"])
+        })
+    }, [])
+    useEffect(() => {
+        MarginAPI.getTotalAsset({ "UID": user.UID }).then((response) => {
+            console.log(response.data)
+            setTotalAsset(response.data["TotalAsset"])
+        })
+    }, [])
+    useEffect(() => {
+        MarginAPI.getTotalLiability({ "UID": user.UID }).then((response) => {
+            console.log(response.data)
+            setTotalLiability(response.data["TotalLiability"])
+        })
     }, [])
 
-    useEffect(()=>{
-        setRiskRate(totalAsset/totalLiability);
-        console.log(riskRate)
-    },[])
-
     useEffect(() => {
-        UserServer.getMarginBal({"UID":user.UID}).then((response)=>{
-            console.log("margin")
-           console.log(response.data)
-           setMBal(response.data)
-       
-       }
-       ) 
-      }, []);
-
-      useEffect(() => {
         MarketAPI.getuserOrder({ "TradePair": Tradepair, "UID": user.UID }).then((response) => {
             //  console.log(response.data)
             var newlist = []
@@ -120,23 +131,23 @@ const Margin = () => {
 
     }, [Switch, openorder, orderH])
     useEffect(() => {
-        MarketAPI.getPrice({ "TradePair": "BTCUSDT" }).then((response) => {
+        MarketAPI.getPrice({ "TradePair": "BTCUSDC" }).then((response) => {
             setBTC(response.data["price"])
         })
-        MarketAPI.getPrice({ "TradePair": "BCHUSDT" }).then((response) => {
+        MarketAPI.getPrice({ "TradePair": "BCHUSDC" }).then((response) => {
             setBCH(response.data["price"])
         })
-        MarketAPI.getPrice({ "TradePair": "ETHUSDT" }).then((response) => {
+        MarketAPI.getPrice({ "TradePair": "ETHUSDC" }).then((response) => {
             setETH(parseFloat(response.data["price"]));
         })
 
-        MarketAPI.getOpenPrice({ "TradePair": "BTCUSDT" }).then((response) => {
+        MarketAPI.getOpenPrice({ "TradePair": "BTCUSDC" }).then((response) => {
             setOPBTC(parseFloat(response.data["price"]))
         })
-        MarketAPI.getOpenPrice({ "TradePair": "BCHUSDT" }).then((response) => {
+        MarketAPI.getOpenPrice({ "TradePair": "BCHUSDC" }).then((response) => {
             setOPBCH(parseFloat(response.data["price"]));
         })
-        MarketAPI.getOpenPrice({ "TradePair": "ETHUSDT" }).then((response) => {
+        MarketAPI.getOpenPrice({ "TradePair": "ETHUSDC" }).then((response) => {
             setOPETH(parseFloat(response.data["price"]));
         })
 
@@ -176,14 +187,14 @@ const Margin = () => {
 
     }
     useEffect(() => {
-        MarketAPI.getOrder({ "TradePair": Tradepair, "TradeType": 1 }).then((response) => {
+        MarketAPI.getOrder({ "TradePair": Tradepair, "TradeType": 3 }).then((response) => {
             console.log(response.data)
             var newlist = []
             for (let value of Object.values(response.data)) {
                 var data = JSON.parse(value)
                 newlist.push({
-                    price: data["price"],
-                    amount: data["amount"] - data["doneAmount"],
+                    price: data["price"].toFixed(PairInfo[Tradepair]["LimitPrice"]),
+                    amount: data["amount"] - data["doneAmount"].toFixed(PairInfo[Tradepair]["LimitCount"]),
                     sum: 0
                 })
                 console.log(newlist)
@@ -196,7 +207,7 @@ const Margin = () => {
     }, [Tradepair]);
 
     useEffect(() => {
-        MarketAPI.getOrder({ "TradePair": Tradepair, "TradeType": 0 }).then((response) => {
+        MarketAPI.getOrder({ "TradePair": Tradepair, "TradeType": 2 }).then((response) => {
             console.log(response.data)
             var newlist = []
             for (let value of Object.values(response.data)) {
@@ -237,7 +248,7 @@ const Margin = () => {
 
     const changetradetype = (type) => {
         console.log(type);
-        setTradepair(type + "USDT")
+        setTradepair(type + "USDC")
     }
 
     useEffect(() => {
@@ -261,22 +272,7 @@ const Margin = () => {
     }, [Tradepair]);
 
 
-    const sellpricechange = (event) => {
-        setsellPrice(event.target.value)
 
-    }
-    const sellamountchange = (event) => {
-        setsellamount(event.target.value)
-
-    }
-    const buypricechange = (event) => {
-        setbuyPrice(event.target.value)
-
-    }
-    const buyamountchange = (event) => {
-        setbuyamount(event.target.value)
-
-    }
 
     useEffect(() => {
         console.log(sellamount)
@@ -302,24 +298,15 @@ const Margin = () => {
     }, [buyamount, buyprice])
 
 
-    const handleSell = () => {
-        if (UserBTC > sellamount) {
-            MarketAPI.submitTrade({ "TradePair": Tradepair, "UID": user.UID, "Amount": sellamount, "Price": sellprice, "TradeType": 1 })
+    const handleSellBuy = (i) => {
+        if (i == 0) {
+            return "Buy"
+        } else {
+            return "Sell"
         }
-        else {
-            alert("not enought BTC")
-        }
-    }
 
-    const handlebuy = () => {
-        if (USDT > buyamount * parseFloat(BTC)) {
-            MarketAPI.submitTrade({ "TradePair": Tradepair, "UID": user.UID, "Amount": buyamount, "Price": buyprice, "TradeType": 0 })
-        }
-        else {
-            alert("not enought USDT")
-        }
     }
-
+    
 
 
     return (
@@ -330,56 +317,30 @@ const Margin = () => {
                     <div className={classes.columPartContainers}>
                         <AssetTable setTPair={(value) => { setTradepair(value) }} setC1={setcoin1} setC2={setcoin2} />
                         <div style={{ height: '230px', position: 'relative', bottom: '-350px', backgroundColor: '#141126' }}>
-                            <div style={{ color: 'white', fontSize: '20px', textAlign: 'left', fontWeight: 'bold', marginBottom: '10px' }}>Margin Account</div>
-                            <div style={{ color: 'grey', fontSize: '14px', textAlign: 'left' }}>Total Asset</div>
-                            <div style={{ color: 'white', fontSize: '14px', textAlign: 'left' }}>{totalAsset}</div>
-                            <div style={{ color: 'grey', fontSize: '14px', textAlign: 'left' }}>Total liability</div>
-                            <div style={{ color: 'white', fontSize: '14px', textAlign: 'left' }}>{totalLiability}</div>
-                            <div>
+                            <div style={{ color: 'white', fontSize: '20px', textAlign: 'left', fontWeight: 'bold', marginBottom: '10px', marginLeft: '10px' }}>Margin Account</div>
+                            <div style={{ color: 'grey', fontSize: '14px', textAlign: 'left', marginLeft: '10px' }}>Total Asset</div>
+                            <div style={{ color: 'white', fontSize: '14px', textAlign: 'left', marginLeft: '10px' }}>{totalAsset}</div>
+                            <div style={{ color: 'grey', fontSize: '14px', textAlign: 'left', marginLeft: '10px' }}>Total liability</div>
+                            <div style={{ color: 'white', fontSize: '14px', textAlign: 'left', marginLeft: '10px' }}>{totalLiability}</div>
+                            <div >
                                 <ReactSpeedometer
                                     ringWidth={20}
                                     width={150}
-                                    maxValue={5}
+                                    height={100}
+                                    maxValue={3}
                                     value={riskRate}
                                     needleColor="red"
                                     startColor="blue"
-                                    segments={5}
+                                    segments={6}
                                     endColor="green"
                                     textColor='grey'
+
                                 />
                             </div>
                         </div>
                     </div>
                     <div className={classes.columPartContainers}>
-                        <div className={classes.ChartTitleContainer}>
-                            <div>
-                                <div style={{ color: 'white', fontSize: '20px', fontWeight: 'bold', textAlign: 'left' }}>
-                                    {coin1}/{coin2}
-                                </div>
-                                <div className={classes.ChartTitleInfoContainer}>
-                                    <div style={{ color: 'green', fontSize: '10px' }}>10,000</div>
-                                    <div style={{ color: 'grey', fontSize: '10px' }}>=1 USD</div>
-                                    <div style={{ color: 'red', fontSize: '10px' }}>-1%</div>
-                                </div>
-                            </div>
-                            <div>
-                                <div style={{ color: '#546071', fontSize: '14px' }}>
-                                    24H High
-                                </div>
-                                <div style={{ color: '#BFBFBF', fontSize: '14px' }}>
-                                    10,000
-                                </div>
-                            </div>
-                            <div>
-                                <div style={{ color: '#546071', fontSize: '14px' }}>
-                                    24H Low
-                                </div>
-                                <div style={{ color: '#BFBFBF', fontSize: '14px' }}>
-                                    10,000
-                                </div>
-                            </div>
-
-                        </div>
+                          <SelectedTP  TradePair={Tradepair} Refresh={change} Coin1={coin1} Coin2={coin2}/>
                         <div style={{
                             display: 'grid',
                             gridTemplateColumns: '5% 5% 5% 5% 5% 5% 5% 5% 5% 65%',
@@ -398,115 +359,10 @@ const Margin = () => {
                             <Chart time={Time} Type={Tradepair}
                             />
                         </div>
-                        <div style={{ position: 'relative', bottom: '-0.6%' }}>
-
-                                <div>
-                                    <div className={classes.SwitchButtonContainer}>
-                                        <div style={{
-                                            color: '#515B6E', fontWeight: 'bold', fontSize: '20px', textAlign: 'left', backgroundColor: '#141126',
-                                            border: 'solid', borderWidth: "3px 0px 0px 0px",
-                                            borderColor: "#37C24A", width: '70%', padding: '3px 9px 3px 9px'
-                                        }} onClick={() => setActive("AutomaticLoan")}>Automatic Mode</div>
-                                    </div>
-                                    <div className={classes.ExchangeContainer}>
-                                        <div className={classes.Left}>
-                                            <div className={classes.ExchangeButton}>
-                                                <button className={classes.ExchangeButtonSetting} onClick={()=>{setSellactive("Limit");}}>Limit</button>
-                                                <button className={classes.ExchangeButtonSetting} onClick={()=>{setSellactive("Market");}}>Market</button>
-                                            </div>
-                                            {Sellactive == "Limit" &&
-                                            <div>
-                                            <div><input type="number" onChange={sellpricechange} min="0" className={classes.inputSetting} placeholder="Price"></input></div>
-                                            <div><input type="number" onChange={sellamountchange} min="0" className={classes.inputSetting} placeholder="Amount"></input></div>
-                                            </div>}
-                                            {Sellactive == "Market" &&
-                                            <div>
-                                            <div><input type="number" onChange={sellamountchange} min="0" className={classes.inputSetting} placeholder="Amount"></input></div>
-                                            </div>}
-
-                                            <div style={{ display: 'grid', gridTemplateColumns: 'auto auto', width: '100%', }}>
-                                                <div style={{ color: 'white', fontSize: '10px', textAlign: 'left' }}>This loan</div>
-                                                <div style={{ color: 'white', fontSize: '10px', textAlign: 'right' }}>0000</div>
-                                            </div>
-                                            <div style={{ display: 'grid', gridTemplateColumns: 'auto auto', width: '100%', }}>
-                                                <div style={{ color: 'white', fontSize: '10px', textAlign: 'left' }}>total</div>
-                                                <div style={{ color: 'white', fontSize: '10px', textAlign: 'right' }}>{stotal}</div>
-                                            </div>
-                                            <div><button onClick={handleSell} className={classes.buttonSettingRed}>Sell</button></div>
-                                        </div>
-                                        <div>
-                                            <div className={classes.verticleLine} />
-                                        </div>
-                                        <div className={classes.Right}>
-                                            <div className={classes.ExchangeButton}>
-                                                <button className={classes.ExchangeButtonSetting} onClick={()=>{setBuyactive("Limit")}}>Limit</button>
-                                                <button className={classes.ExchangeButtonSetting} onClick={()=>{setBuyactive("Market")}}>Market</button>
-                                            </div>
-                                            {Buyactive=="Limit" &&
-                                                <div>
-                                            <div><input type="number" onChange={buypricechange} min="0" className={classes.inputSetting} placeholder="Price" ></input></div>
-                                            <div><input type="number" onChange={buyamountchange} min="0" className={classes.inputSetting} placeholder="Amount" ></input></div>
-                                            </div>}
-                                            {Buyactive=="Market" &&
-                                                <div>
-                                            
-                                            <div><input type="number" onChange={buyamountchange} min="0" className={classes.inputSetting} placeholder="Amount" ></input></div>
-                                            </div>}
-                                            <div style={{ display: 'grid', gridTemplateColumns: 'auto auto', width: '100%', }}>
-                                                <div style={{ color: 'white', fontSize: '10px', textAlign: 'left' }}>This loan</div>
-                                                <div style={{ color: 'white', fontSize: '10px', textAlign: 'right' }}>0000</div>
-                                            </div>
-                                            <div style={{ display: 'grid', gridTemplateColumns: 'auto auto', width: '100%', }}>
-                                                <div style={{ color: 'white', fontSize: '10px', textAlign: 'left' }}>total</div>
-                                                <div style={{ color: 'white', fontSize: '10px', textAlign: 'right' }}>{btotal}</div>
-                                            </div>
-                                            <div><button onClick={handlebuy} className={classes.buttonSettingGreen}>Buy</button></div>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                        </div>
+                        <Mode/>
                     </div>
-                    <div className={classes.columPartContainers}>
-                        <div className={classes.TitleText}>OrderBook</div>
-                        <div className={classes.leftSideContainer}>
-                            <div className={classes.smallText2}>Price</div>
-                            <div className={classes.smallText2}>Amount</div>
-                            <div className={classes.smallText2}>sum</div>
-                        </div>
-                        {buyorder.map((item, index) => {
-                            return (
-                                <div className={classes.leftSideContainer}>
-                                    <div className={classes.smallTextRed}>{item.price}</div>
-                                    <div className={classes.smallText}>{item.amount}</div>
-                                    <div className={classes.smallText}>{item.sum.toFixed(2)}</div>
-                                </div>
-                            );
-                        })}
-                        <div>
-                            <hr
-                                style={{
-                                    color: '#707070',
-                                    height: 3,
-                                    width: '100%'
-                                }} />
-                        </div>
-                        <div className={classes.leftSideContainer}>
-                            <div className={classes.smallText2}>Price</div>
-                            <div className={classes.smallText2}>Amount</div>
-                            <div className={classes.smallText2}>sum</div>
-                        </div>
-                        {sellorder.map((item, index) => {
-                            return (
-                                <div className={classes.leftSideContainer}>
-                                    <div className={classes.smallTextGreen}>{item.price}</div>
-                                    <div className={classes.smallText}>{item.amount}</div>
-                                    <div className={classes.smallText}>{item.sum.toFixed(2)}</div>
-                                </div>
-                            );
-                        })}
-                    </div>
+
+                    <OrderBook TradePair={Tradepair}/>
                     <div className={classes.columPartContainers}>
                         <div className={classes.TitleText}>MarketTrade</div>
                         <div className={classes.leftSideContainer}>
@@ -531,20 +387,19 @@ const Margin = () => {
             <div className={classes.buttonContainer}>
                 {active == "openOrder" &&
                     <div>
-                <button onClick={() => { SwitchOpenOrder(); setActive("openOrder") }} >Open Order</button>
-                <button style={{backgroundColor:'#04011A',color:'white'}}onClick={() => { Switchistory(); setActive("orderHistory") }}>Order history</button>
-                </div>}
+                        <button onClick={() => { SwitchOpenOrder(); setActive("openOrder"); }} >Open Order</button>
+                        <button style={{ backgroundColor: '#04011A', color: 'white' }} onClick={() => { Switchistory(); setActive("orderHistory") }}>Order history</button>
+                    </div>}
                 {active == "orderHistory" &&
                     <div>
-                <button style={{backgroundColor:'#04011A',color:'white'}} onClick={() => { SwitchOpenOrder(); setActive("openOrder") }} >Open Order</button>
-                <button onClick={() => { Switchistory(); setActive("orderHistory") }}>Order history</button>
-                </div>}
+                        <button style={{ backgroundColor: '#04011A', color: 'white' }} onClick={() => { SwitchOpenOrder(); setActive("openOrder") }} >Open Order</button>
+                        <button onClick={() => { Switchistory(); setActive("orderHistory"); }}>Order history</button>
+                    </div>}
             </div>
             {active == "openOrder" &&
                 <div style={{ height: '1000px' }}>
-                    <div className={classes.openOrderContainer}>
+                    <div className={classes.orderHistoryContainer}>
                         <div className={classes.smallText2}>Pair</div>
-                        <div className={classes.smallText2}>Type</div>
                         <div className={classes.smallText2}>Side</div>
                         <div className={classes.smallText2}>Price</div>
                         <div className={classes.smallText2}>Amount</div>
@@ -553,37 +408,40 @@ const Margin = () => {
                     </div>
                     {bottom.map((item, index) => {
                         return (
-                            <div className={classes.openOrderContainer}>
+                            <div className={classes.orderHistoryContainer}>
                                 <div className={classes.smallText}>{item.tradePair}</div>
-                                <div className={classes.smallText}>{item.tradeType}</div>
+                                <div className={classes.smallText}>{handleSellBuy(item.tradeType)}</div>
                                 <div className={classes.smallText}>{item.price}</div>
                                 <div className={classes.smallText}>{item.amount}</div>
+                                <div className={classes.smallText}>{item.doneAmount}</div>
+                                
                             </div>
                         );
                     })}
                 </div>}
             {active == "orderHistory" &&
                 <div style={{ height: '1000px' }}>
-                    <div className={classes.orderHistoryContainer}>
+                    <div className={classes.openOrderContainer}>
                         <div className={classes.smallText2}>Time</div>
                         <div className={classes.smallText2}>Pair</div>
                         <div className={classes.smallText2}>Side</div>
                         <div className={classes.smallText2}>Price</div>
                         <div className={classes.smallText2}>Amount</div>
+                        <div className={classes.smallText2}>total</div>
                     </div>
                     {bottom.map((item, index) => {
                         return (
-                            <div className={classes.orderHistoryContainer}>
+                            <div className={classes.openOrderContainer}>
                                 <div className={classes.smallText}>{item.time}</div>
                                 <div className={classes.smallText}>{item.tradePair}</div>
-                                <div className={classes.smallText}>{item.tradeType}</div>
+                                <div className={classes.smallText}>{handleSellBuy(item.tradeType)}</div>
                                 <div className={classes.smallText}>{item.price}</div>
                                 <div className={classes.smallText}>{item.amount}</div>
+                                <div className={classes.smallText}>{item.amount*item.price}</div>
                             </div>
                         );
                     })}
                 </div>}
-
         </div>
     )
 }

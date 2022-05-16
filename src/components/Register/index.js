@@ -17,8 +17,9 @@ const Register = () => {
     const [Password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [UserName, setName] = useState("");
+    const [ButtonInfo, setButtonInfo] = useState("verify your email");
     const [formErrors, setFormErrors] = useState({})
-
+    const [disable, setDisable] = useState(false);
     const updateEmail = (event) => {
         setEmail(event.target.value);
     }
@@ -60,12 +61,14 @@ const Register = () => {
         }else{
             console.log("fail")
             console.log("Code="+Code)
+            alert("Wrong code.");
         }
     }
     const confirmEmail = async (event) => {
-        event.preventDefault();
+        
         var Code = Math.floor(Math.random() * 900000) + 100000;
         setVCode(Code);
+        setButtonInfo("Already Send");
         let user = { Email, Code };
         console.log(Email + "," + Code);
         console.log('user:' + JSON.stringify(user));
@@ -147,8 +150,8 @@ const Register = () => {
                                     placeholder="Verification Code"
                                     onChange={updateCode}
                                 />
-                                <button style={{ backgroundColor:'#154B67', color:'white', 
-                                    fontSize:'10px',borderRadius:'10px'}} onClick={confirmEmail} > send me code</button>
+                                <button disabled={disable} style={{ backgroundColor:'#154B67', color:'white', 
+                                    fontSize:'10px',borderRadius:'10px'}} onClick={()=>{confirmEmail();setDisable(true);}} > {ButtonInfo}</button>
                                 </div>
                                 <div className={classes.buttonContainer}>
                                 <button type="submit" className={classes.button} onClick={confirmRegister}>

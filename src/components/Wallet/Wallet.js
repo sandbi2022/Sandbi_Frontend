@@ -24,7 +24,7 @@ const Wallet =()=>{
     const [render,setrender]=useState([])
     const classes = useStyles();
     useEffect(() => {
-        WalletAPI.getPrice({"TradePair":"BTCUSDT"}).then((response)=>{
+        WalletAPI.getPrice({"TradePair":"BTCUSDC"}).then((response)=>{
            console.log(response.data)
            setBTC(response.data["price"])
 
@@ -35,7 +35,7 @@ const Wallet =()=>{
 
 
       useEffect(()=>{
-         WalletAPI.getPrice({"TradePair":"BCHUSDT"}).then((response)=>{
+         WalletAPI.getPrice({"TradePair":"BCHUSDC"}).then((response)=>{
         console.log(response.data)
         setBCH(response.data["price"])
     }
@@ -45,7 +45,7 @@ const Wallet =()=>{
 
 
 useEffect(()=>{
- WalletAPI.getPrice({"TradePair":"ETHUSDT"}).then((response)=>{
+ WalletAPI.getPrice({"TradePair":"ETHUSDC"}).then((response)=>{
         console.log(response.data)
         setETH(response.data["price"]);
         
@@ -85,13 +85,13 @@ useEffect(()=>{
                 available:data["ETH"]-data["FreezeETH"]  
             },
             {
-                name:"USDT",
-                balance:parseFloat(data["USDT"]).toFixed(2),
-                available:data["USDT"]-data["FreezeUSDT"]  
+                name:"USDC",
+                balance:parseFloat(data["USDC"]).toFixed(2),
+                available:data["USDC"]-data["FreezeUSDC"]  
             }
 
         ]);
-        var totalBalance = parseFloat(BTC*data["BTC"]+0)+parseFloat(BCH*data["BCH"]+0)+parseFloat(ETH*data["ETH"]+0)+parseFloat(data["USDT"]+0)+0;
+        var totalBalance = parseFloat(BTC*data["BTC"]+0)+parseFloat(BCH*data["BCH"]+0)+parseFloat(ETH*data["ETH"]+0)+parseFloat(data["USDC"]+0)+0;
         settotal((totalBalance).toFixed(2)) ;
        
         });

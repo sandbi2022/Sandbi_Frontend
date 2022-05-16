@@ -102,7 +102,7 @@ export const useStyles = createUseStyles({
     },
     infoContainers:{
         display:'grid',
-        gridTemplateColumns:'20% 20% 25% 20% 15%',
+        gridTemplateColumns:'15% 15% 15% 20% 15% 15%',
         width: '100%',
         margin:'0px 0px 15px 0px'
         

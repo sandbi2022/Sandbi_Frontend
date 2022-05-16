@@ -5,31 +5,68 @@ import { useHistory } from 'react-router-dom';
 import AuthContext from "../../context/AuthProvider"
 import c2cAPI from '../../api/c2c-api';
 import { useDispatch, useSelector } from 'react-redux';
+import UserServer from '../../api/user-api';
 
 
-const CreateOrder = () => {
+const CreateOrder = params => {
         const user = useSelector((state) => state.user.value)
         const classes = useStyles();
         const history = useHistory();
-        const [Coin, setCoin] = useState("")
+        const [Coin, setCoin] = useState("BTC")
         const [amount, setAmount] = useState("Buy")
         const [maxAmount, setmaxAmount] = useState(0)
         const [minAmount, setminAmount] = useState(0)
+        const [C2CBalance, setC2CBal] = useState({})
         const [price, setprice] = useState(0)
-        const [side,setSide]=useState()
-        const TradeType = 1
+        const [side,setSide]=useState(0)
+        const setRefresh=params.Refresh;
+
+
+
+        useEffect(() => {
+                UserServer.getC2CBal({ "UID": user.UID }).then((response) => {
+                    console.log("c2c")
+                    console.log(response.data)
+                    setC2CBal(response.data)
+                }
+                )
+            }, []);
 
         const confirmCreation = () => {
-                c2cAPI.createOrder({
-                        "TradePair": Coin + "USD",
-                        "UID": user.UID,
-                        "Amount": amount,
-                        "MaxAmount": maxAmount,
-                        "MinAmount": minAmount,
-                        "Price": price,
-                        "TradeType": TradeType
-                })
-                history.push('/C2C');
+                console.log(Coin)
+                console.log(side)
+                if(C2CBalance[Coin]<amount&&side==1){
+                        alert("Your balance is not enough")
+                }else{
+                   if(Number(maxAmount)>Number(amount)){
+                        alert("Error Max trade amount excueed total trade amount")
+                   }
+                   else{
+                        if(Number(minAmount)>Number(maxAmount)){
+                        alert("Error Max trade amount is smaller than Min trade amount")
+                        }
+                        else{
+                                c2cAPI.createOrder({
+                                                        "TradePair": Coin + "USD",
+                                                        "UID": user.UID,
+                                                        "Amount": amount,
+                                                        "MaxAmount": maxAmount,
+                                                        "MinAmount": minAmount,
+                                                        "Price": price,
+                                                        "TradeType": side
+                                                })
+                                                setRefresh(1)
+                                                
+                        }
+                        alert("Successfuly created a order")
+                        window.location.reload();
+                   }
+
+
+                }
+                setRefresh(1)
+                
+
         }
 
         const updateCoin = (event) => {
@@ -50,7 +87,11 @@ const CreateOrder = () => {
                 setprice(event.target.value);
         }
         const updateSide = (event) => {
-                setSide(event.target.value);
+               if(event.target.value==="Buy"){
+                       setSide(0)
+               }else{
+                       setSide(1)
+               }
         }
 
         return (
@@ -68,7 +109,7 @@ const CreateOrder = () => {
                                         <option >BTC</option>
                                         <option >ETH</option>
                                         <option >BCH</option>
-                                        <option >USDT</option>
+                                        <option >USDC</option>
                                         </select>
                                 
                         </div>
@@ -118,7 +159,7 @@ const CreateOrder = () => {
                                 </div>
                         </div>
                         <div style={{textAlign:'center'}}>
-                        <button type="submit" style={{position:'center',color:'white',backgroundColor:'#4ABCBB',borderRadius: '5px',margin:'5%',fontSize:'20px',width:'30%'}}onClick={confirmCreation}>
+                        <button type="submit" style={{position:'center',color:'white',backgroundColor:'#4ABCBB',borderRadius: '5px',margin:'5%',fontSize:'20px',width:'30%'}}onClick={confirmCreation  }>
                                 Create
                         </button>
                         </div>

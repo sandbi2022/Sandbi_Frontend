@@ -49,7 +49,7 @@ export const useStyles = createUseStyles({
         color:'white',
         fontSize:'14px',
         textAlign:'left',
-        marginLeft:'10%'
+        marginLeft:'5%'
     },
     smallTextRed:{
         color:'red',
@@ -86,7 +86,7 @@ export const useStyles = createUseStyles({
         width: '80%',
     },
     buttonContainer:{
-        textAlign:'left'
+        textAlign:'left',
     },
     TitleText:{
         color:'white',
@@ -167,9 +167,22 @@ export const useStyles = createUseStyles({
     SwitchButtonContainer:{
         display:'grid',
         marginLeft:'0px',
-        gridTemplateColumns:'40% auto',
+        gridTemplateColumns:'40% 30% auto',
         width: '100%',
     },
-    
+    SwitchButtonContainer2:{
+        display:'grid',
+        marginLeft:'0px',
+        gridTemplateColumns:'40% 30% 10% 10% auto',
+        width: '100%',
+    },
+    inputSetting3:{
+        color:'black',
+        backgroundColor:'white',
+        marginBottom:'5%',
+        borderColor:'grey',
+        width:'70%',
+        padding:'0px 20px 0px 20px'
+    },
 
 })

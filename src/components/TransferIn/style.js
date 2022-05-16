@@ -30,7 +30,7 @@ export const useStyles = createUseStyles({
 
     },
     UserInfoContainer:{
-
+        marginLeft: "15vw",
         backgroundColor:'#141126',
         height:'80px',
         marginBottom:'20px',
@@ -49,6 +49,37 @@ export const useStyles = createUseStyles({
         display:'grid',
         gridTemplateColumns:'auto auto auto auto',
         width: '60%',
+        
+    },
+    PopUpContainer:{
+        display:'grid',
+        gridTemplateColumns:'70% 30%',
+        width: '90%',
+        
+        
+    },
+    PopUpButton:{
+        backgroundColor:'#4ABCBB',
+        color:'white',
+        marginTop:'20%',
+        width:'40%',
+        fontWeight:'bold'
+        
+    },
+    PopUpTitle:{
+        color:'white',
+        fontSize:'15px',
+        textAlign:'left',
+        paddingLeft:'10%',
+        marginBottom:'3%',
+        fontWeight:'bold'
+        
+    },
+    PopUptext:{
+        color:'white',
+        fontSize:'12px',
+        textAlign:'left',
+        paddingLeft:'10%'
         
     },
     TitleContainer:{
